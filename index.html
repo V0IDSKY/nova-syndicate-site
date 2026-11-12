@@ -5,219 +5,1888 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="NØVA SYNDICATE — an independent digital collective focused on cybersecurity education, technology, digital awareness and creative research."
+      content="NØVA SYNDICATE — cybersecurity education, research archive and threat intelligence knowledge platform."
     />
     <meta name="theme-color" content="#080710" />
-    <title>NØVA SYNDICATE — Something Is Coming</title>
+    <title>NØVA SYNDICATE | Knowledge Archive</title>
     <style>
       :root {
         color-scheme: dark;
         --obsidian: #080710;
+        --obsidian-2: #11101c;
         --violet: #54258a;
         --electric: #a56bff;
         --silver: #c5c3d0;
+        --silver-soft: rgba(197, 195, 208, 0.7);
         --white: #eae7f2;
-        --muted: rgba(234, 231, 242, 0.7);
+        --muted: rgba(234, 231, 242, 0.74);
         --line: rgba(197, 195, 208, 0.17);
+        --line-strong: rgba(165, 107, 255, 0.35);
+        --panel: rgba(17, 16, 28, 0.82);
+        --panel-strong: rgba(20, 19, 30, 0.96);
+        --success: #b5f9d5;
+        --warning: #f8d48d;
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
         --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
         --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        --sans: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
       }
 
-      *, *::before, *::after { box-sizing: border-box; }
+      * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body {
+        margin: 0;
         min-width: 320px;
         min-height: 100vh;
-        margin: 0;
         overflow-x: hidden;
-        color: var(--white);
         background:
-          radial-gradient(ellipse at 78% 18%, rgba(84, 37, 138, .22), transparent 34rem),
-          radial-gradient(ellipse at 13% 32%, rgba(165, 107, 255, .13), transparent 27rem),
-          var(--obsidian);
-        font-family: var(--serif);
+          radial-gradient(circle at 78% 18%, rgba(84, 37, 138, 0.28), transparent 30%),
+          radial-gradient(circle at 13% 34%, rgba(165, 107, 255, 0.12), transparent 24%),
+          linear-gradient(180deg, #080710 0%, #0d0b17 25%, #080710 100%);
+        color: var(--white);
+        font-family: var(--sans);
       }
 
-      body::after {
-        position: fixed;
-        z-index: 5;
-        inset: 0;
+      body::before {
         content: "";
+        position: fixed;
+        inset: 0;
         pointer-events: none;
-        opacity: .14;
-        background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,.025) 4px);
+        background:
+          linear-gradient(transparent 0%, rgba(255,255,255,0.02) 100%),
+          repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,0.018) 4px);
+        opacity: 0.7;
       }
 
-      a { color: inherit; }
-      .shell { position: relative; width: min(1120px, calc(100% - 44px)); margin-inline: auto; }
-      .topbar {
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+      button, input, select { font: inherit; }
+
+      .shell {
+        width: min(1180px, calc(100% - 48px));
+        margin-inline: auto;
         position: relative;
         z-index: 1;
-        display: flex;
-        min-height: 82px;
-        align-items: center;
-        justify-content: space-between;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        background: rgba(8, 7, 16, 0.68);
         border-bottom: 1px solid var(--line);
       }
-      .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 82px;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
       .brand-mark {
         position: relative;
         display: grid;
-        width: 38px;
+        width: 40px;
         aspect-ratio: 1;
         place-items: center;
-        border: 1px solid rgba(197,195,208,.42);
+        border: 1px solid rgba(197, 195, 208, 0.45);
         border-radius: 50%;
-        box-shadow: 0 0 20px rgba(165,107,255,.12), inset 0 0 16px rgba(165,107,255,.1);
+        box-shadow: 0 0 20px rgba(165, 107, 255, 0.12), inset 0 0 12px rgba(165, 107, 255, 0.1);
       }
-      .brand-mark::before, .brand-mark::after {
-        position: absolute;
+
+      .brand-mark::before,
+      .brand-mark::after {
         content: "";
-        border: 1px solid rgba(165,107,255,.48);
+        position: absolute;
+        border: 1px solid rgba(165, 107, 255, 0.48);
         border-radius: 50%;
       }
+
       .brand-mark::before { inset: 6px; }
-      .brand-mark::after { width: 4px; height: 4px; border: 0; background: var(--silver); box-shadow: 0 0 10px var(--electric); }
-      .brand-name { display: block; font-size: .96rem; font-weight: 600; letter-spacing: .3em; }
-      .brand-sub { display: block; margin-top: 4px; color: var(--muted); font: .53rem var(--mono); letter-spacing: .34em; text-transform: uppercase; }
-      .status { display: inline-flex; align-items: center; gap: 9px; color: var(--silver); font: .62rem var(--mono); letter-spacing: .17em; }
-      .status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--electric); box-shadow: 0 0 12px var(--electric); animation: pulse 2.4s ease-in-out infinite; }
+      .brand-mark::after {
+        width: 6px;
+        height: 6px;
+        border: 0;
+        background: var(--silver);
+        box-shadow: 0 0 12px var(--electric);
+      }
+
+      .brand-name {
+        display: block;
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+      }
+
+      .brand-sub {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font: 0.52rem var(--mono);
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav a {
+        position: relative;
+        color: var(--silver-soft);
+        font: 0.62rem var(--mono);
+        letter-spacing: 0.23em;
+        text-transform: uppercase;
+        transition: color 0.2s ease;
+      }
+
+      .nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -9px;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, var(--electric), transparent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.2s ease;
+      }
+
+      .nav a:hover,
+      .nav a:focus-visible { color: var(--white); }
+      .nav a:hover::after,
+      .nav a:focus-visible::after { transform: scaleX(1); }
+
+      .mobile-toggle {
+        display: none;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 10px 12px;
+        color: var(--white);
+        font: 0.62rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border: 1px solid rgba(165, 107, 255, 0.28);
+        border-radius: 999px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .status-pill .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--electric);
+        box-shadow: 0 0 10px rgba(165, 107, 255, 0.8);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
 
       .hero {
-        position: relative;
-        z-index: 1;
         display: grid;
-        min-height: min(700px, calc(100svh - 82px));
-        grid-template-columns: 1.1fr .9fr;
+        grid-template-columns: 1.2fr 0.8fr;
         align-items: center;
-        gap: 28px;
-        padding-block: 54px;
+        gap: 36px;
+        min-height: min(760px, calc(100vh - 100px));
+        padding: 58px 0 18px;
       }
-      .hero-copy { animation: rise .9s ease both; }
-      .eyebrow, .micro-label { color: var(--silver); font: .64rem var(--mono); letter-spacing: .3em; text-transform: uppercase; }
-      .eyebrow { margin: 0 0 22px; }
-      h1 { max-width: 700px; margin: 0; font-size: clamp(3.2rem, 7.1vw, 6.8rem); font-weight: 500; letter-spacing: -.055em; line-height: .91; text-shadow: 0 0 42px rgba(165,107,255,.13); }
-      .subtitle { margin: 24px 0 0; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.4rem); font-style: italic; }
-      .slogan { margin: 12px 0 0; color: var(--white); font: .8rem var(--mono); letter-spacing: .14em; }
-      .founder-line { margin: 35px 0 0; color: var(--silver); font: .64rem var(--mono); letter-spacing: .17em; text-transform: uppercase; }
 
-      .emblem-area { display: grid; min-height: 390px; place-items: center; animation: rise 1s .12s ease both; }
+      .eyebrow,
+      .micro-label,
+      .meta-label {
+        color: var(--silver);
+        font: 0.62rem var(--mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow { margin: 0 0 20px; }
+
+      h1, h2, h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 500;
+        letter-spacing: -0.06em;
+      }
+
+      .hero h1 {
+        max-width: 760px;
+        font-size: clamp(3.4rem, 7vw, 7rem);
+        line-height: 0.9;
+        text-shadow: 0 0 36px rgba(165, 107, 255, 0.18);
+      }
+
+      .subtitle {
+        margin: 22px 0 0;
+        color: var(--muted);
+        font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+        font-style: italic;
+        line-height: 1.6;
+      }
+
+      .slogan {
+        margin: 12px 0 0;
+        color: var(--white);
+        font: 0.8rem var(--mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .founder-line {
+        margin: 34px 0 0;
+        color: var(--silver);
+        font: 0.62rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .button,
+      .button-ghost {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        font: 0.7rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .button {
+        background: linear-gradient(135deg, rgba(165, 107, 255, 0.2), rgba(84, 37, 138, 0.14));
+        box-shadow: inset 0 0 18px rgba(165, 107, 255, 0.14), 0 10px 25px rgba(84, 37, 138, 0.22);
+      }
+
+      .button-ghost {
+        background: transparent;
+        color: var(--white);
+      }
+
+      .button:hover,
+      .button-ghost:hover,
+      .button:focus-visible,
+      .button-ghost:focus-visible {
+        transform: translateY(-1px);
+        border-color: rgba(165, 107, 255, 0.42);
+      }
+
+      .emblem-area {
+        display: grid;
+        justify-items: center;
+        min-height: 430px;
+      }
+
       .emblem {
         position: relative;
         display: grid;
-        width: min(360px, 72vw);
-        aspect-ratio: 1;
         place-items: center;
-        border: 1px solid rgba(197,195,208,.17);
+        width: min(420px, 75vw);
+        aspect-ratio: 1;
+        border: 1px solid rgba(197, 195, 208, 0.16);
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(84,37,138,.12), rgba(8,7,16,.12) 62%, transparent 63%);
-        box-shadow: inset 0 0 50px rgba(165,107,255,.07), 0 0 60px rgba(84,37,138,.08);
+        background: radial-gradient(circle, rgba(84, 37, 138, 0.12), rgba(8, 7, 16, 0.08) 62%, transparent 64%);
+        box-shadow: inset 0 0 60px rgba(165, 107, 255, 0.08), 0 0 80px rgba(84, 37, 138, 0.08);
       }
-      .emblem::before, .emblem::after { position: absolute; content: ""; border: 1px solid rgba(197,195,208,.12); border-radius: 50%; }
+
+      .emblem::before,
+      .emblem::after {
+        content: "";
+        position: absolute;
+        border: 1px solid rgba(197, 195, 208, 0.12);
+        border-radius: 50%;
+      }
+
       .emblem::before { inset: 12%; }
-      .emblem::after { inset: 25%; border-color: rgba(165,107,255,.3); }
-      .orbit { position: absolute; width: 112%; height: 46%; border: 1px solid rgba(197,195,208,.15); border-radius: 50%; transform: rotate(-37deg); }
-      .orbit.second { width: 104%; height: 57%; transform: rotate(38deg); border-color: rgba(165,107,255,.17); }
-      .orbit-dot { position: absolute; top: 16%; right: 17%; width: 8px; height: 8px; border-radius: 50%; background: var(--silver); box-shadow: 0 0 14px var(--electric); }
-      .emblem-word { position: relative; z-index: 1; font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 600; letter-spacing: .12em; text-shadow: 0 0 24px rgba(165,107,255,.25); }
+      .emblem::after { inset: 23%; border-color: rgba(165, 107, 255, 0.32); }
+
+      .orbit {
+        position: absolute;
+        width: 112%;
+        height: 46%;
+        border: 1px solid rgba(197, 195, 208, 0.14);
+        border-radius: 50%;
+        transform: rotate(-38deg);
+      }
+
+      .orbit.second {
+        width: 104%;
+        height: 57%;
+        border-color: rgba(165, 107, 255, 0.18);
+        transform: rotate(38deg);
+      }
+
+      .orbit-dot {
+        position: absolute;
+        top: 15%;
+        right: 16%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--silver);
+        box-shadow: 0 0 14px var(--electric);
+      }
+
+      .emblem-word {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(2.5rem, 5vw, 4.2rem);
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-shadow: 0 0 24px rgba(165, 107, 255, 0.22);
+      }
+
       .emblem-word span { color: var(--silver); }
-      .emblem-caption { position: absolute; bottom: 12%; color: var(--silver); font: .55rem var(--mono); letter-spacing: .34em; text-transform: uppercase; }
+      .emblem-caption {
+        position: absolute;
+        bottom: 12%;
+        color: var(--silver);
+        font: 0.55rem var(--mono);
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+      }
 
-      .details { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; border-block: 1px solid var(--line); }
-      .detail { padding: 18px 22px; }
-      .detail + .detail { border-left: 1px solid var(--line); }
-      .detail p { margin: 0 0 8px; color: var(--silver); font: .58rem var(--mono); letter-spacing: .24em; text-transform: uppercase; }
-      .detail strong { font-size: 1rem; font-weight: 500; letter-spacing: .05em; }
+      .info-strip {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        margin-top: 12px;
+      }
 
-      .about { position: relative; z-index: 1; padding: 86px 0 74px; }
-      .about-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 40px; align-items: start; }
-      .about h2 { margin: 12px 0 0; font-size: clamp(2.4rem, 5vw, 4.5rem); font-weight: 500; letter-spacing: -.05em; line-height: .95; }
-      .about-copy { margin: 0; color: var(--muted); font-size: clamp(1.05rem, 1.7vw, 1.3rem); line-height: 1.75; }
-      .keywords { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-      .keyword { padding: 10px 13px; border: 1px solid var(--line); color: var(--white); font: .62rem var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+      .info-unit {
+        padding: 18px 22px;
+      }
 
-      footer { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 14px; padding: 18px 0 24px; border-top: 1px solid var(--line); color: var(--silver); font: .59rem var(--mono); letter-spacing: .16em; text-transform: uppercase; }
-      .story-note { margin: 0; padding: 12px 0 18px; color: rgba(197,195,208,.56); font: .56rem/1.7 var(--mono); letter-spacing: .04em; }
+      .info-unit + .info-unit {
+        border-left: 1px solid var(--line);
+      }
 
-      @keyframes pulse { 50% { opacity: .55; transform: scale(.75); } }
-      @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      .info-unit p {
+        margin: 0 0 8px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .info-unit strong {
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
+
+      section {
+        padding-top: 92px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(2.35rem, 5vw, 4.5rem);
+        line-height: 0.95;
+      }
+
+      .section-head p { margin: 0; }
+
+      .feature-grid,
+      .research-grid,
+      .article-grid,
+      .path-grid,
+      .about-grid,
+      .privacy-grid {
+        display: grid;
+        gap: 22px;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .feature-card,
+      .research-card,
+      .article-card,
+      .path-card,
+      .about-panel,
+      .privacy-panel,
+      .search-panel {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      .feature-card,
+      .research-card,
+      .article-card,
+      .path-card,
+      .about-panel,
+      .privacy-panel {
+        padding: 28px 24px 24px;
+      }
+
+      .feature-card .tag,
+      .research-card .tag,
+      .article-card .tag,
+      .path-card .tag {
+        display: inline-block;
+        margin-bottom: 16px;
+        color: var(--silver);
+        font: 0.6rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .feature-card h3,
+      .research-card h3,
+      .article-card h3,
+      .path-card h3 {
+        font-size: clamp(1.6rem, 2vw, 2.2rem);
+        line-height: 1.06;
+      }
+
+      .feature-card p,
+      .research-card p,
+      .article-card p,
+      .path-card p,
+      .about-panel p,
+      .privacy-panel p,
+      .path-list li {
+        color: var(--muted);
+        line-height: 1.72;
+      }
+
+      .feature-card .mini,
+      .research-card .mini,
+      .article-card .mini {
+        margin-top: 18px;
+        color: var(--silver);
+        font: 0.6rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .database-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 24px;
+        align-items: start;
+      }
+
+      .search-panel {
+        padding: 18px 18px 14px;
+      }
+
+      .search-toolbar {
+        display: grid;
+        grid-template-columns: 1.6fr repeat(2, minmax(0, 0.8fr)) auto;
+        gap: 12px;
+      }
+
+      .field {
+        position: relative;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        min-height: 46px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+        color: var(--white);
+      }
+
+      .field input::placeholder { color: rgba(234, 231, 242, 0.55); }
+      .field-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .search-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        color: var(--silver-soft);
+        font: 0.62rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .reset-button {
+        background: transparent;
+        color: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0 18px;
+        min-height: 46px;
+        font: 0.6rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .threat-results {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .threat-item {
+        display: grid;
+        gap: 14px;
+        padding: 22px 20px;
+        background: rgba(17, 16, 28, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        cursor: pointer;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .threat-item:hover,
+      .threat-item:focus-visible {
+        transform: translateY(-1px);
+        border-color: rgba(165, 107, 255, 0.42);
+        box-shadow: 0 18px 40px rgba(84, 37, 138, 0.12);
+      }
+
+      .threat-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: start;
+      }
+
+      .threat-head h3 {
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        line-height: 1.1;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .threat-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--silver);
+        font: 0.6rem var(--mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .threat-description {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .threat-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .threat-tags span {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(165, 107, 255, 0.08);
+        border: 1px solid rgba(165, 107, 255, 0.15);
+        color: var(--silver);
+        font: 0.56rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .side-panel {
+        position: sticky;
+        top: 102px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .detail-card {
+        background: var(--panel-strong);
+        border: 1px solid var(--line);
+        padding: 22px 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .detail-card h3 {
+        font-size: clamp(1.8rem, 2vw, 2.5rem);
+        line-height: 1.1;
+      }
+
+      .detail-card .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .detail-card .body {
+        margin-top: 18px;
+      }
+
+      .detail-card p,
+      .detail-card li {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .detail-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .related-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .related-list span {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--silver);
+        font: 0.56rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .research-grid,
+      .article-grid,
+      .path-grid,
+      .about-grid,
+      .privacy-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .research-card,
+      .article-card,
+      .path-card,
+      .about-panel,
+      .privacy-panel {
+        border-radius: 20px;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .article-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .path-card {
+        padding-bottom: 20px;
+      }
+
+      .path-card .progress {
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.04);
+        overflow: hidden;
+        margin: 18px 0 16px;
+      }
+
+      .path-card .progress span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--electric), rgba(197,195,208,0.8));
+        border-radius: inherit;
+      }
+
+      .path-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .path-list li {
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .path-list li:first-child { border-top: 0; }
+
+      .about-grid {
+        grid-template-columns: 1.1fr 1.1fr 0.8fr;
+        align-items: start;
+      }
+
+      .principles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .principles span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        color: var(--white);
+        background: rgba(165, 107, 255, 0.05);
+        font: 0.7rem var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .privacy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .privacy-panel ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .privacy-panel li {
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .privacy-panel li:first-child { border-top: 0; }
+
+      .not-found {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .not-found-card {
+        width: min(760px, 100%);
+        padding: 46px 28px;
+        border: 1px solid var(--line);
+        background: rgba(17, 16, 28, 0.9);
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .not-found-card h1 {
+        font-size: clamp(4rem, 12vw, 9rem);
+        line-height: 0.85;
+        letter-spacing: -0.08em;
+      }
+
+      .not-found-card p {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      footer {
+        padding: 26px 0 40px;
+        border-top: 1px solid var(--line);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        color: var(--silver);
+        font: 0.58rem var(--mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .empty-state {
+        padding: 34px 20px;
+        border: 1px dashed var(--line);
+        border-radius: 18px;
+        color: var(--muted);
+        text-align: center;
+        font: 0.8rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      @keyframes pulse {
+        50% { opacity: 0.55; transform: scale(0.75); }
+      }
+
+      @media (max-width: 980px) {
+        .nav { display: none; }
+        .mobile-toggle { display: inline-flex; }
+        .hero,
+        .database-shell,
+        .about-grid,
+        .privacy-grid,
+        .feature-grid,
+        .research-grid,
+        .article-grid,
+        .path-grid {
+          grid-template-columns: 1fr;
+        }
+        .search-toolbar { grid-template-columns: 1fr; }
+        .side-panel { position: static; }
+      }
 
       @media (max-width: 700px) {
-        .shell { width: min(100% - 34px, 540px); }
-        .topbar { min-height: 70px; }
-        .status { font-size: .52rem; letter-spacing: .1em; }
-        .hero { min-height: auto; grid-template-columns: 1fr; gap: 0; padding-block: 32px 38px; }
-        .emblem-area { grid-row: 1; min-height: 300px; }
-        .emblem { width: min(280px, 74vw); }
-        .hero-copy { grid-row: 2; }
-        h1 { font-size: clamp(3.15rem, 14vw, 5.4rem); }
-        .eyebrow { margin-bottom: 17px; }
-        .founder-line { margin-top: 25px; font-size: .59rem; }
-        .details { grid-template-columns: 1fr; }
-        .detail { padding: 15px 4px; }
-        .detail + .detail { border-top: 1px solid var(--line); border-left: 0; }
-        .about { padding: 62px 0 52px; }
-        .about-grid { grid-template-columns: 1fr; gap: 18px; }
-        .about h2 { margin-top: 0; }
-        footer { flex-direction: column; }
+        .shell { width: min(100% - 30px, 700px); }
+        .topbar-inner { min-height: 74px; }
+        .brand-name { letter-spacing: 0.22em; }
+        .brand-sub { letter-spacing: 0.22em; }
+        .hero { min-height: auto; padding-top: 32px; }
+        .info-strip { grid-template-columns: 1fr; }
+        .info-unit + .info-unit { border-top: 1px solid var(--line); border-left: 0; }
+        .section-head { align-items: start; flex-direction: column; }
+        .cta-row { flex-direction: column; }
+        .button, .button-ghost { width: 100%; }
+        .footer-inner { flex-direction: column; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
       }
     </style>
   </head>
   <body>
-    <header class="topbar shell">
-      <a class="brand" href="#home" aria-label="NØVA SYNDICATE home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span><span class="brand-name">NØVA</span><span class="brand-sub">Syndicate</span></span>
-      </a>
-      <div class="status"><span class="status-dot" aria-hidden="true"></span><span>Work in progress</span></div>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="#home" aria-label="NØVA SYNDICATE home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>
+            <span class="brand-name">NØVA</span>
+            <span class="brand-sub">Syndicate</span>
+          </span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#home">Home</a>
+          <a href="#database">Threat Database</a>
+          <a href="#research">Research</a>
+          <a href="#learning">Learning</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <div class="status-pill" aria-label="System status online">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>System status: online</span>
+        </div>
+
+        <button class="mobile-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+      </div>
     </header>
 
-    <main id="home" class="shell">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">Independent digital collective</p>
-          <h1 id="hero-title">Something<br />is coming.</h1>
-          <p class="subtitle">A new digital collective is taking shape.</p>
-          <p class="slogan">“Disappear from the system.”</p>
-          <p class="founder-line">Founded by VØIDSKY <span aria-hidden="true">//</span> Est. 2026</p>
+    <main class="shell">
+      <section id="home" class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">Independent cyber research archive</p>
+          <h1 id="hero-title">NØVA<br />SYNDICATE</h1>
+          <p class="subtitle">“Knowledge is the ultimate form of independence.”</p>
+          <p class="slogan">Disappear from the system.</p>
+          <p class="founder-line">Founder: VØIDSKY // Established 2026</p>
+
+          <div class="cta-row">
+            <a class="button" href="#database">Enter the archive</a>
+            <a class="button-ghost" href="#research">View research</a>
+          </div>
         </div>
-        <div class="emblem-area" aria-label="NØVA celestial emblem">
+
+        <div class="emblem-area" aria-label="NØVA emblem">
           <div class="emblem" aria-hidden="true">
-            <span class="orbit"></span><span class="orbit second"></span><span class="orbit-dot"></span>
+            <span class="orbit"></span>
+            <span class="orbit second"></span>
+            <span class="orbit-dot"></span>
             <span class="emblem-word">NØ<span>/</span>VA</span>
             <span class="emblem-caption">NØVA SYNDICATE</span>
           </div>
         </div>
       </section>
 
-      <section class="details" aria-label="Collective details">
-        <div class="detail"><p>Collective</p><strong>NØVA SYNDICATE</strong></div>
-        <div class="detail"><p>Founder</p><strong>VØIDSKY <span aria-hidden="true">//</span> EST. 2026</strong></div>
+      <div class="info-strip" aria-label="Collective details">
+        <div class="info-unit">
+          <p>Collective</p>
+          <strong>NØVA SYNDICATE</strong>
+        </div>
+        <div class="info-unit">
+          <p>Founder</p>
+          <strong>VØIDSKY</strong>
+        </div>
+      </div>
+
+      <section aria-labelledby="featured-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">01 / Intelligence stack</p>
+            <h2 id="featured-title">Featured research topics</h2>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="tag">Malware</span>
+            <h3>Infection paths</h3>
+            <p>Understand how malicious code mutates, spreads and hides itself across endpoints and networks.</p>
+            <div class="mini">Threat behavior • Defense logic</div>
+          </article>
+
+          <article class="feature-card">
+            <span class="tag">Web security</span>
+            <h3>Application abuse</h3>
+            <p>Track the ways user input, sessions, trust boundaries and browser logic are exploited.</p>
+            <div class="mini">Injection • UX abuse</div>
+          </article>
+
+          <article class="feature-card">
+            <span class="tag">Forensics</span>
+            <h3>Evidence handling</h3>
+            <p>Learn how logs, artifacts and timelines become the backbone of defensible investigation.</p>
+            <div class="mini">Timeline • Verification</div>
+          </article>
+        </div>
       </section>
 
-      <section class="about" aria-labelledby="about-title">
-        <div class="about-grid">
-          <div><p class="micro-label">01 / The collective</p><h2 id="about-title">What is<br />NØVA?</h2></div>
+      <section id="database" aria-labelledby="database-title">
+        <div class="section-head">
           <div>
-            <p class="about-copy">NØVA is an independent digital collective focused on cybersecurity education, technology, digital awareness and creative research.</p>
-            <div class="keywords" aria-label="Guiding principles">
-              <span class="keyword">Knowledge.</span>
-              <span class="keyword">Independence.</span>
-              <span class="keyword">Curiosity.</span>
+            <p class="micro-label">02 / Threat database</p>
+            <h2 id="database-title">Cybersecurity knowledge archive</h2>
+          </div>
+        </div>
+
+        <div class="database-shell">
+          <div>
+            <div class="search-panel">
+              <div class="search-toolbar">
+                <div class="field">
+                  <label class="field-label" for="global-search">Search topics</label>
+                  <input id="global-search" type="search" placeholder="Search by name, description or keyword" aria-label="Search threat database" />
+                </div>
+                <div class="field">
+                  <label class="field-label" for="category-filter">Category</label>
+                  <select id="category-filter" aria-label="Filter by category">
+                    <option value="all">All categories</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="difficulty-filter">Difficulty</label>
+                  <select id="difficulty-filter" aria-label="Filter by difficulty">
+                    <option value="all">All levels</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+                <button class="reset-button" type="button" id="reset-filters">Reset</button>
+              </div>
+
+              <div class="search-summary">
+                <span id="result-count">0 entries</span>
+                <span>Ctrl + K</span>
+              </div>
             </div>
+
+            <div id="threat-results" class="threat-results" aria-live="polite"></div>
+          </div>
+
+          <aside class="side-panel">
+            <div class="detail-card" id="detail-card">
+              <p class="meta-label">Selected topic</p>
+              <h3>Threat atlas</h3>
+              <div class="meta">
+                <span>Choose an entry</span>
+              </div>
+              <div class="body">
+                <p>Use the database to inspect a tactic, see how it works conceptually and review the core prevention methods.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="research" aria-labelledby="research-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">03 / Research archive</p>
+            <h2 id="research-title">Latest educational articles</h2>
+          </div>
+        </div>
+
+        <div class="article-grid" id="archive-grid"></div>
+      </section>
+
+      <section id="learning" aria-labelledby="learning-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">04 / Learning center</p>
+            <h2 id="learning-title">Structured learning paths</h2>
+          </div>
+        </div>
+
+        <div class="path-grid" id="learning-grid"></div>
+      </section>
+
+      <section id="about" aria-labelledby="about-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">05 / About NØVA</p>
+            <h2 id="about-title">Independently founded. Quietly sharp.</h2>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-panel">
+            <p>“NØVA SYNDICATE is an independently founded digital collective focused on cybersecurity education, digital awareness, technology and creative research.”</p>
+            <p>Founded by VØIDSKY.</p>
+          </div>
+
+          <div class="about-panel">
+            <p>NØVA currently has one founder. There are no employees, members, certifications, or formal partnerships to claim. The archive is intentionally minimal and transparent: it teaches the principles, tools, and tradecraft behind security without pretending to be a large institution.</p>
+            <div class="principles" aria-label="Core principles">
+              <span>Knowledge.</span>
+              <span>Independence.</span>
+              <span>Curiosity.</span>
+            </div>
+          </div>
+
+          <div class="about-panel">
+            <p>Any fictional narratives and simulated incidents are clearly labeled as fiction throughout the archive.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="privacy" aria-labelledby="privacy-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">06 / Privacy & Security</p>
+            <h2 id="privacy-title">Visitor-first, by design.</h2>
+          </div>
+        </div>
+
+        <div class="privacy-grid">
+          <div class="privacy-panel">
+            <p>We do not collect unnecessary personal information, and we do not expose visitor data publicly. This platform is built to be static and lightweight, with no hidden tracking, credential collection, or unnecessary analytics. No passwords or sensitive credentials are requested or stored.</p>
+          </div>
+
+          <div class="privacy-panel">
+            <ul>
+              <li>No hidden tracking or behavioral profiling.</li>
+              <li>No public exposure of visitor information.</li>
+              <li>No credential theft or unauthorized access tooling.</li>
+              <li>Any future user-submitted content must be handled securely and minimally.</li>
+            </ul>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="shell">
-      <span>NØVA SYNDICATE © 2026</span>
-      <span>Founder: VØIDSKY</span>
+    <footer>
+      <div class="shell footer-inner">
+        <span>NØVA SYNDICATE © <span id="year"></span></span>
+        <span>Founder: VØIDSKY</span>
+      </div>
     </footer>
-    <p class="story-note shell">NØVA is currently an independently founded creative and educational collective with one member, its founder VØIDSKY. Any hacking operations, cyberattacks, fictional incidents, or mysterious historical events presented in future storytelling are fictional.</p>
+
+    <script>
+      const categories = [
+        { name: 'MALWARE', topics: ['Computer viruses', 'Trojans', 'Ransomware', 'Spyware', 'Rootkits', 'Worms'] },
+        { name: 'SOCIAL ENGINEERING', topics: ['Phishing', 'Spear phishing', 'Identity impersonation', 'Social engineering psychology', 'Online scams'] },
+        { name: 'NETWORK SECURITY', topics: ['DDoS concepts', 'DNS security', 'Man-in-the-middle concepts', 'Network monitoring', 'Network vulnerabilities'] },
+        { name: 'WEB SECURITY', topics: ['SQL injection', 'Cross-site scripting', 'CSRF', 'Session security', 'Authentication vulnerabilities'] },
+        { name: 'SYSTEM SECURITY', topics: ['Privilege escalation concepts', 'Zero-day vulnerabilities', 'Misconfigurations', 'Operating system security', 'Patch management'] },
+        { name: 'DIGITAL FORENSICS', topics: ['Log analysis', 'Incident response', 'File analysis', 'Digital evidence', 'Malware analysis concepts'] },
+        { name: 'DEFENSIVE SECURITY', topics: ['Firewalls', 'Encryption', 'Multi-factor authentication', 'Password security', 'System hardening', 'Security monitoring'] }
+      ];
+
+      const threatEntries = [
+        {
+          name: 'Computer Viruses', category: 'MALWARE', difficulty: 'Beginner',
+          description: 'Malicious code designed to copy and spread itself, often using executable files or user actions to propagate.',
+          technicalExplanation: 'A virus is code that relies on a host file or program to execute. Once active, it may alter files, corrupt data, or trigger additional behaviors when the host program is run. The distinction from other malware is that the payload depends on a host and often spreads through user-mediated copying or execution.',
+          howThreatWorks: 'The payload hides in a file, document, or program. When a user opens the host, the virus activates and copies itself to other files or locations, extending its reach while trying to stay unnoticed.',
+          historicalExamples: 'Virus families documented in public security literature often highlighted self-replication and file-based propagation. The key principle is persistence through infected hosts rather than network-only spread.',
+          warningSigns: ['Unexpected file changes', 'Unusual startup behavior', 'Files appearing or duplicating themselves'],
+          detectionMethods: ['File integrity checks', 'Behavioral monitoring', 'Antivirus scanning with suspicious file analysis'],
+          preventionMethods: ['Keep systems updated', 'Avoid opening unknown files', 'Use application allowlisting and endpoint controls'],
+          references: ['MITRE ATT&CK: Malware'],
+          keywords: ['virus', 'replication', 'infected file', 'payload']
+        },
+        {
+          name: 'Trojans', category: 'MALWARE', difficulty: 'Beginner',
+          description: 'A malicious program disguised as legitimate software, often used for remote access, data theft, or payload delivery.',
+          technicalExplanation: 'A Trojan deceives a user into executing it by appearing useful, harmless, or necessary. Once installed, it can open a communication channel, exfiltrate data, or download additional code. Unlike self-replicating viruses, Trojans typically rely on deception rather than automatic spread.',
+          howThreatWorks: 'The attack depends on trust. The malicious file is packaged inside a familiar name, installer, or document, and the payload activates when the user grants execution rights or opens a dropped file.',
+          historicalExamples: 'Legacy trojan families and modern loaders demonstrate the same pattern: appearance masquerading as a trusted utility while the hidden payload operates in the background.',
+          warningSigns: ['Unexpected system prompts', 'New background services', 'Unknown network connections'],
+          detectionMethods: ['Static file analysis', 'Network telemetry review', 'Sandbox behavior analysis'],
+          preventionMethods: ['Download software only from official sources', 'Review permission prompts', 'Use endpoint protection and application controls'],
+          references: ['CISA: Cybersecurity best practices', 'OWASP: Secure software development'],
+          keywords: ['trojan', 'dropper', 'backdoor', 'fake installer']
+        },
+        {
+          name: 'Ransomware', category: 'MALWARE', difficulty: 'Intermediate',
+          description: 'Malware that encrypts files or locks access to systems and demands payment to restore access.',
+          technicalExplanation: 'Ransomware uses asymmetric encryption or key management to render data unusable unless the victim possesses a decryption key. The attacker often combines encryption with extortion messaging, exfiltration threats, or operational disruption to increase pressure.',
+          howThreatWorks: 'The malicious program reaches a system through phishing, vulnerable services, or compromised credentials. It then enumerates files, encrypts data, and leaves a ransom note or extortion mechanism in place.',
+          historicalExamples: 'Public reporting frequently documents the general pattern of file encryption, extortion messaging, and disruption of normal business operations. This is a broad class of threat rather than a single vulnerability.',
+          warningSigns: ['Locked files with unusual extensions', 'Mass file encryption', 'Extortion notes on systems'],
+          detectionMethods: ['Behavioral endpoint detection', 'File entropy monitoring', 'Network indicators and ransomware hunting'],
+          preventionMethods: ['Backups and validated restore processes', 'Patch exposure points', 'User awareness and segmentation'],
+          references: ['CISA: Ransomware guidance', 'NIST: Cybersecurity framework'],
+          keywords: ['cryptocurrency', 'encryption', 'extortion', 'backup']
+        },
+        {
+          name: 'Spyware', category: 'MALWARE', difficulty: 'Intermediate',
+          description: 'Software that observes activity, often capturing keystrokes, clipboard data, browser behavior, or system state.',
+          technicalExplanation: 'Spyware is designed for covert collection. It may monitor user input, take screenshots, log browsing history, or exfiltrate sensitive content. The objective is typically intelligence gathering, fraud, or surveillance rather than overt disruption.',
+          howThreatWorks: 'It often installs behind a legitimate-looking tool or through an exploited application. Once running, it quietly records data to local storage or transmits it to a remote server.',
+          historicalExamples: 'Commercial spyware and covert monitoring tools show how surveillance functions are often disguised as productivity or support software, making detection reliant on unexpected behavior or traffic.',
+          warningSigns: ['Suspicious background process', 'Unexpected browser extensions', 'Unusual outbound traffic'],
+          detectionMethods: ['Process auditing', 'Browser extension review', 'Network monitoring for exfiltration'],
+          preventionMethods: ['Use trusted software only', 'Review installed extensions', 'Limit admin rights and isolate workstations'],
+          references: ['OWASP: Secure application configuration', 'CISA: Security monitoring'],
+          keywords: ['surveillance', 'keylogging', 'browser monitoring', 'exfiltration']
+        },
+        {
+          name: 'Rootkits', category: 'MALWARE', difficulty: 'Advanced',
+          description: 'A rootkit is designed to hide malicious activity or persistence at a deep system level, often below normal administrative visibility.',
+          technicalExplanation: 'Rootkits manipulate the operating system, kernel components, or boot process to hide files, processes, or network activity. They are difficult to detect because they target the same trust boundaries administrators rely on.',
+          howThreatWorks: 'The attacker installs persistence at a privileged layer and then changes system behavior to conceal the malicious code, logs, or network communication from normal tools and users.',
+          historicalExamples: 'Public analysis of rootkits highlights the use of kernel hooks, drivers, or boot-level mechanisms to bury code below conventional detection layers.',
+          warningSigns: ['Missing processes from task managers', 'Unusual kernel modules', 'Difficulty validating clean system state'],
+          detectionMethods: ['Memory forensics', 'Integrity verification', 'Kernel-mode and boot record checks'],
+          preventionMethods: ['Secure boot and integrity checks', 'Least privilege', 'Rapid incident isolation'],
+          references: ['MITRE ATT&CK: Defense Evasion'],
+          keywords: ['kernel', 'privilege', 'persistence', 'evasion']
+        },
+        {
+          name: 'Worms', category: 'MALWARE', difficulty: 'Intermediate',
+          description: 'Self-replicating malware that spreads across networks without requiring a host program to be opened by a user.',
+          technicalExplanation: 'Worms exploit software, services, or trust relationships to move from one system to another. Their standout trait is autonomous propagation, which can multiply quickly across connected environments.',
+          howThreatWorks: 'A compromised system scans for vulnerable hosts or reachable devices. It then copies itself into those endpoints, often creating exponential spread and network congestion in the process.',
+          historicalExamples: 'Historical examples in public security discussions commonly focus on network-mediated spread and payload propagation rather than user-driven installation.',
+          warningSigns: ['Unexpected outbound traffic', 'Rapid spread to multiple hosts', 'System instability under load'],
+          detectionMethods: ['Network traffic analysis', 'Endpoint replication telemetry', 'Vulnerability and exposure review'],
+          preventionMethods: ['Patch exposed services', 'Segment networks', 'Disable unnecessary remote services'],
+          references: ['MITRE ATT&CK: Initial Access and Lateral Movement'],
+          keywords: ['propagation', 'network spread', 'vulnerability', 'scan']
+        },
+        {
+          name: 'Phishing', category: 'SOCIAL ENGINEERING', difficulty: 'Beginner',
+          description: 'A deceptive message or site designed to trick a user into revealing data, clicking a malicious link, or taking an unsafe action.',
+          technicalExplanation: 'Phishing relies on impersonation, urgency, and trust. Attackers send messages that appear legitimate, often mimicking a vendor, employer, or known service, and then prompt the user to act quickly without verifying the source.',
+          howThreatWorks: 'A malicious message creates pressure or curiosity. The user is pushed to click a link, open an attachment, or submit credentials to a lookalike site. Once the credentials or session are handed over, the attacker can act on the victim’s behalf.',
+          historicalExamples: 'Credential theft and account takeover discussions frequently describe the same pattern of impersonation and urgency across email, SMS, and messaging systems.',
+          warningSigns: ['Urgent wording', 'Unexpected attachments', 'Mismatched sender names or domains'],
+          detectionMethods: ['Email filtering', 'User awareness training', 'Domain verification and link inspection'],
+          preventionMethods: ['Verify sender identity', 'Use MFA', 'Check URLs before clicking'],
+          references: ['CISA: Phishing guidance', 'NIST: Identity and access management'],
+          keywords: ['email scam', 'credential theft', 'impersonation', 'link click']
+        },
+        {
+          name: 'Spear Phishing', category: 'SOCIAL ENGINEERING', difficulty: 'Intermediate',
+          description: 'A targeted phishing attempt tailored to a specific person, role, or organization with customized context.',
+          technicalExplanation: 'Spear phishing uses a personal detail, role information, or recent activity to increase trust and improve response rates. The malicious message often looks like a legitimate request from a coworker, supplier, or vendor.',
+          howThreatWorks: 'The attacker researches the target, then uses a relevant detail to manipulate them into taking an unsafe action, such as sending data, approving a payment, or granting access.',
+          historicalExamples: 'Targeted campaign analysis consistently emphasizes personalization and context rather than generic mass messaging as the main difference from broad phishing.',
+          warningSigns: ['Unusual requests from known contacts', 'Highly personalized language', 'Pressure to act outside normal procedures'],
+          detectionMethods: ['User validation procedures', 'Out-of-band verification', 'Security awareness and monitoring'],
+          preventionMethods: ['Confirm request authenticity', 'Train staff in escalation procedures', 'Restrict access to sensitive workflows'],
+          references: ['CISA: Social engineering guidance', 'NIST: Risk management'],
+          keywords: ['targeted campaign', 'impersonation', 'contextual lure', 'credential harvesting']
+        },
+        {
+          name: 'Identity Impersonation', category: 'SOCIAL ENGINEERING', difficulty: 'Intermediate',
+          description: 'Pretending to be an individual or organization in order to exploit trust, authority, or access.',
+          technicalExplanation: 'Identity impersonation can occur through fake accounts, spoofed email domains, social media impersonation, or in-person deception. The goal is usually to bypass verification or to gain access to information or systems.',
+          howThreatWorks: 'The attacker presents as someone the target already trusts. Instead of asking for obvious credentials, they rely on authority, familiarity, or a shared context to manipulate an action.',
+          historicalExamples: 'The pattern appears in transactional fraud, account recovery abuse, and social engineering incident reports where trust is exploited rather than technical weakness alone.',
+          warningSigns: ['Account names differ from expected identities', 'Unexpected authority requests', 'New contact methods or claims'],
+          detectionMethods: ['Identity verification checks', 'Multi-factor authentication', 'Monitoring for impersonation attempts'],
+          preventionMethods: ['Verify identities through separate channels', 'Use known communication paths', 'Train staff on escalation and verification'],
+          references: ['OWASP: Authentication best practices', 'CISA: Security awareness'],
+          keywords: ['spoofing', 'fake profile', 'trust abuse', 'pretexting']
+        },
+        {
+          name: 'Social Engineering Psychology', category: 'SOCIAL ENGINEERING', difficulty: 'Advanced',
+          description: 'The study of how attackers manipulate human decision-making through urgency, authority, curiosity, fear, and trust.',
+          technicalExplanation: 'Attackers exploit common cognitive shortcuts and social expectations. They manipulate attention and perception rather than targeting only software vulnerabilities. The result is often a user willingly performing an unsafe action.',
+          howThreatWorks: 'The adversary shapes a situation in which the user feels compelled to act before verifying. The attack relies on emotional pressure, urgency, or the authority of a person who appears credible.',
+          historicalExamples: 'Security research and awareness resources repeatedly show that manipulation succeeds when users are rushed, overloaded, or not given a clear verification path.',
+          warningSigns: ['High-pressure language', 'Urgency or fear cues', 'Requests that bypass normal process'],
+          detectionMethods: ['Awareness training', 'Behavior and incident review', 'Process design that includes verification'],
+          preventionMethods: ['Create friction for sensitive actions', 'Teach verification habits', 'Reduce pressure and ambiguity in workflows'],
+          references: ['CISA: Social engineering guidance', 'NIST: Human factors'],
+          keywords: ['psychology', 'authority', 'urgency', 'cognitive bias']
+        },
+        {
+          name: 'Online Scams', category: 'SOCIAL ENGINEERING', difficulty: 'Beginner',
+          description: 'Fraudulent schemes that use deception, false urgency, or fake opportunities to extract money, data, or trust.',
+          technicalExplanation: 'Scams often combine social engineering, false promises, and pressure to act quickly. They may involve fake offers, fake support, impersonation, or deceptive financial requests.',
+          howThreatWorks: 'The attacker frames a situation as urgent or lucrative. The victim is nudged to pay, disclose information, or transfer access, often before any verification or review takes place.',
+          historicalExamples: 'Consumer fraud and account-support scam patterns illustrate the recurrence of trust exploitation, pressure, and urgency across digital channels.',
+          warningSigns: ['Too-good-to-be-true offers', 'Pressure for immediate payment', 'Requests that bypass channel verification'],
+          detectionMethods: ['Verification of payment requests', 'User education', 'Pattern tracking and reporting'],
+          preventionMethods: ['Use verified contact paths', 'Never pay under pressure', 'Report suspicious requests'],
+          references: ['FTC guidance on scams', 'CISA: Employee awareness'],
+          keywords: ['fraud', 'payment scam', 'fake support', 'deception']
+        },
+        {
+          name: 'DDoS Concepts', category: 'NETWORK SECURITY', difficulty: 'Beginner',
+          description: 'Distributed denial-of-service attacks overload a service or network with excessive traffic, reducing normal availability.',
+          technicalExplanation: 'A DDoS attack tries to exhaust capacity—bandwidth, compute resources, or application processing—so legitimate users cannot reach a service. The attack may be volumetric, protocol-based, or application-layer focused.',
+          howThreatWorks: 'The attacker coordinates many devices or endpoints to send requests simultaneously. The target experiences resource exhaustion or traffic saturation, causing delays, degradation, or outages.',
+          historicalExamples: 'Public reports and security analysis explain how capacity exhaustion and traffic amplification are used to deny service without necessarily compromising the target system itself.',
+          warningSigns: ['Sudden traffic spikes', 'Service latency or timeouts', 'Connectivity degradation'],
+          detectionMethods: ['Traffic baselining', 'Rate limiting', 'CDN and network scrubbing'],
+          preventionMethods: ['Traffic filtering', 'Rate controls', 'Distributed service design and redundancy'],
+          references: ['CISA: Denial of service guidance', 'Cloudflare: DDoS resources'],
+          keywords: ['availability', 'traffic saturation', 'botnet', 'rate limit']
+        },
+        {
+          name: 'DNS Security', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
+          description: 'The protection and integrity of domain name system records and resolution logic that route traffic to services.',
+          technicalExplanation: 'DNS translates names into addresses and underpins internet navigation. If DNS records are altered, users can be sent to malicious infrastructure, redirected to lookalike websites, or prevented from reaching legitimate services.',
+          howThreatWorks: 'Attackers may abuse DNS resolution, cache poisoning, or malicious records to re-route traffic or create confusion. This turns a trusted name into a controlled destination without changing the user’s behavior consciously.',
+          historicalExamples: 'DNS abuse and traffic redirection discussions show how attackers often use trust in names to bypass user suspicion and manipulate access.',
+          warningSigns: ['Unexpected redirects', 'Name resolution changes', 'Certificate mismatches or unreachable services'],
+          detectionMethods: ['DNS monitoring', 'Resolver validation', 'Signed DNS records and logs'],
+          preventionMethods: ['Secure DNS configuration', 'Use DNSSEC and hardened resolvers', 'Monitor unusual record changes'],
+          references: ['ICANN DNSSEC overview', 'CISA DNS guidance'],
+          keywords: ['resolver', 'DNSSEC', 'redirection', 'records']
+        },
+        {
+          name: 'Man-in-the-Middle', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
+          description: 'An attacker intercepts communications between two parties and relays or alters their data without their knowledge.',
+          technicalExplanation: 'MITM attacks exploit poor trust boundaries, insecure channels, or weak certificate verification. The attacker sits between a client and server, capturing data or modifying content before forwarding it.',
+          howThreatWorks: 'On an unsecured or compromised network, the attacker can intercept traffic and make it appear as if the client is still communicating with the intended server. The communication channel is then controlled by the attacker.',
+          historicalExamples: 'Security discussions of insecure wireless and untrusted networks regularly cover how interception is possible without either endpoint noticing unless strong authentication or encryption is in place.',
+          warningSigns: ['Unexpected certificate warnings', 'Unexpected login prompts', 'Traffic shows irregular routing or spoofed hosts'],
+          detectionMethods: ['TLS verification', 'Certificate inspection', 'Wireless security controls'],
+          preventionMethods: ['Use encrypted protocols', 'Validate certificates', 'Avoid untrusted wireless networks'],
+          references: ['OWASP: Transport Layer Security', 'NIST: TLS guidance'],
+          keywords: ['intercept', 'relay', 'certificate', 'network sniffing']
+        },
+        {
+          name: 'Network Monitoring', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
+          description: 'The process of observing traffic, services, and flows to detect anomalies, misuse, or security issues.',
+          technicalExplanation: 'Monitoring looks at packet and flow metadata, endpoint behavior, and service health to understand whether traffic is normal or suspicious. It is essential for detection, investigation, and response.',
+          howThreatWorks: 'Anomalies are identified by looking for unusual connections, long-lived sessions, repeated failed attempts, or impossible traffic patterns that do not match expected baselines.',
+          historicalExamples: 'Security operations centers rely on baseline intelligence and alert triage to identify suspicious traffic spikes or unusual communication patterns from internal or external systems.',
+          warningSigns: ['Unexpected connection spreads', 'One-way or repeated failed attempts', 'High latency or unknown ports'],
+          detectionMethods: ['Netflow analysis', 'IDS/IPS alerts', 'Baseline anomaly detection'],
+          preventionMethods: ['Deploy monitoring tools', 'Review logs regularly', 'Establish incident response playbooks'],
+          references: ['CISA: Monitoring and logging guidance', 'MITRE ATT&CK: Network behaviors'],
+          keywords: ['netflow', 'telemetry', 'soc', 'anomaly detection']
+        },
+        {
+          name: 'Network Vulnerabilities', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
+          description: 'Weaknesses in protocols, services, or infrastructure that allow attackers to impact integrity, confidentiality, or availability.',
+          technicalExplanation: 'Network vulnerabilities are flaws in how services or devices handle traffic, authentication, or trust. They may be caused by software bugs, insecure defaults, or poor segmentation.',
+          howThreatWorks: 'Attackers discover route, service, or protocol weaknesses and use those openings to access systems, tunnel traffic, or overwhelm critical infrastructure.',
+          historicalExamples: 'Security advisories often document weaknesses in exposed services, authentication logic, or network implementations that become exploitable through protocol-level interactions.',
+          warningSigns: ['Unexpected open ports', 'Legacy protocols enabled', 'Service misconfigurations or weak auth'],
+          detectionMethods: ['Vulnerability scanning', 'Configuration review', 'Patch validation'],
+          preventionMethods: ['Patch promptly', 'Restrict access', 'Use segmentation and monitoring'],
+          references: ['CISA advisories', 'OWASP ASVS'],
+          keywords: ['exposed services', 'misconfiguration', 'patching', 'service weakness']
+        },
+        {
+          name: 'SQL Injection', category: 'WEB SECURITY', difficulty: 'Intermediate',
+          description: 'Untrusted input is inserted into a database query in a way that alters the intended query logic.',
+          technicalExplanation: 'When application code concatenates user-controlled input into SQL statements without proper sanitization or parameterization, an attacker may alter the logic and force unintended database operations.',
+          howThreatWorks: 'The attacker supplies special input that breaks the syntax of the query. The database interprets the injected payload as part of the logic, enabling unauthorized reads or modifications.',
+          historicalExamples: 'Injection issues remain a recurring application security theme because many systems still handle user input carelessly in query construction.',
+          warningSigns: ['Unexpected query output', 'Authentication bypass', 'Error messages revealing query structure'],
+          detectionMethods: ['Input validation', 'Prepared statements', 'Web application firewall and testing'],
+          preventionMethods: ['Use parameterized queries', 'Least privilege database access', 'Validate and encode data'],
+          references: ['OWASP Top 10', 'OWASP SQL Injection Prevention Cheat Sheet'],
+          keywords: ['database', 'injection', 'user input', 'query manipulation']
+        },
+        {
+          name: 'Cross-Site Scripting', category: 'WEB SECURITY', difficulty: 'Intermediate',
+          description: 'An attacker injects script content into a web page so it executes in a victim’s browser.',
+          technicalExplanation: 'XSS lets attackers run malicious JavaScript in a browser context where the victim is already authenticated or trusted. This can steal session information, alter page content, or trigger actions in the interface.',
+          howThreatWorks: 'An unsafe reflection or stored input path allows attacker-controlled content into the page. When the browser renders it, the script executes with the victim’s trust and origin.',
+          historicalExamples: 'Reflected and stored XSS remain classic web flaws because they exploit trust in browser rendering and origin boundaries.',
+          warningSigns: ['Unexpected popups', 'Altered page content', 'Session issues after visiting a page'],
+          detectionMethods: ['Output encoding', 'Content security policy', 'Security testing'],
+          preventionMethods: ['Encode output', 'Sanitize user input', 'Use CSP and secure templates'],
+          references: ['OWASP XSS', 'MDN: Content Security Policy'],
+          keywords: ['javascript', 'reflected', 'DOM', 'browser execution']
+        },
+        {
+          name: 'CSRF', category: 'WEB SECURITY', difficulty: 'Intermediate',
+          description: 'Cross-site request forgery tricks a victim’s browser into performing an action in a trusted site without their intent.',
+          technicalExplanation: 'A CSRF attack abuses authenticated sessions by sending a cross-site request that the browser includes with cookies or other session context. The target site accepts it as if it came from the user.',
+          howThreatWorks: 'An attacker causes the browser to submit a request to a trusted application, often via hidden form fields, images, or AJAX requests. The user never intended that action, but the browser still sends the authenticated request.',
+          historicalExamples: 'State-changing actions such as transfers, preferences, or account changes are classic CSRF targets because the application trusts the browser session too much.',
+          warningSigns: ['Unexpected state changes', 'Authentication context used in cross-site flow', 'Incomplete origin validation'],
+          detectionMethods: ['CSRF tokens', 'SameSite cookie attributes', 'Origin checks'],
+          preventionMethods: ['Require tokens on state-changing requests', 'Use SameSite and secure cookies', 'Validate request origins'],
+          references: ['OWASP CSRF Prevention Cheat Sheet'],
+          keywords: ['state change', 'forged request', 'origin', 'session abuse']
+        },
+        {
+          name: 'Session Security', category: 'WEB SECURITY', difficulty: 'Intermediate',
+          description: 'The controls used to maintain and protect a user’s authenticated state across requests and browser sessions.',
+          technicalExplanation: 'Sessions track user state after login. If session identifiers are predictable, exposed, or reused improperly, attackers may hijack the user’s valid session and impersonate them.',
+          howThreatWorks: 'The attacker obtains the session token through interception, theft, or prediction. The application then treats the attacker’s requests as if they came from the genuine user, bypassing the authentication steps entirely.',
+          historicalExamples: 'Session management issues often appear in weak cookie settings, long-lived tokens, or abusive token rotation logic.',
+          warningSigns: ['Unexpected account access', 'Multiple sessions across devices', 'Session fixation or token reuse'],
+          detectionMethods: ['Secure cookies', 'Session rotation', 'Activity monitoring'],
+          preventionMethods: ['Use strong random tokens', 'Rotate tokens on privilege change', 'Set proper cookie flags'],
+          references: ['OWASP Session Management Cheat Sheet'],
+          keywords: ['cookies', 'session IDs', 'session hijack', 'token management']
+        },
+        {
+          name: 'Authentication Vulnerabilities', category: 'WEB SECURITY', difficulty: 'Advanced',
+          description: 'Weaknesses in identity verification or access control that let users bypass controls or impersonate other users.',
+          technicalExplanation: 'Authentication bugs can appear as weak password policies, poor MFA implementation, insecure reset flows, or logic mistakes in credential evaluation. These flaws undermine trust and often allow unauthorized access without direct exploitation of the system’s core software.',
+          howThreatWorks: 'An attacker finds a path where the system accepts a bad credential, allows bruteforce, or trusts an unvalidated identity signal. Once accepted, the system grants access beyond the intended boundary.',
+          historicalExamples: 'Authentication issues recur because identity logic is difficult to get right at scale, especially when combined with account recovery and centralized trust flows.',
+          warningSigns: ['Bruteforce attempts', 'Unexpected login success', 'Reset or MFA bypass logic'],
+          detectionMethods: ['Security testing', 'Rate limiting', 'MFA and alerting'],
+          preventionMethods: ['Strong password policy', 'MFA and phishing resistance', 'Secure account recovery'],
+          references: ['OWASP Authentication Cheat Sheet', 'NIST Digital Identity'],
+          keywords: ['login bypass', 'MFA', 'account takeover', 'reset flow']
+        },
+        {
+          name: 'Privilege Escalation', category: 'SYSTEM SECURITY', difficulty: 'Advanced',
+          description: 'An attacker gains access to higher rights than intended, usually by abusing a flaw, misconfiguration, or weak boundary enforcement.',
+          technicalExplanation: 'Privilege escalation abuses the trust model of an operating system or application. A low-privilege actor exploits a bug, service path, or configuration issue to obtain more control than their account should grant.',
+          howThreatWorks: 'The attacker first gains a foothold, then reveals a path that allows them to move from a restricted context to a privileged one. The sequence often includes code execution, service abuse, or token misuse.',
+          historicalExamples: 'Privilege escalation is a recurring theme in security advisories because it turns a low-impact foothold into a much stronger and more damaging position.',
+          warningSigns: ['Unexpected admin actions', 'Service escalations', 'Access to protected files or policies'],
+          detectionMethods: ['Access reviews', 'Behavioral monitoring', 'Privilege auditing'],
+          preventionMethods: ['Least privilege', 'Patch vulnerabilities', 'Harden service boundaries'],
+          references: ['MITRE ATT&CK: Privilege Escalation'],
+          keywords: ['admin rights', 'token abuse', 'service hijack', 'restricted access']
+        },
+        {
+          name: 'Zero-Day Vulnerabilities', category: 'SYSTEM SECURITY', difficulty: 'Advanced',
+          description: 'A software flaw that is unknown to the vendor or not yet patched, leaving defenders without a known fix.',
+          technicalExplanation: 'Zero-day vulnerabilities are dangerous because there is no official remediating patch and malicious actors may discover or weaponize them before defenders know what to look for.',
+          howThreatWorks: 'An attacker uses the unknown flaw to achieve execution, bypass controls, or access restricted data before security teams can respond. The risk is amplified by the lack of a public patch and the difficulty of detection.',
+          historicalExamples: 'Security advisories and vendor disclosures regularly describe the risk of unknown issues and why rapid patching and robust monitoring remain critical.',
+          warningSigns: ['Unusual exploitation symptoms', 'Behavior not matching baseline', 'No known advisory yet'],
+          detectionMethods: ['Threat hunting', 'Behavioral analytics', 'Rapid patch validation'],
+          preventionMethods: ['Patch quickly when available', 'Reduce exposure surface', 'Harden systems and isolate critical assets'],
+          references: ['CISA: Vulnerability management guidance', 'NIST: Secure software development'],
+          keywords: ['unknown flaw', 'exploit', 'patch gap', 'weaponized bug']
+        },
+        {
+          name: 'Misconfigurations', category: 'SYSTEM SECURITY', difficulty: 'Beginner',
+          description: 'Security settings that are weak, missing, or incorrectly applied, leaving critical resources exposed or easier to abuse.',
+          technicalExplanation: 'Misconfigurations are often simple but impactful. They can expose a service, leave admin interfaces open, or allow overly broad permissions that attackers can exploit quickly.',
+          howThreatWorks: 'A system is deployed with insecure defaults or incomplete controls. Because the mistake is structural rather than a complex exploit, it can be abused repeatedly by attackers who know the exposure path.',
+          historicalExamples: 'Misconfiguration analysis appears in many security assessments because default settings, permissive firewall rules, or weak identity boundaries often create avoidable exposure.',
+          warningSigns: ['Open ports or services', 'Overly broad permissions', 'Unexpected admin access'],
+          detectionMethods: ['Configuration baselines', 'Security review', 'Automated posture checks'],
+          preventionMethods: ['Use hardened baselines', 'Review access rights', 'Automate configuration checks'],
+          references: ['CISA: Configuration guidance', 'NIST: Security configuration'],
+          keywords: ['default settings', 'open access', 'weak policy', 'hardening gap']
+        },
+        {
+          name: 'Operating System Security', category: 'SYSTEM SECURITY', difficulty: 'Intermediate',
+          description: 'The controls, permissions, and policies that keep an operating system trustworthy and resilient against abuse.',
+          technicalExplanation: 'Operating system security focuses on user accounts, access control, process isolation, patching, logging, and secure defaults. It defines the trust boundaries the system relies on to protect files, services, and identities.',
+          howThreatWorks: 'Attackers target OS weaknesses such as weak permissions, service execution paths, or vulnerable drivers. Once a foothold exists, they often seek to increase control or move laterally.',
+          historicalExamples: 'Public advisories emphasize the importance of permissions, patch levels, and secure defaults because weak OS controls make many higher-layer attacks easier to perform.',
+          warningSigns: ['Unexpected system changes', 'Privilege drift', 'Processes running without cause'],
+          detectionMethods: ['Auditing', 'Integrity checks', 'Process analysis'],
+          preventionMethods: ['Harden the OS', 'Use least privilege', 'Apply patches promptly'],
+          references: ['NIST: OS security guidance', 'CISA: Secure config guidance'],
+          keywords: ['permissions', 'process isolation', 'drivers', 'secure defaults']
+        },
+        {
+          name: 'Patch Management', category: 'SYSTEM SECURITY', difficulty: 'Beginner',
+          description: 'The process of identifying, testing, prioritizing, and deploying updates that close known security weaknesses.',
+          technicalExplanation: 'Patch management is how an organization turns known security issues into a controlled remediation process. Without it, known vulnerabilities remain exposed long enough for attackers to exploit them.',
+          howThreatWorks: 'Attackers look for systems that are exposed and unpatched. Since known issues remain accessible, exploitation becomes cheaper and more predictable than trying to discover fresh flaws.',
+          historicalExamples: 'Patch management remains essential because the majority of security incidents begin with a known issue that was not addressed in time or not prioritized correctly.',
+          warningSigns: ['Outdated software inventory', 'No patch windows', 'Unclear ownership of updates'],
+          detectionMethods: ['Asset inventory', 'Patch reporting', 'Version and exposure monitoring'],
+          preventionMethods: ['Prioritize critical risk', 'Automate updates where safe', 'Test patches before deployment'],
+          references: ['CISA: Vulnerability management', 'NIST: Secure software'],
+          keywords: ['updates', 'vulnerability fix', 'risk prioritization', 'remediation']
+        },
+        {
+          name: 'Log Analysis', category: 'DIGITAL FORENSICS', difficulty: 'Beginner',
+          description: 'Reviewing records of activity to reconstruct events, track access, and identify suspicious behavior.',
+          technicalExplanation: 'Logs preserve the digital history of applications, hosts, and network systems. By correlating timestamps, source addresses, user activity, and process behavior, investigators can reconstruct what happened and when.',
+          howThreatWorks: 'An attacker may leave traces in logs, even when they hide their activity elsewhere. Investigators compare baseline patterns against anomalies, then validate the timeline with other evidence.',
+          historicalExamples: 'Forensic exercises and incident reviews repeatedly show that log integrity and chronology matter as much as the content itself, especially when reconstructing a sequence of events.',
+          warningSigns: ['Unusual login times', 'Unexpected service restarts', 'Failed commands or alerts'],
+          detectionMethods: ['Centralized log collection', 'Correlation across sources', 'Timeline building'],
+          preventionMethods: ['Protect log integrity', 'Centralize collection', 'Monitor for suspicious access'],
+          references: ['NIST: Logging guidance', 'CISA: Incident response guidance'],
+          keywords: ['audit trail', 'timeline', 'alerts', 'correlation']
+        },
+        {
+          name: 'Incident Response', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
+          description: 'The structured process of handling a suspected security event to contain damage, preserve evidence, and recover safely.',
+          technicalExplanation: 'Incident response is a set of operational steps: triage, containment, eradication, recovery, and lessons learned. It depends on clear responsibilities, evidence handling, and a calm decision path under pressure.',
+          howThreatWorks: 'The team identifies a suspicious event, creates a pace of response, and works to limit lateral movement or data loss while maintaining forensic integrity. The goal is to restore operations without damaging evidence.',
+          historicalExamples: 'Case response procedures consistently emphasize containment first, then evidence preservation, because a scattered or rushed response can destroy the ability to understand what happened.',
+          warningSigns: ['Rapid escalation of events', 'Detection rules firing', 'Unclear ownership of systems'],
+          detectionMethods: ['Playbooks', 'Log correlation', 'Threat intelligence'] ,
+          preventionMethods: ['Prepare runbooks', 'Define escalation paths', 'Practice exercises'],
+          references: ['NIST Computer Security Incident Handling Guide', 'CISA responders hub'],
+          keywords: ['containment', 'triage', 'evidence', 'recovery']
+        },
+        {
+          name: 'File Analysis', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
+          description: 'Inspecting file properties, metadata, structure, and behavior to understand origin, purpose, and impact.',
+          technicalExplanation: 'File analysis looks at hashes, timestamps, embedded resources, metadata, and dynamic behavior. It helps analysts determine whether a file is benign, malicious, or part of a wider set of artifacts.',
+          howThreatWorks: 'Attackers often rely on executable or script files to carry malicious logic. By analyzing the file’s structure and behavior, investigators can determine the intent without relying on assumptions.',
+          historicalExamples: 'Malware triage and forensics work frequently use file metadata, embedded strings, and behavioral checks to determine what a file was designed to do.',
+          warningSigns: ['Unexpected file creation', 'Unknown extensions', 'Embedded macros or scripts'],
+          detectionMethods: ['Hash comparison', 'Static review', 'Sandbox analysis'],
+          preventionMethods: ['Limit script execution', 'Review file metadata', 'Quarantine unknown files'],
+          references: ['MITRE ATT&CK: Analysis techniques'],
+          keywords: ['hashes', 'artifacts', 'static analysis', 'triage']
+        },
+        {
+          name: 'Digital Evidence', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
+          description: 'Information collected from systems or networks that can be used to support investigation and explanation of events.',
+          technicalExplanation: 'Digital evidence includes logs, file artifacts, volatile memory, browser data, and network records. Its value depends on integrity, reproducibility, and an understanding of how each source was captured.',
+          howThreatWorks: 'Investigators preserve and collect artifacts in sequence so the evidence reflects the circumstances at the time of the event. This allows them to explain what happened and support defensible conclusions.',
+          historicalExamples: 'Evidence handling and chain-of-custody concepts repeatedly stress integrity because a compromised or poorly captured artifact can mislead an investigation.',
+          warningSigns: ['Missing timestamps', 'Altered system state', 'Unclear source ownership'],
+          detectionMethods: ['Imaging and hashing', 'Timeline creation', 'Preservation procedures'],
+          preventionMethods: ['Document collection methods', 'Protect forensic copies', 'Maintain clear evidence workflows'],
+          references: ['NIST digital evidence guidance'],
+          keywords: ['artifacts', 'timeline', 'preservation', 'integrity']
+        },
+        {
+          name: 'Malware Analysis Concepts', category: 'DIGITAL FORENSICS', difficulty: 'Advanced',
+          description: 'The examination of malicious code and behavior to understand its capabilities, delivery, and impact.',
+          technicalExplanation: 'Malware analysis includes static inspection, dynamic behavior monitoring, and the reconstruction of execution steps. Analysts build a model of what the file does without assuming the author’s intent from the file name alone.',
+          howThreatWorks: 'By observing how the malware interacts with the system, persists, executes, and communicates, analysts derive its operational model and identify indicators that can be used for detection and blocking.',
+          historicalExamples: 'Analysis work in public cyber education consistently demonstrates that behavior and execution context matter as much as the code strings or file name.',
+          warningSigns: ['Unexpected process chains', 'Encoded commands', 'Hidden persistence methods'],
+          detectionMethods: ['Sandboxing', 'Behavioral analysis', 'YARA rules and network indicators'],
+          preventionMethods: ['Separate analysis environments', 'Use controlled lab systems', 'Document findings and indicators'],
+          references: ['CISA malware analysis guidance', 'MITRE ATT&CK'],
+          keywords: ['sandbox', 'static', 'dynamic', 'indicators']
+        },
+        {
+          name: 'Firewalls', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
+          description: 'Security controls that filter traffic based on policy, allowing legitimate communication while blocking or restricting unauthorized paths.',
+          technicalExplanation: 'Firewalls inspect traffic according to rules such as source, destination, protocol, and port. They enforce policy boundaries between networks or between a system and the wider internet.',
+          howThreatWorks: 'Traffic that violates the configured policy is blocked. This reduces the attack surface and creates a predictable boundary that defenders can tune and monitor.',
+          historicalExamples: 'Network segmentation and perimeter filtering remain central to defensive design because they provide a simple, enforceable barrier against known attack paths.',
+          warningSigns: ['Blocked traffic events', 'Unexpected firewall rule changes', 'Unapproved port exposure'],
+          detectionMethods: ['Policy review', 'Traffic logs', 'Access validation'],
+          preventionMethods: ['Harden rules', 'Restrict exposure', 'Review changes regularly'],
+          references: ['NIST firewall guidance', 'CISA network defenses'],
+          keywords: ['ingress', 'egress', 'rules', 'segmentation']
+        },
+        {
+          name: 'Encryption', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
+          description: 'The use of cryptographic methods to protect confidentiality, integrity, and trust in data and communication.',
+          technicalExplanation: 'Encryption turns readable data into a form that is intentionally hard to interpret without the right key or algorithm. It protects stored data, network traffic, and sensitive communications from unauthorized access.',
+          howThreatWorks: 'Put simply, the sender or system uses a key to transform content so that only authorized parties can reverse the operation. This helps reduce exposure if data is intercepted or stolen.',
+          historicalExamples: 'Modern security practice depends on encryption in transit and at rest because it narrows the impact of theft and network interception.',
+          warningSigns: ['Weak or legacy crypto settings', 'No TLS on services', 'Stored data without protection'],
+          detectionMethods: ['Certificate checks', 'Config review', 'Cryptography policy controls'],
+          preventionMethods: ['Use modern protocols', 'Manage keys carefully', 'Protect data in transit and at rest'],
+          references: ['NIST cryptography guidance', 'OWASP TLS guidance'],
+          keywords: ['cipher', 'keys', 'confidentiality', 'TLS']
+        },
+        {
+          name: 'Multi-Factor Authentication', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
+          description: 'A method that requires more than one type of verification before a user is trusted.',
+          technicalExplanation: 'MFA adds a second factor such as a token, code, or device possession to a username and password. This reduces the risk that a password alone grants unauthorized access.',
+          howThreatWorks: 'A password might be compromised or guessed, but the attacker still needs the second factor. That additional challenge narrows the number of paths by which a bad actor can access a valid account.',
+          historicalExamples: 'Account takeover prevention commonly relies on MFA because it blocks a broad class of credential-based attacks even when credentials are weak or leaked.',
+          warningSigns: ['Users bypass MFA prompts', 'SMS-only or legacy strong authentication issues', 'Unexpected reset requests'],
+          detectionMethods: ['MFA rollouts', 'Authentication reporting', 'Risk-based policies'],
+          preventionMethods: ['Enforce MFA everywhere', 'Use phishing-resistant forms where possible', 'Review exceptions'],
+          references: ['NIST Digital Identity', 'CISA MFA guidance'],
+          keywords: ['2FA', 'one-time code', 'token', 'identity proofing']
+        },
+        {
+          name: 'Password Security', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
+          description: 'The practices and controls that protect user credentials from guessing, theft, and reuse across systems.',
+          technicalExplanation: 'Strong password security combines password quality, password managers, risk-aware reset flows, and safe storage techniques. The goal is to make credential compromise significantly harder while reducing user friction where appropriate.',
+          howThreatWorks: 'Attackers try to guess, brute-force, or steal credentials. Without strong controls, a compromised password may be enough to access a user’s account, email, or internal systems.',
+          historicalExamples: 'Credential compromise remains one of the most common attack themes because password reuse and weak policies create long-lived opportunity for attackers.',
+          warningSigns: ['Reused passwords', 'No MFA', 'Password resets without verification'],
+          detectionMethods: ['Password policy review', 'Account monitoring', 'Leak detection'],
+          preventionMethods: ['Use password managers', 'Avoid reuse', 'Enforce MFA and reset verification'],
+          references: ['NIST Digital Identity guidelines'],
+          keywords: ['credential storage', 'breach', 'reuse', 'guessing']
+        },
+        {
+          name: 'System Hardening', category: 'DEFENSIVE SECURITY', difficulty: 'Intermediate',
+          description: 'Reducing the attack surface of systems by removing unnecessary services, tightening permissions, and applying baseline security controls.',
+          technicalExplanation: 'Hardening is about reducing what a system does and how exposed it is. It removes unnecessary privileges, undesirable services, weak defaults, and open trust relationships that attackers would otherwise exploit.',
+          howThreatWorks: 'Attackers prefer easy access paths. By reducing those paths, defenders increase the work required for exploitation and shrink the attack surface for lateral movement and privilege abuse.',
+          historicalExamples: 'Security baselines, workstation hardening guides, and service minimization all rely on the same idea: fewer attack paths means lower risk.',
+          warningSigns: ['Unneeded services or accounts', 'Broad permissions', 'Default or legacy settings left active'],
+          detectionMethods: ['Baseline review', 'Policy compliance checks', 'Configuration monitoring'],
+          preventionMethods: ['Disable unnecessary features', 'Restrict rights', 'Automate secure configuration'],
+          references: ['CISA hardening guidance'],
+          keywords: ['baseline', 'attack surface', 'permissions', 'service minimization']
+        },
+        {
+          name: 'Security Monitoring', category: 'DEFENSIVE SECURITY', difficulty: 'Intermediate',
+          description: 'Ongoing observation of systems and networks for suspicious changes, access, or behavior.',
+          technicalExplanation: 'Monitoring combines endpoint data, identity logs, network flows, and alerts to detect suspicious behavior at the moment it matters. It helps defenders identify slow compromise, misuse, and attack progression.',
+          howThreatWorks: 'An attacker leaves traces through new processes, failed logins, unusual scripts, account access, or outbound behavior. Monitoring surfaces those patterns before they become full-blown compromise.',
+          historicalExamples: 'Detection and analyst workflows are built around signal quality and context: normal behavior is identified first, then anomalies are examined before responding.',
+          warningSigns: ['Unexpected alerts', 'Repeated failures', 'New processes or access patterns'],
+          detectionMethods: ['SIEM review', 'Endpoint telemetry', 'Behavioral alerts'],
+          preventionMethods: ['Collect useful telemetry', 'Tune alerts carefully', 'Respond to high-confidence detections'],
+          references: ['CISA monitoring guidance', 'MITRE ATT&CK detection tactics'],
+          keywords: ['SIEM', 'alerts', 'telemetry', 'anomaly detection']
+        }
+      ];
+
+      const researchArticles = [
+        {
+          title: 'The practical value of threat modeling',
+          category: 'Threat analysis',
+          date: '2026-10-11',
+          readTime: '6 min read',
+          author: 'VØIDSKY',
+          summary: 'Threat modeling helps teams map trust boundaries, identify risk pathways, and prioritize the controls that matter most before a system grows complex.',
+          references: ['OWASP Threat Modeling', 'CISA Cybersecurity Awareness'],
+          tag: 'Research'
+        },
+        {
+          title: 'Defensive defaults for web applications',
+          category: 'Web security',
+          date: '2026-10-25',
+          readTime: '8 min read',
+          author: 'VØIDSKY',
+          summary: 'Strong defaults reduce the need for heroic defense. Secure cookies, strict content policies, validation, and isolation help keep user sessions and application trust boundaries intact.',
+          references: ['OWASP Application Security Verification Standard', 'MDN Security Guidance'],
+          tag: 'Guide'
+        },
+        {
+          title: 'Digital privacy in a monitored internet',
+          category: 'Privacy',
+          date: '2026-11-01',
+          readTime: '7 min read',
+          author: 'VØIDSKY',
+          summary: 'Privacy is not a single product—it is a collection of defaults, habits, and system boundaries that limit unnecessary exposure across messages, devices, and services.',
+          references: ['CISA Cybersecurity Tips', 'NIST Privacy Framework'],
+          tag: 'Guide'
+        },
+        {
+          title: 'Security advisories and understanding exposure',
+          category: 'Advisory',
+          date: '2026-11-05',
+          readTime: '5 min read',
+          author: 'VØIDSKY',
+          summary: 'Official advisories matter because they provide context about impact, attack patterns, and remediation sequencing when threats become actionable.',
+          references: ['CISA advisories', 'MITRE ATT&CK'],
+          tag: 'Briefing'
+        }
+      ];
+
+      const learningPaths = [
+        {
+          level: 'Beginner',
+          title: 'Cybersecurity fundamentals',
+          progress: 28,
+          lessons: ['Cybersecurity fundamentals', 'Internet infrastructure', 'Basic encryption', 'Password security', 'Online privacy'],
+          description: 'Build the language and mental models needed to understand access, risk, and trust in digital systems.'
+        },
+        {
+          level: 'Intermediate',
+          title: 'Network and application security',
+          progress: 52,
+          lessons: ['Network security', 'Web application security', 'Linux security', 'Digital forensics', 'Threat analysis'],
+          description: 'Move from theory to operational understanding through monitoring, application risk, and attack-path analysis.'
+        },
+        {
+          level: 'Advanced',
+          title: 'Defensive security engineering',
+          progress: 76,
+          lessons: ['Security architecture', 'Vulnerability research concepts', 'Incident response', 'Defensive security engineering'],
+          description: 'Learn how resilient systems are designed, monitored, and improved under real operational pressure.'
+        }
+      ];
+
+      const detailCard = document.getElementById('detail-card');
+      const threatResults = document.getElementById('threat-results');
+      const categoryFilter = document.getElementById('category-filter');
+      const difficultyFilter = document.getElementById('difficulty-filter');
+      const globalSearch = document.getElementById('global-search');
+      const resultCount = document.getElementById('result-count');
+      const resetButton = document.getElementById('reset-filters');
+
+      function populateCategories() {
+        const options = categories
+          .map(category => `<option value="${category.name}">${category.name}</option>`)
+          .join('');
+        categoryFilter.innerHTML = '<option value="all">All categories</option>' + options;
+      }
+
+      function getFilteredEntries() {
+        const searchTerm = globalSearch.value.trim().toLowerCase();
+        const selectedCategory = categoryFilter.value;
+        const selectedDifficulty = difficultyFilter.value;
+
+        return threatEntries.filter(entry => {
+          const matchesCategory = selectedCategory === 'all' || entry.category === selectedCategory;
+          const matchesDifficulty = selectedDifficulty === 'all' || entry.difficulty === selectedDifficulty;
+          const searchText = [entry.name, entry.category, entry.description, entry.keywords.join(' ')].join(' ').toLowerCase();
+          const matchesSearch = !searchTerm || searchText.includes(searchTerm);
+          return matchesCategory && matchesDifficulty && matchesSearch;
+        });
+      }
+
+      function renderThreats() {
+        const filtered = getFilteredEntries();
+        resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? 'entry' : 'entries'}`;
+
+        if (!filtered.length) {
+          threatResults.innerHTML = '<div class="empty-state">No matching entries. Adjust your filters and try again.</div>';
+          return;
+        }
+
+        threatResults.innerHTML = filtered.map(entry => `
+          <article class="threat-item" tabindex="0" data-name="${entry.name}">
+            <div class="threat-head">
+              <h3>${entry.name}</h3>
+              <span class="pill">${entry.difficulty}</span>
+            </div>
+            <div class="threat-meta">
+              <span>${entry.category}</span>
+              <span>•</span>
+              <span>${entry.references[0]}</span>
+            </div>
+            <p class="threat-description">${entry.description}</p>
+            <div class="threat-tags">
+              ${entry.keywords.slice(0, 4).map(tag => `<span>${tag}</span>`).join('')}
+            </div>
+          </article>
+        `).join('');
+
+        const items = document.querySelectorAll('.threat-item');
+        items.forEach(item => {
+          item.addEventListener('click', () => openThreat(item.dataset.name));
+          item.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openThreat(item.dataset.name);
+            }
+          });
+        });
+
+        if (filtered[0]) openThreat(filtered[0].name);
+      }
+
+      function openThreat(name) {
+        const entry = threatEntries.find(item => item.name === name);
+        if (!entry) return;
+
+        const related = threatEntries
+          .filter(item => item.category === entry.category && item.name !== entry.name)
+          .slice(0, 5)
+          .map(item => `<span data-name="${item.name}">${item.name}</span>`)
+          .join('');
+
+        detailCard.innerHTML = `
+          <p class="meta-label">Selected topic</p>
+          <h3>${entry.name}</h3>
+          <div class="meta">
+            <span>${entry.category}</span>
+            <span>•</span>
+            <span>${entry.difficulty}</span>
+          </div>
+          <div class="body">
+            <p>${entry.description}</p>
+            <h4>Technical explanation</h4>
+            <p>${entry.technicalExplanation}</p>
+            <h4>How the threat works</h4>
+            <p>${entry.howThreatWorks}</p>
+            <h4>Warning signs</h4>
+            <ul>${entry.warningSigns.map(item => `<li>${item}</li>`).join('')}</ul>
+            <h4>Detection methods</h4>
+            <ul>${entry.detectionMethods.map(item => `<li>${item}</li>`).join('')}</ul>
+            <h4>Prevention methods</h4>
+            <ul>${entry.preventionMethods.map(item => `<li>${item}</li>`).join('')}</ul>
+            <h4>Related topics</h4>
+            <div class="related-list">${related || '<span>None in this category</span>'}</div>
+          </div>
+        `;
+
+        detailCard.querySelectorAll('.related-list span').forEach(item => {
+          item.addEventListener('click', () => openThreat(item.dataset.name));
+        });
+      }
+
+      function renderResearch() {
+        const archiveGrid = document.getElementById('archive-grid');
+        archiveGrid.innerHTML = researchArticles.map(article => `
+          <article class="article-card">
+            <span class="tag">${article.tag}</span>
+            <h3>${article.title}</h3>
+            <div class="meta-row">
+              <span>${article.category}</span>
+              <span>•</span>
+              <span>${article.date}</span>
+              <span>•</span>
+              <span>${article.readTime}</span>
+            </div>
+            <p>${article.summary}</p>
+            <div class="meta-row">
+              <span>Author: ${article.author}</span>
+            </div>
+            <div class="mini">Sources: ${article.references.join(' • ')}</div>
+          </article>
+        `).join('');
+      }
+
+      function renderLearning() {
+        const learningGrid = document.getElementById('learning-grid');
+        learningGrid.innerHTML = learningPaths.map(path => `
+          <article class="path-card">
+            <span class="tag">${path.level}</span>
+            <h3>${path.title}</h3>
+            <p>${path.description}</p>
+            <div class="progress"><span style="width: ${path.progress}%"></span></div>
+            <div class="mini">Progress: ${path.progress}%</div>
+            <ul class="path-list">
+              ${path.lessons.map(lesson => `<li>${lesson}</li>`).join('')}
+            </ul>
+          </article>
+        `).join('');
+      }
+
+      function bindFilters() {
+        [globalSearch, categoryFilter, difficultyFilter].forEach(input => {
+          input.addEventListener('input', renderThreats);
+          input.addEventListener('change', renderThreats);
+        });
+
+        resetButton.addEventListener('click', () => {
+          globalSearch.value = '';
+          categoryFilter.value = 'all';
+          difficultyFilter.value = 'all';
+          renderThreats();
+          globalSearch.focus();
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+            event.preventDefault();
+            globalSearch.focus();
+            globalSearch.select();
+          }
+        });
+
+        const toggle = document.querySelector('.mobile-toggle');
+        const nav = document.querySelector('.nav');
+        toggle.addEventListener('click', () => {
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          nav.style.display = expanded ? 'none' : 'flex';
+          nav.style.flexDirection = 'column';
+          nav.style.position = 'absolute';
+          nav.style.top = '72px';
+          nav.style.right = '20px';
+          nav.style.padding = '18px';
+          nav.style.background = 'rgba(17, 16, 28, 0.96)';
+          nav.style.border = '1px solid var(--line)';
+          nav.style.borderRadius = '12px';
+          nav.style.zIndex = '10';
+        });
+      }
+
+      function init() {
+        populateCategories();
+        renderThreats();
+        renderResearch();
+        renderLearning();
+        bindFilters();
+        document.getElementById('year').textContent = new Date().getFullYear();
+      }
+
+      init();
+    </script>
   </body>
 </html>
