@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="NØVA SYNDICATE — cybersecurity education, research archive and threat intelligence knowledge platform."
+      content="NØVA SYNDICATE — cybersecurity education, research archive, code lab, and interactive security learning environment."
     />
     <meta name="theme-color" content="#080710" />
     <title>NØVA SYNDICATE | Knowledge Archive</title>
@@ -26,7 +26,7 @@
         --panel-strong: rgba(20, 19, 30, 0.96);
         --success: #b5f9d5;
         --warning: #f8d48d;
-        --shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+        --shadow: 0 22px 55px rgba(0, 0, 0, 0.42);
         --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
         --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
         --sans: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
@@ -60,7 +60,8 @@
 
       a { color: inherit; text-decoration: none; }
       img { max-width: 100%; display: block; }
-      button, input, select { font: inherit; }
+      button, input, select, textarea { font: inherit; }
+      pre, code { font-family: var(--mono); }
 
       .shell {
         width: min(1180px, calc(100% - 48px));
@@ -270,7 +271,8 @@
       }
 
       .button,
-      .button-ghost {
+      .button-ghost,
+      .mini-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -282,9 +284,11 @@
         font: 0.7rem var(--mono);
         letter-spacing: 0.18em;
         text-transform: uppercase;
+        cursor: pointer;
       }
 
-      .button {
+      .button,
+      .mini-button {
         background: linear-gradient(135deg, rgba(165, 107, 255, 0.2), rgba(84, 37, 138, 0.14));
         box-shadow: inset 0 0 18px rgba(165, 107, 255, 0.14), 0 10px 25px rgba(84, 37, 138, 0.22);
       }
@@ -296,8 +300,10 @@
 
       .button:hover,
       .button-ghost:hover,
+      .mini-button:hover,
       .button:focus-visible,
-      .button-ghost:focus-visible {
+      .button-ghost:focus-visible,
+      .mini-button:focus-visible {
         transform: translateY(-1px);
         border-color: rgba(165, 107, 255, 0.42);
       }
@@ -431,14 +437,14 @@
       .article-grid,
       .path-grid,
       .about-grid,
-      .privacy-grid {
+      .privacy-grid,
+      .lab-grid,
+      .code-grid {
         display: grid;
         gap: 22px;
       }
 
-      .feature-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
       .feature-card,
       .research-card,
@@ -446,7 +452,9 @@
       .path-card,
       .about-panel,
       .privacy-panel,
-      .search-panel {
+      .search-panel,
+      .lab-card,
+      .code-card {
         position: relative;
         background: var(--panel);
         border: 1px solid var(--line);
@@ -458,7 +466,9 @@
       .article-card,
       .path-card,
       .about-panel,
-      .privacy-panel {
+      .privacy-panel,
+      .lab-card,
+      .code-card {
         padding: 28px 24px 24px;
       }
 
@@ -477,7 +487,9 @@
       .feature-card h3,
       .research-card h3,
       .article-card h3,
-      .path-card h3 {
+      .path-card h3,
+      .lab-card h3,
+      .code-card h3 {
         font-size: clamp(1.6rem, 2vw, 2.2rem);
         line-height: 1.06;
       }
@@ -488,14 +500,17 @@
       .path-card p,
       .about-panel p,
       .privacy-panel p,
-      .path-list li {
+      .path-list li,
+      .lab-card p,
+      .code-card p {
         color: var(--muted);
         line-height: 1.72;
       }
 
       .feature-card .mini,
       .research-card .mini,
-      .article-card .mini {
+      .article-card .mini,
+      .lab-card .mini {
         margin-top: 18px;
         color: var(--silver);
         font: 0.6rem var(--mono);
@@ -724,7 +739,9 @@
       .article-grid,
       .path-grid,
       .about-grid,
-      .privacy-grid {
+      .privacy-grid,
+      .lab-grid,
+      .code-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
@@ -732,7 +749,9 @@
       .article-card,
       .path-card,
       .about-panel,
-      .privacy-panel {
+      .privacy-panel,
+      .lab-card,
+      .code-card {
         border-radius: 20px;
       }
 
@@ -747,9 +766,7 @@
         text-transform: uppercase;
       }
 
-      .article-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
       .path-card {
         padding-bottom: 20px;
@@ -828,6 +845,126 @@
 
       .privacy-panel li:first-child { border-top: 0; }
 
+      .code-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .code-card pre {
+        max-height: 260px;
+        overflow: auto;
+        margin: 18px 0 0;
+        padding: 16px 18px;
+        background: rgba(8, 7, 16, 0.9);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--white);
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+
+      .code-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .mini-button {
+        min-height: 36px;
+        padding: 0 14px;
+        font-size: 0.58rem;
+      }
+
+      .lab-card .lab-list {
+        list-style: none;
+        margin: 18px 0 0;
+        padding: 0;
+      }
+
+      .lab-card .lab-list li {
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      .lab-card .lab-list li:first-child { border-top: 0; }
+
+      .interactive-panel {
+        display: grid;
+        gap: 18px;
+        padding: 24px 22px;
+        background: rgba(17, 16, 28, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+
+      .interact-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .interact-tabs button {
+        background: rgba(165, 107, 255, 0.06);
+        border: 1px solid var(--line);
+        color: var(--white);
+        padding: 10px 14px;
+        border-radius: 999px;
+        font: 0.56rem var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .interact-tabs button.active {
+        background: rgba(165, 107, 255, 0.15);
+        border-color: rgba(165, 107, 255, 0.35);
+      }
+
+      .simulator-output {
+        min-height: 170px;
+        padding: 18px 16px;
+        background: rgba(8, 7, 16, 0.82);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .simulator-output h4 {
+        margin: 0 0 12px;
+        font-size: 1.15rem;
+        color: var(--white);
+      }
+
+      .simulator-output p,
+      .simulator-output li {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .simulator-output ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .lab-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .hash-box,
+      .password-box,
+      .dns-box {
+        width: 100%;
+        min-height: 44px;
+        padding: 12px 14px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--white);
+      }
+
       .not-found {
         display: grid;
         place-items: center;
@@ -895,7 +1032,9 @@
         .feature-grid,
         .research-grid,
         .article-grid,
-        .path-grid {
+        .path-grid,
+        .lab-grid,
+        .code-grid {
           grid-template-columns: 1fr;
         }
         .search-toolbar { grid-template-columns: 1fr; }
@@ -912,7 +1051,7 @@
         .info-unit + .info-unit { border-top: 1px solid var(--line); border-left: 0; }
         .section-head { align-items: start; flex-direction: column; }
         .cta-row { flex-direction: column; }
-        .button, .button-ghost { width: 100%; }
+        .button, .button-ghost, .mini-button { width: 100%; }
         .footer-inner { flex-direction: column; }
       }
 
@@ -939,9 +1078,10 @@
 
         <nav class="nav" aria-label="Main navigation">
           <a href="#home">Home</a>
-          <a href="#database">Threat Database</a>
+          <a href="#database">Knowledge Database</a>
           <a href="#research">Research</a>
-          <a href="#learning">Learning</a>
+          <a href="#code-lab">NØVA Code Lab</a>
+          <a href="#learning">Laboratories</a>
           <a href="#about">About</a>
         </nav>
 
@@ -960,8 +1100,8 @@
           <p class="eyebrow">Independent cyber research archive</p>
           <h1 id="hero-title">NØVA<br />SYNDICATE</h1>
           <p class="subtitle">“Knowledge is the ultimate form of independence.”</p>
-          <p class="slogan">Disappear from the system.</p>
-          <p class="founder-line">Founder: VØIDSKY // Established 2026</p>
+          <p class="slogan">Knowledge. Independence. Curiosity.</p>
+          <p class="founder-line">Founder: VØIDSKY // Research archive 2026</p>
 
           <div class="cta-row">
             <a class="button" href="#database">Enter the archive</a>
@@ -982,12 +1122,12 @@
 
       <div class="info-strip" aria-label="Collective details">
         <div class="info-unit">
-          <p>Collective</p>
-          <strong>NØVA SYNDICATE</strong>
+          <p>Focus</p>
+          <strong>Cybersecurity education & research</strong>
         </div>
         <div class="info-unit">
-          <p>Founder</p>
-          <strong>VØIDSKY</strong>
+          <p>Mission</p>
+          <strong>Defensive knowledge, structured learning, practical tools</strong>
         </div>
       </div>
 
@@ -999,34 +1139,13 @@
           </div>
         </div>
 
-        <div class="feature-grid">
-          <article class="feature-card">
-            <span class="tag">Malware</span>
-            <h3>Infection paths</h3>
-            <p>Understand how malicious code mutates, spreads and hides itself across endpoints and networks.</p>
-            <div class="mini">Threat behavior • Defense logic</div>
-          </article>
-
-          <article class="feature-card">
-            <span class="tag">Web security</span>
-            <h3>Application abuse</h3>
-            <p>Track the ways user input, sessions, trust boundaries and browser logic are exploited.</p>
-            <div class="mini">Injection • UX abuse</div>
-          </article>
-
-          <article class="feature-card">
-            <span class="tag">Forensics</span>
-            <h3>Evidence handling</h3>
-            <p>Learn how logs, artifacts and timelines become the backbone of defensible investigation.</p>
-            <div class="mini">Timeline • Verification</div>
-          </article>
-        </div>
+        <div class="feature-grid" id="feature-grid"></div>
       </section>
 
       <section id="database" aria-labelledby="database-title">
         <div class="section-head">
           <div>
-            <p class="micro-label">02 / Threat database</p>
+            <p class="micro-label">02 / Knowledge database</p>
             <h2 id="database-title">Cybersecurity knowledge archive</h2>
           </div>
         </div>
@@ -1037,7 +1156,7 @@
               <div class="search-toolbar">
                 <div class="field">
                   <label class="field-label" for="global-search">Search topics</label>
-                  <input id="global-search" type="search" placeholder="Search by name, description or keyword" aria-label="Search threat database" />
+                  <input id="global-search" type="search" placeholder="Search by title, tag, or keyword" aria-label="Search knowledge database" />
                 </div>
                 <div class="field">
                   <label class="field-label" for="category-filter">Category</label>
@@ -1069,12 +1188,12 @@
           <aside class="side-panel">
             <div class="detail-card" id="detail-card">
               <p class="meta-label">Selected topic</p>
-              <h3>Threat atlas</h3>
+              <h3>Knowledge atlas</h3>
               <div class="meta">
                 <span>Choose an entry</span>
               </div>
               <div class="body">
-                <p>Use the database to inspect a tactic, see how it works conceptually and review the core prevention methods.</p>
+                <p>Use the database to inspect concepts, review defensive controls, and navigate the broader cyber research archive.</p>
               </div>
             </div>
           </aside>
@@ -1092,65 +1211,98 @@
         <div class="article-grid" id="archive-grid"></div>
       </section>
 
-      <section id="learning" aria-labelledby="learning-title">
+      <section id="code-lab" aria-labelledby="code-lab-title">
         <div class="section-head">
           <div>
-            <p class="micro-label">04 / Learning center</p>
-            <h2 id="learning-title">Structured learning paths</h2>
+            <p class="micro-label">04 / NØVA Code Lab</p>
+            <h2 id="code-lab-title">Practical defensive tooling</h2>
           </div>
         </div>
 
-        <div class="path-grid" id="learning-grid"></div>
+        <div class="code-grid" id="code-lab-grid"></div>
+      </section>
+
+      <section id="learning" aria-labelledby="learning-title">
+        <div class="section-head">
+          <div>
+            <p class="micro-label">05 / Interactive learning</p>
+            <h2 id="learning-title">NØVA Laboratories</h2>
+          </div>
+        </div>
+
+        <div class="lab-grid" id="labs-grid"></div>
+
+        <div class="interactive-panel" style="margin-top: 22px;">
+          <div class="interact-tabs" id="simulator-tabs"></div>
+          <div class="simulator-output" id="simulator-output"></div>
+        </div>
       </section>
 
       <section id="about" aria-labelledby="about-title">
         <div class="section-head">
           <div>
-            <p class="micro-label">05 / About NØVA</p>
-            <h2 id="about-title">Independently founded. Quietly sharp.</h2>
+            <p class="micro-label">06 / Mission</p>
+            <h2 id="about-title">A disciplined research practice</h2>
           </div>
         </div>
 
         <div class="about-grid">
           <div class="about-panel">
-            <p>“NØVA SYNDICATE is an independently founded digital collective focused on cybersecurity education, digital awareness, technology and creative research.”</p>
-            <p>Founded by VØIDSKY.</p>
+            <p class="tag">Method</p>
+            <h3>Research grounded in defensible principles</h3>
+            <p>
+              NØVA SYNDICATE focuses on technical literacy, real-world defensive reasoning, and careful analysis of system behavior. We emphasize architecture, evidence, and repeatable controls rather than hype or noise.
+            </p>
           </div>
 
           <div class="about-panel">
-            <p>NØVA currently has one founder. There are no employees, members, certifications, or formal partnerships to claim. The archive is intentionally minimal and transparent: it teaches the principles, tools, and tradecraft behind security without pretending to be a large institution.</p>
-            <div class="principles" aria-label="Core principles">
-              <span>Knowledge.</span>
-              <span>Independence.</span>
-              <span>Curiosity.</span>
+            <p class="tag">Scope</p>
+            <h3>From fundamentals to specialized disciplines</h3>
+            <p>
+              The archive spans networking, web security, cryptography, OS hardening, digital forensics, malware analysis, privacy, and security architecture. Every article is designed to explain how a system works and how to defend it.
+            </p>
+          </div>
+
+          <div class="about-panel">
+            <p class="tag">Principles</p>
+            <div class="principles">
+              <span>Defense</span>
+              <span>Evidence</span>
+              <span>Clarity</span>
+              <span>Ethics</span>
             </div>
-          </div>
-
-          <div class="about-panel">
-            <p>Any fictional narratives and simulated incidents are clearly labeled as fiction throughout the archive.</p>
           </div>
         </div>
       </section>
 
-      <section id="privacy" aria-labelledby="privacy-title">
+      <section aria-labelledby="privacy-title">
         <div class="section-head">
           <div>
-            <p class="micro-label">06 / Privacy & Security</p>
-            <h2 id="privacy-title">Visitor-first, by design.</h2>
+            <p class="micro-label">07 / Privacy</p>
+            <h2 id="privacy-title">Responsible digital hygiene</h2>
           </div>
         </div>
 
         <div class="privacy-grid">
           <div class="privacy-panel">
-            <p>We do not collect unnecessary personal information, and we do not expose visitor data publicly. This platform is built to be static and lightweight, with no hidden tracking, credential collection, or unnecessary analytics. No passwords or sensitive credentials are requested or stored.</p>
+            <p class="tag">Field notes</p>
+            <h3>Security is a habit</h3>
+            <ul>
+              <li>Limit metadata exposure under normal operating conditions.</li>
+              <li>Prefer strong defaults such as MFA, encrypted transport, and strict validation.</li>
+              <li>Document decision-making with evidence, not assumptions.</li>
+              <li>Review system boundaries, access models, and logging before deployment.</li>
+            </ul>
           </div>
 
           <div class="privacy-panel">
+            <p class="tag">Operational guidance</p>
+            <h3>Minimal disclosure, stronger posture</h3>
             <ul>
-              <li>No hidden tracking or behavioral profiling.</li>
-              <li>No public exposure of visitor information.</li>
-              <li>No credential theft or unauthorized access tooling.</li>
-              <li>Any future user-submitted content must be handled securely and minimally.</li>
+              <li>Use synthetic data in demonstrations and workshops.</li>
+              <li>Verify data retention windows and access scopes before sharing artifacts.</li>
+              <li>Favor least-privilege access, session controls, and auditability.</li>
+              <li>Review browser and network telemetry before broad public publishing.</li>
             </ul>
           </div>
         </div>
@@ -1159,535 +1311,422 @@
 
     <footer>
       <div class="shell footer-inner">
-        <span>NØVA SYNDICATE © <span id="year"></span></span>
-        <span>Founder: VØIDSKY</span>
+        <span>NØVA SYNDICATE</span>
+        <span>Knowledge. Independence. Curiosity.</span>
       </div>
     </footer>
 
     <script>
-      const categories = [
-        { name: 'MALWARE', topics: ['Computer viruses', 'Trojans', 'Ransomware', 'Spyware', 'Rootkits', 'Worms'] },
-        { name: 'SOCIAL ENGINEERING', topics: ['Phishing', 'Spear phishing', 'Identity impersonation', 'Social engineering psychology', 'Online scams'] },
-        { name: 'NETWORK SECURITY', topics: ['DDoS concepts', 'DNS security', 'Man-in-the-middle concepts', 'Network monitoring', 'Network vulnerabilities'] },
-        { name: 'WEB SECURITY', topics: ['SQL injection', 'Cross-site scripting', 'CSRF', 'Session security', 'Authentication vulnerabilities'] },
-        { name: 'SYSTEM SECURITY', topics: ['Privilege escalation concepts', 'Zero-day vulnerabilities', 'Misconfigurations', 'Operating system security', 'Patch management'] },
-        { name: 'DIGITAL FORENSICS', topics: ['Log analysis', 'Incident response', 'File analysis', 'Digital evidence', 'Malware analysis concepts'] },
-        { name: 'DEFENSIVE SECURITY', topics: ['Firewalls', 'Encryption', 'Multi-factor authentication', 'Password security', 'System hardening', 'Security monitoring'] }
-      ];
-
-      const threatEntries = [
+      const featureCards = [
         {
-          name: 'Computer Viruses', category: 'MALWARE', difficulty: 'Beginner',
-          description: 'Malicious code designed to copy and spread itself, often using executable files or user actions to propagate.',
-          technicalExplanation: 'A virus is code that relies on a host file or program to execute. Once active, it may alter files, corrupt data, or trigger additional behaviors when the host program is run. The distinction from other malware is that the payload depends on a host and often spreads through user-mediated copying or execution.',
-          howThreatWorks: 'The payload hides in a file, document, or program. When a user opens the host, the virus activates and copies itself to other files or locations, extending its reach while trying to stay unnoticed.',
-          historicalExamples: 'Virus families documented in public security literature often highlighted self-replication and file-based propagation. The key principle is persistence through infected hosts rather than network-only spread.',
-          warningSigns: ['Unexpected file changes', 'Unusual startup behavior', 'Files appearing or duplicating themselves'],
-          detectionMethods: ['File integrity checks', 'Behavioral monitoring', 'Antivirus scanning with suspicious file analysis'],
-          preventionMethods: ['Keep systems updated', 'Avoid opening unknown files', 'Use application allowlisting and endpoint controls'],
-          references: ['MITRE ATT&CK: Malware'],
-          keywords: ['virus', 'replication', 'infected file', 'payload']
+          title: 'Network security foundations',
+          tag: 'Network',
+          description: 'TCP/IP, DNS, switching, routing, segmentation, and the architecture behind modern enterprise networking.',
+          mini: 'Architecture • Monitoring'
         },
         {
-          name: 'Trojans', category: 'MALWARE', difficulty: 'Beginner',
-          description: 'A malicious program disguised as legitimate software, often used for remote access, data theft, or payload delivery.',
-          technicalExplanation: 'A Trojan deceives a user into executing it by appearing useful, harmless, or necessary. Once installed, it can open a communication channel, exfiltrate data, or download additional code. Unlike self-replicating viruses, Trojans typically rely on deception rather than automatic spread.',
-          howThreatWorks: 'The attack depends on trust. The malicious file is packaged inside a familiar name, installer, or document, and the payload activates when the user grants execution rights or opens a dropped file.',
-          historicalExamples: 'Legacy trojan families and modern loaders demonstrate the same pattern: appearance masquerading as a trusted utility while the hidden payload operates in the background.',
-          warningSigns: ['Unexpected system prompts', 'New background services', 'Unknown network connections'],
-          detectionMethods: ['Static file analysis', 'Network telemetry review', 'Sandbox behavior analysis'],
-          preventionMethods: ['Download software only from official sources', 'Review permission prompts', 'Use endpoint protection and application controls'],
-          references: ['CISA: Cybersecurity best practices', 'OWASP: Secure software development'],
-          keywords: ['trojan', 'dropper', 'backdoor', 'fake installer']
+          title: 'Web application defense',
+          tag: 'Web',
+          description: 'Input validation, secure APIs, secure session patterns, and application-layer controls under OWASP guidance.',
+          mini: 'OWASP • Controls'
         },
         {
-          name: 'Ransomware', category: 'MALWARE', difficulty: 'Intermediate',
-          description: 'Malware that encrypts files or locks access to systems and demands payment to restore access.',
-          technicalExplanation: 'Ransomware uses asymmetric encryption or key management to render data unusable unless the victim possesses a decryption key. The attacker often combines encryption with extortion messaging, exfiltration threats, or operational disruption to increase pressure.',
-          howThreatWorks: 'The malicious program reaches a system through phishing, vulnerable services, or compromised credentials. It then enumerates files, encrypts data, and leaves a ransom note or extortion mechanism in place.',
-          historicalExamples: 'Public reporting frequently documents the general pattern of file encryption, extortion messaging, and disruption of normal business operations. This is a broad class of threat rather than a single vulnerability.',
-          warningSigns: ['Locked files with unusual extensions', 'Mass file encryption', 'Extortion notes on systems'],
-          detectionMethods: ['Behavioral endpoint detection', 'File entropy monitoring', 'Network indicators and ransomware hunting'],
-          preventionMethods: ['Backups and validated restore processes', 'Patch exposure points', 'User awareness and segmentation'],
-          references: ['CISA: Ransomware guidance', 'NIST: Cybersecurity framework'],
-          keywords: ['cryptocurrency', 'encryption', 'extortion', 'backup']
-        },
-        {
-          name: 'Spyware', category: 'MALWARE', difficulty: 'Intermediate',
-          description: 'Software that observes activity, often capturing keystrokes, clipboard data, browser behavior, or system state.',
-          technicalExplanation: 'Spyware is designed for covert collection. It may monitor user input, take screenshots, log browsing history, or exfiltrate sensitive content. The objective is typically intelligence gathering, fraud, or surveillance rather than overt disruption.',
-          howThreatWorks: 'It often installs behind a legitimate-looking tool or through an exploited application. Once running, it quietly records data to local storage or transmits it to a remote server.',
-          historicalExamples: 'Commercial spyware and covert monitoring tools show how surveillance functions are often disguised as productivity or support software, making detection reliant on unexpected behavior or traffic.',
-          warningSigns: ['Suspicious background process', 'Unexpected browser extensions', 'Unusual outbound traffic'],
-          detectionMethods: ['Process auditing', 'Browser extension review', 'Network monitoring for exfiltration'],
-          preventionMethods: ['Use trusted software only', 'Review installed extensions', 'Limit admin rights and isolate workstations'],
-          references: ['OWASP: Secure application configuration', 'CISA: Security monitoring'],
-          keywords: ['surveillance', 'keylogging', 'browser monitoring', 'exfiltration']
-        },
-        {
-          name: 'Rootkits', category: 'MALWARE', difficulty: 'Advanced',
-          description: 'A rootkit is designed to hide malicious activity or persistence at a deep system level, often below normal administrative visibility.',
-          technicalExplanation: 'Rootkits manipulate the operating system, kernel components, or boot process to hide files, processes, or network activity. They are difficult to detect because they target the same trust boundaries administrators rely on.',
-          howThreatWorks: 'The attacker installs persistence at a privileged layer and then changes system behavior to conceal the malicious code, logs, or network communication from normal tools and users.',
-          historicalExamples: 'Public analysis of rootkits highlights the use of kernel hooks, drivers, or boot-level mechanisms to bury code below conventional detection layers.',
-          warningSigns: ['Missing processes from task managers', 'Unusual kernel modules', 'Difficulty validating clean system state'],
-          detectionMethods: ['Memory forensics', 'Integrity verification', 'Kernel-mode and boot record checks'],
-          preventionMethods: ['Secure boot and integrity checks', 'Least privilege', 'Rapid incident isolation'],
-          references: ['MITRE ATT&CK: Defense Evasion'],
-          keywords: ['kernel', 'privilege', 'persistence', 'evasion']
-        },
-        {
-          name: 'Worms', category: 'MALWARE', difficulty: 'Intermediate',
-          description: 'Self-replicating malware that spreads across networks without requiring a host program to be opened by a user.',
-          technicalExplanation: 'Worms exploit software, services, or trust relationships to move from one system to another. Their standout trait is autonomous propagation, which can multiply quickly across connected environments.',
-          howThreatWorks: 'A compromised system scans for vulnerable hosts or reachable devices. It then copies itself into those endpoints, often creating exponential spread and network congestion in the process.',
-          historicalExamples: 'Historical examples in public security discussions commonly focus on network-mediated spread and payload propagation rather than user-driven installation.',
-          warningSigns: ['Unexpected outbound traffic', 'Rapid spread to multiple hosts', 'System instability under load'],
-          detectionMethods: ['Network traffic analysis', 'Endpoint replication telemetry', 'Vulnerability and exposure review'],
-          preventionMethods: ['Patch exposed services', 'Segment networks', 'Disable unnecessary remote services'],
-          references: ['MITRE ATT&CK: Initial Access and Lateral Movement'],
-          keywords: ['propagation', 'network spread', 'vulnerability', 'scan']
-        },
-        {
-          name: 'Phishing', category: 'SOCIAL ENGINEERING', difficulty: 'Beginner',
-          description: 'A deceptive message or site designed to trick a user into revealing data, clicking a malicious link, or taking an unsafe action.',
-          technicalExplanation: 'Phishing relies on impersonation, urgency, and trust. Attackers send messages that appear legitimate, often mimicking a vendor, employer, or known service, and then prompt the user to act quickly without verifying the source.',
-          howThreatWorks: 'A malicious message creates pressure or curiosity. The user is pushed to click a link, open an attachment, or submit credentials to a lookalike site. Once the credentials or session are handed over, the attacker can act on the victim’s behalf.',
-          historicalExamples: 'Credential theft and account takeover discussions frequently describe the same pattern of impersonation and urgency across email, SMS, and messaging systems.',
-          warningSigns: ['Urgent wording', 'Unexpected attachments', 'Mismatched sender names or domains'],
-          detectionMethods: ['Email filtering', 'User awareness training', 'Domain verification and link inspection'],
-          preventionMethods: ['Verify sender identity', 'Use MFA', 'Check URLs before clicking'],
-          references: ['CISA: Phishing guidance', 'NIST: Identity and access management'],
-          keywords: ['email scam', 'credential theft', 'impersonation', 'link click']
-        },
-        {
-          name: 'Spear Phishing', category: 'SOCIAL ENGINEERING', difficulty: 'Intermediate',
-          description: 'A targeted phishing attempt tailored to a specific person, role, or organization with customized context.',
-          technicalExplanation: 'Spear phishing uses a personal detail, role information, or recent activity to increase trust and improve response rates. The malicious message often looks like a legitimate request from a coworker, supplier, or vendor.',
-          howThreatWorks: 'The attacker researches the target, then uses a relevant detail to manipulate them into taking an unsafe action, such as sending data, approving a payment, or granting access.',
-          historicalExamples: 'Targeted campaign analysis consistently emphasizes personalization and context rather than generic mass messaging as the main difference from broad phishing.',
-          warningSigns: ['Unusual requests from known contacts', 'Highly personalized language', 'Pressure to act outside normal procedures'],
-          detectionMethods: ['User validation procedures', 'Out-of-band verification', 'Security awareness and monitoring'],
-          preventionMethods: ['Confirm request authenticity', 'Train staff in escalation procedures', 'Restrict access to sensitive workflows'],
-          references: ['CISA: Social engineering guidance', 'NIST: Risk management'],
-          keywords: ['targeted campaign', 'impersonation', 'contextual lure', 'credential harvesting']
-        },
-        {
-          name: 'Identity Impersonation', category: 'SOCIAL ENGINEERING', difficulty: 'Intermediate',
-          description: 'Pretending to be an individual or organization in order to exploit trust, authority, or access.',
-          technicalExplanation: 'Identity impersonation can occur through fake accounts, spoofed email domains, social media impersonation, or in-person deception. The goal is usually to bypass verification or to gain access to information or systems.',
-          howThreatWorks: 'The attacker presents as someone the target already trusts. Instead of asking for obvious credentials, they rely on authority, familiarity, or a shared context to manipulate an action.',
-          historicalExamples: 'The pattern appears in transactional fraud, account recovery abuse, and social engineering incident reports where trust is exploited rather than technical weakness alone.',
-          warningSigns: ['Account names differ from expected identities', 'Unexpected authority requests', 'New contact methods or claims'],
-          detectionMethods: ['Identity verification checks', 'Multi-factor authentication', 'Monitoring for impersonation attempts'],
-          preventionMethods: ['Verify identities through separate channels', 'Use known communication paths', 'Train staff on escalation and verification'],
-          references: ['OWASP: Authentication best practices', 'CISA: Security awareness'],
-          keywords: ['spoofing', 'fake profile', 'trust abuse', 'pretexting']
-        },
-        {
-          name: 'Social Engineering Psychology', category: 'SOCIAL ENGINEERING', difficulty: 'Advanced',
-          description: 'The study of how attackers manipulate human decision-making through urgency, authority, curiosity, fear, and trust.',
-          technicalExplanation: 'Attackers exploit common cognitive shortcuts and social expectations. They manipulate attention and perception rather than targeting only software vulnerabilities. The result is often a user willingly performing an unsafe action.',
-          howThreatWorks: 'The adversary shapes a situation in which the user feels compelled to act before verifying. The attack relies on emotional pressure, urgency, or the authority of a person who appears credible.',
-          historicalExamples: 'Security research and awareness resources repeatedly show that manipulation succeeds when users are rushed, overloaded, or not given a clear verification path.',
-          warningSigns: ['High-pressure language', 'Urgency or fear cues', 'Requests that bypass normal process'],
-          detectionMethods: ['Awareness training', 'Behavior and incident review', 'Process design that includes verification'],
-          preventionMethods: ['Create friction for sensitive actions', 'Teach verification habits', 'Reduce pressure and ambiguity in workflows'],
-          references: ['CISA: Social engineering guidance', 'NIST: Human factors'],
-          keywords: ['psychology', 'authority', 'urgency', 'cognitive bias']
-        },
-        {
-          name: 'Online Scams', category: 'SOCIAL ENGINEERING', difficulty: 'Beginner',
-          description: 'Fraudulent schemes that use deception, false urgency, or fake opportunities to extract money, data, or trust.',
-          technicalExplanation: 'Scams often combine social engineering, false promises, and pressure to act quickly. They may involve fake offers, fake support, impersonation, or deceptive financial requests.',
-          howThreatWorks: 'The attacker frames a situation as urgent or lucrative. The victim is nudged to pay, disclose information, or transfer access, often before any verification or review takes place.',
-          historicalExamples: 'Consumer fraud and account-support scam patterns illustrate the recurrence of trust exploitation, pressure, and urgency across digital channels.',
-          warningSigns: ['Too-good-to-be-true offers', 'Pressure for immediate payment', 'Requests that bypass channel verification'],
-          detectionMethods: ['Verification of payment requests', 'User education', 'Pattern tracking and reporting'],
-          preventionMethods: ['Use verified contact paths', 'Never pay under pressure', 'Report suspicious requests'],
-          references: ['FTC guidance on scams', 'CISA: Employee awareness'],
-          keywords: ['fraud', 'payment scam', 'fake support', 'deception']
-        },
-        {
-          name: 'DDoS Concepts', category: 'NETWORK SECURITY', difficulty: 'Beginner',
-          description: 'Distributed denial-of-service attacks overload a service or network with excessive traffic, reducing normal availability.',
-          technicalExplanation: 'A DDoS attack tries to exhaust capacity—bandwidth, compute resources, or application processing—so legitimate users cannot reach a service. The attack may be volumetric, protocol-based, or application-layer focused.',
-          howThreatWorks: 'The attacker coordinates many devices or endpoints to send requests simultaneously. The target experiences resource exhaustion or traffic saturation, causing delays, degradation, or outages.',
-          historicalExamples: 'Public reports and security analysis explain how capacity exhaustion and traffic amplification are used to deny service without necessarily compromising the target system itself.',
-          warningSigns: ['Sudden traffic spikes', 'Service latency or timeouts', 'Connectivity degradation'],
-          detectionMethods: ['Traffic baselining', 'Rate limiting', 'CDN and network scrubbing'],
-          preventionMethods: ['Traffic filtering', 'Rate controls', 'Distributed service design and redundancy'],
-          references: ['CISA: Denial of service guidance', 'Cloudflare: DDoS resources'],
-          keywords: ['availability', 'traffic saturation', 'botnet', 'rate limit']
-        },
-        {
-          name: 'DNS Security', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
-          description: 'The protection and integrity of domain name system records and resolution logic that route traffic to services.',
-          technicalExplanation: 'DNS translates names into addresses and underpins internet navigation. If DNS records are altered, users can be sent to malicious infrastructure, redirected to lookalike websites, or prevented from reaching legitimate services.',
-          howThreatWorks: 'Attackers may abuse DNS resolution, cache poisoning, or malicious records to re-route traffic or create confusion. This turns a trusted name into a controlled destination without changing the user’s behavior consciously.',
-          historicalExamples: 'DNS abuse and traffic redirection discussions show how attackers often use trust in names to bypass user suspicion and manipulate access.',
-          warningSigns: ['Unexpected redirects', 'Name resolution changes', 'Certificate mismatches or unreachable services'],
-          detectionMethods: ['DNS monitoring', 'Resolver validation', 'Signed DNS records and logs'],
-          preventionMethods: ['Secure DNS configuration', 'Use DNSSEC and hardened resolvers', 'Monitor unusual record changes'],
-          references: ['ICANN DNSSEC overview', 'CISA DNS guidance'],
-          keywords: ['resolver', 'DNSSEC', 'redirection', 'records']
-        },
-        {
-          name: 'Man-in-the-Middle', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
-          description: 'An attacker intercepts communications between two parties and relays or alters their data without their knowledge.',
-          technicalExplanation: 'MITM attacks exploit poor trust boundaries, insecure channels, or weak certificate verification. The attacker sits between a client and server, capturing data or modifying content before forwarding it.',
-          howThreatWorks: 'On an unsecured or compromised network, the attacker can intercept traffic and make it appear as if the client is still communicating with the intended server. The communication channel is then controlled by the attacker.',
-          historicalExamples: 'Security discussions of insecure wireless and untrusted networks regularly cover how interception is possible without either endpoint noticing unless strong authentication or encryption is in place.',
-          warningSigns: ['Unexpected certificate warnings', 'Unexpected login prompts', 'Traffic shows irregular routing or spoofed hosts'],
-          detectionMethods: ['TLS verification', 'Certificate inspection', 'Wireless security controls'],
-          preventionMethods: ['Use encrypted protocols', 'Validate certificates', 'Avoid untrusted wireless networks'],
-          references: ['OWASP: Transport Layer Security', 'NIST: TLS guidance'],
-          keywords: ['intercept', 'relay', 'certificate', 'network sniffing']
-        },
-        {
-          name: 'Network Monitoring', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
-          description: 'The process of observing traffic, services, and flows to detect anomalies, misuse, or security issues.',
-          technicalExplanation: 'Monitoring looks at packet and flow metadata, endpoint behavior, and service health to understand whether traffic is normal or suspicious. It is essential for detection, investigation, and response.',
-          howThreatWorks: 'Anomalies are identified by looking for unusual connections, long-lived sessions, repeated failed attempts, or impossible traffic patterns that do not match expected baselines.',
-          historicalExamples: 'Security operations centers rely on baseline intelligence and alert triage to identify suspicious traffic spikes or unusual communication patterns from internal or external systems.',
-          warningSigns: ['Unexpected connection spreads', 'One-way or repeated failed attempts', 'High latency or unknown ports'],
-          detectionMethods: ['Netflow analysis', 'IDS/IPS alerts', 'Baseline anomaly detection'],
-          preventionMethods: ['Deploy monitoring tools', 'Review logs regularly', 'Establish incident response playbooks'],
-          references: ['CISA: Monitoring and logging guidance', 'MITRE ATT&CK: Network behaviors'],
-          keywords: ['netflow', 'telemetry', 'soc', 'anomaly detection']
-        },
-        {
-          name: 'Network Vulnerabilities', category: 'NETWORK SECURITY', difficulty: 'Intermediate',
-          description: 'Weaknesses in protocols, services, or infrastructure that allow attackers to impact integrity, confidentiality, or availability.',
-          technicalExplanation: 'Network vulnerabilities are flaws in how services or devices handle traffic, authentication, or trust. They may be caused by software bugs, insecure defaults, or poor segmentation.',
-          howThreatWorks: 'Attackers discover route, service, or protocol weaknesses and use those openings to access systems, tunnel traffic, or overwhelm critical infrastructure.',
-          historicalExamples: 'Security advisories often document weaknesses in exposed services, authentication logic, or network implementations that become exploitable through protocol-level interactions.',
-          warningSigns: ['Unexpected open ports', 'Legacy protocols enabled', 'Service misconfigurations or weak auth'],
-          detectionMethods: ['Vulnerability scanning', 'Configuration review', 'Patch validation'],
-          preventionMethods: ['Patch promptly', 'Restrict access', 'Use segmentation and monitoring'],
-          references: ['CISA advisories', 'OWASP ASVS'],
-          keywords: ['exposed services', 'misconfiguration', 'patching', 'service weakness']
-        },
-        {
-          name: 'SQL Injection', category: 'WEB SECURITY', difficulty: 'Intermediate',
-          description: 'Untrusted input is inserted into a database query in a way that alters the intended query logic.',
-          technicalExplanation: 'When application code concatenates user-controlled input into SQL statements without proper sanitization or parameterization, an attacker may alter the logic and force unintended database operations.',
-          howThreatWorks: 'The attacker supplies special input that breaks the syntax of the query. The database interprets the injected payload as part of the logic, enabling unauthorized reads or modifications.',
-          historicalExamples: 'Injection issues remain a recurring application security theme because many systems still handle user input carelessly in query construction.',
-          warningSigns: ['Unexpected query output', 'Authentication bypass', 'Error messages revealing query structure'],
-          detectionMethods: ['Input validation', 'Prepared statements', 'Web application firewall and testing'],
-          preventionMethods: ['Use parameterized queries', 'Least privilege database access', 'Validate and encode data'],
-          references: ['OWASP Top 10', 'OWASP SQL Injection Prevention Cheat Sheet'],
-          keywords: ['database', 'injection', 'user input', 'query manipulation']
-        },
-        {
-          name: 'Cross-Site Scripting', category: 'WEB SECURITY', difficulty: 'Intermediate',
-          description: 'An attacker injects script content into a web page so it executes in a victim’s browser.',
-          technicalExplanation: 'XSS lets attackers run malicious JavaScript in a browser context where the victim is already authenticated or trusted. This can steal session information, alter page content, or trigger actions in the interface.',
-          howThreatWorks: 'An unsafe reflection or stored input path allows attacker-controlled content into the page. When the browser renders it, the script executes with the victim’s trust and origin.',
-          historicalExamples: 'Reflected and stored XSS remain classic web flaws because they exploit trust in browser rendering and origin boundaries.',
-          warningSigns: ['Unexpected popups', 'Altered page content', 'Session issues after visiting a page'],
-          detectionMethods: ['Output encoding', 'Content security policy', 'Security testing'],
-          preventionMethods: ['Encode output', 'Sanitize user input', 'Use CSP and secure templates'],
-          references: ['OWASP XSS', 'MDN: Content Security Policy'],
-          keywords: ['javascript', 'reflected', 'DOM', 'browser execution']
-        },
-        {
-          name: 'CSRF', category: 'WEB SECURITY', difficulty: 'Intermediate',
-          description: 'Cross-site request forgery tricks a victim’s browser into performing an action in a trusted site without their intent.',
-          technicalExplanation: 'A CSRF attack abuses authenticated sessions by sending a cross-site request that the browser includes with cookies or other session context. The target site accepts it as if it came from the user.',
-          howThreatWorks: 'An attacker causes the browser to submit a request to a trusted application, often via hidden form fields, images, or AJAX requests. The user never intended that action, but the browser still sends the authenticated request.',
-          historicalExamples: 'State-changing actions such as transfers, preferences, or account changes are classic CSRF targets because the application trusts the browser session too much.',
-          warningSigns: ['Unexpected state changes', 'Authentication context used in cross-site flow', 'Incomplete origin validation'],
-          detectionMethods: ['CSRF tokens', 'SameSite cookie attributes', 'Origin checks'],
-          preventionMethods: ['Require tokens on state-changing requests', 'Use SameSite and secure cookies', 'Validate request origins'],
-          references: ['OWASP CSRF Prevention Cheat Sheet'],
-          keywords: ['state change', 'forged request', 'origin', 'session abuse']
-        },
-        {
-          name: 'Session Security', category: 'WEB SECURITY', difficulty: 'Intermediate',
-          description: 'The controls used to maintain and protect a user’s authenticated state across requests and browser sessions.',
-          technicalExplanation: 'Sessions track user state after login. If session identifiers are predictable, exposed, or reused improperly, attackers may hijack the user’s valid session and impersonate them.',
-          howThreatWorks: 'The attacker obtains the session token through interception, theft, or prediction. The application then treats the attacker’s requests as if they came from the genuine user, bypassing the authentication steps entirely.',
-          historicalExamples: 'Session management issues often appear in weak cookie settings, long-lived tokens, or abusive token rotation logic.',
-          warningSigns: ['Unexpected account access', 'Multiple sessions across devices', 'Session fixation or token reuse'],
-          detectionMethods: ['Secure cookies', 'Session rotation', 'Activity monitoring'],
-          preventionMethods: ['Use strong random tokens', 'Rotate tokens on privilege change', 'Set proper cookie flags'],
-          references: ['OWASP Session Management Cheat Sheet'],
-          keywords: ['cookies', 'session IDs', 'session hijack', 'token management']
-        },
-        {
-          name: 'Authentication Vulnerabilities', category: 'WEB SECURITY', difficulty: 'Advanced',
-          description: 'Weaknesses in identity verification or access control that let users bypass controls or impersonate other users.',
-          technicalExplanation: 'Authentication bugs can appear as weak password policies, poor MFA implementation, insecure reset flows, or logic mistakes in credential evaluation. These flaws undermine trust and often allow unauthorized access without direct exploitation of the system’s core software.',
-          howThreatWorks: 'An attacker finds a path where the system accepts a bad credential, allows bruteforce, or trusts an unvalidated identity signal. Once accepted, the system grants access beyond the intended boundary.',
-          historicalExamples: 'Authentication issues recur because identity logic is difficult to get right at scale, especially when combined with account recovery and centralized trust flows.',
-          warningSigns: ['Bruteforce attempts', 'Unexpected login success', 'Reset or MFA bypass logic'],
-          detectionMethods: ['Security testing', 'Rate limiting', 'MFA and alerting'],
-          preventionMethods: ['Strong password policy', 'MFA and phishing resistance', 'Secure account recovery'],
-          references: ['OWASP Authentication Cheat Sheet', 'NIST Digital Identity'],
-          keywords: ['login bypass', 'MFA', 'account takeover', 'reset flow']
-        },
-        {
-          name: 'Privilege Escalation', category: 'SYSTEM SECURITY', difficulty: 'Advanced',
-          description: 'An attacker gains access to higher rights than intended, usually by abusing a flaw, misconfiguration, or weak boundary enforcement.',
-          technicalExplanation: 'Privilege escalation abuses the trust model of an operating system or application. A low-privilege actor exploits a bug, service path, or configuration issue to obtain more control than their account should grant.',
-          howThreatWorks: 'The attacker first gains a foothold, then reveals a path that allows them to move from a restricted context to a privileged one. The sequence often includes code execution, service abuse, or token misuse.',
-          historicalExamples: 'Privilege escalation is a recurring theme in security advisories because it turns a low-impact foothold into a much stronger and more damaging position.',
-          warningSigns: ['Unexpected admin actions', 'Service escalations', 'Access to protected files or policies'],
-          detectionMethods: ['Access reviews', 'Behavioral monitoring', 'Privilege auditing'],
-          preventionMethods: ['Least privilege', 'Patch vulnerabilities', 'Harden service boundaries'],
-          references: ['MITRE ATT&CK: Privilege Escalation'],
-          keywords: ['admin rights', 'token abuse', 'service hijack', 'restricted access']
-        },
-        {
-          name: 'Zero-Day Vulnerabilities', category: 'SYSTEM SECURITY', difficulty: 'Advanced',
-          description: 'A software flaw that is unknown to the vendor or not yet patched, leaving defenders without a known fix.',
-          technicalExplanation: 'Zero-day vulnerabilities are dangerous because there is no official remediating patch and malicious actors may discover or weaponize them before defenders know what to look for.',
-          howThreatWorks: 'An attacker uses the unknown flaw to achieve execution, bypass controls, or access restricted data before security teams can respond. The risk is amplified by the lack of a public patch and the difficulty of detection.',
-          historicalExamples: 'Security advisories and vendor disclosures regularly describe the risk of unknown issues and why rapid patching and robust monitoring remain critical.',
-          warningSigns: ['Unusual exploitation symptoms', 'Behavior not matching baseline', 'No known advisory yet'],
-          detectionMethods: ['Threat hunting', 'Behavioral analytics', 'Rapid patch validation'],
-          preventionMethods: ['Patch quickly when available', 'Reduce exposure surface', 'Harden systems and isolate critical assets'],
-          references: ['CISA: Vulnerability management guidance', 'NIST: Secure software development'],
-          keywords: ['unknown flaw', 'exploit', 'patch gap', 'weaponized bug']
-        },
-        {
-          name: 'Misconfigurations', category: 'SYSTEM SECURITY', difficulty: 'Beginner',
-          description: 'Security settings that are weak, missing, or incorrectly applied, leaving critical resources exposed or easier to abuse.',
-          technicalExplanation: 'Misconfigurations are often simple but impactful. They can expose a service, leave admin interfaces open, or allow overly broad permissions that attackers can exploit quickly.',
-          howThreatWorks: 'A system is deployed with insecure defaults or incomplete controls. Because the mistake is structural rather than a complex exploit, it can be abused repeatedly by attackers who know the exposure path.',
-          historicalExamples: 'Misconfiguration analysis appears in many security assessments because default settings, permissive firewall rules, or weak identity boundaries often create avoidable exposure.',
-          warningSigns: ['Open ports or services', 'Overly broad permissions', 'Unexpected admin access'],
-          detectionMethods: ['Configuration baselines', 'Security review', 'Automated posture checks'],
-          preventionMethods: ['Use hardened baselines', 'Review access rights', 'Automate configuration checks'],
-          references: ['CISA: Configuration guidance', 'NIST: Security configuration'],
-          keywords: ['default settings', 'open access', 'weak policy', 'hardening gap']
-        },
-        {
-          name: 'Operating System Security', category: 'SYSTEM SECURITY', difficulty: 'Intermediate',
-          description: 'The controls, permissions, and policies that keep an operating system trustworthy and resilient against abuse.',
-          technicalExplanation: 'Operating system security focuses on user accounts, access control, process isolation, patching, logging, and secure defaults. It defines the trust boundaries the system relies on to protect files, services, and identities.',
-          howThreatWorks: 'Attackers target OS weaknesses such as weak permissions, service execution paths, or vulnerable drivers. Once a foothold exists, they often seek to increase control or move laterally.',
-          historicalExamples: 'Public advisories emphasize the importance of permissions, patch levels, and secure defaults because weak OS controls make many higher-layer attacks easier to perform.',
-          warningSigns: ['Unexpected system changes', 'Privilege drift', 'Processes running without cause'],
-          detectionMethods: ['Auditing', 'Integrity checks', 'Process analysis'],
-          preventionMethods: ['Harden the OS', 'Use least privilege', 'Apply patches promptly'],
-          references: ['NIST: OS security guidance', 'CISA: Secure config guidance'],
-          keywords: ['permissions', 'process isolation', 'drivers', 'secure defaults']
-        },
-        {
-          name: 'Patch Management', category: 'SYSTEM SECURITY', difficulty: 'Beginner',
-          description: 'The process of identifying, testing, prioritizing, and deploying updates that close known security weaknesses.',
-          technicalExplanation: 'Patch management is how an organization turns known security issues into a controlled remediation process. Without it, known vulnerabilities remain exposed long enough for attackers to exploit them.',
-          howThreatWorks: 'Attackers look for systems that are exposed and unpatched. Since known issues remain accessible, exploitation becomes cheaper and more predictable than trying to discover fresh flaws.',
-          historicalExamples: 'Patch management remains essential because the majority of security incidents begin with a known issue that was not addressed in time or not prioritized correctly.',
-          warningSigns: ['Outdated software inventory', 'No patch windows', 'Unclear ownership of updates'],
-          detectionMethods: ['Asset inventory', 'Patch reporting', 'Version and exposure monitoring'],
-          preventionMethods: ['Prioritize critical risk', 'Automate updates where safe', 'Test patches before deployment'],
-          references: ['CISA: Vulnerability management', 'NIST: Secure software'],
-          keywords: ['updates', 'vulnerability fix', 'risk prioritization', 'remediation']
-        },
-        {
-          name: 'Log Analysis', category: 'DIGITAL FORENSICS', difficulty: 'Beginner',
-          description: 'Reviewing records of activity to reconstruct events, track access, and identify suspicious behavior.',
-          technicalExplanation: 'Logs preserve the digital history of applications, hosts, and network systems. By correlating timestamps, source addresses, user activity, and process behavior, investigators can reconstruct what happened and when.',
-          howThreatWorks: 'An attacker may leave traces in logs, even when they hide their activity elsewhere. Investigators compare baseline patterns against anomalies, then validate the timeline with other evidence.',
-          historicalExamples: 'Forensic exercises and incident reviews repeatedly show that log integrity and chronology matter as much as the content itself, especially when reconstructing a sequence of events.',
-          warningSigns: ['Unusual login times', 'Unexpected service restarts', 'Failed commands or alerts'],
-          detectionMethods: ['Centralized log collection', 'Correlation across sources', 'Timeline building'],
-          preventionMethods: ['Protect log integrity', 'Centralize collection', 'Monitor for suspicious access'],
-          references: ['NIST: Logging guidance', 'CISA: Incident response guidance'],
-          keywords: ['audit trail', 'timeline', 'alerts', 'correlation']
-        },
-        {
-          name: 'Incident Response', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
-          description: 'The structured process of handling a suspected security event to contain damage, preserve evidence, and recover safely.',
-          technicalExplanation: 'Incident response is a set of operational steps: triage, containment, eradication, recovery, and lessons learned. It depends on clear responsibilities, evidence handling, and a calm decision path under pressure.',
-          howThreatWorks: 'The team identifies a suspicious event, creates a pace of response, and works to limit lateral movement or data loss while maintaining forensic integrity. The goal is to restore operations without damaging evidence.',
-          historicalExamples: 'Case response procedures consistently emphasize containment first, then evidence preservation, because a scattered or rushed response can destroy the ability to understand what happened.',
-          warningSigns: ['Rapid escalation of events', 'Detection rules firing', 'Unclear ownership of systems'],
-          detectionMethods: ['Playbooks', 'Log correlation', 'Threat intelligence'] ,
-          preventionMethods: ['Prepare runbooks', 'Define escalation paths', 'Practice exercises'],
-          references: ['NIST Computer Security Incident Handling Guide', 'CISA responders hub'],
-          keywords: ['containment', 'triage', 'evidence', 'recovery']
-        },
-        {
-          name: 'File Analysis', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
-          description: 'Inspecting file properties, metadata, structure, and behavior to understand origin, purpose, and impact.',
-          technicalExplanation: 'File analysis looks at hashes, timestamps, embedded resources, metadata, and dynamic behavior. It helps analysts determine whether a file is benign, malicious, or part of a wider set of artifacts.',
-          howThreatWorks: 'Attackers often rely on executable or script files to carry malicious logic. By analyzing the file’s structure and behavior, investigators can determine the intent without relying on assumptions.',
-          historicalExamples: 'Malware triage and forensics work frequently use file metadata, embedded strings, and behavioral checks to determine what a file was designed to do.',
-          warningSigns: ['Unexpected file creation', 'Unknown extensions', 'Embedded macros or scripts'],
-          detectionMethods: ['Hash comparison', 'Static review', 'Sandbox analysis'],
-          preventionMethods: ['Limit script execution', 'Review file metadata', 'Quarantine unknown files'],
-          references: ['MITRE ATT&CK: Analysis techniques'],
-          keywords: ['hashes', 'artifacts', 'static analysis', 'triage']
-        },
-        {
-          name: 'Digital Evidence', category: 'DIGITAL FORENSICS', difficulty: 'Intermediate',
-          description: 'Information collected from systems or networks that can be used to support investigation and explanation of events.',
-          technicalExplanation: 'Digital evidence includes logs, file artifacts, volatile memory, browser data, and network records. Its value depends on integrity, reproducibility, and an understanding of how each source was captured.',
-          howThreatWorks: 'Investigators preserve and collect artifacts in sequence so the evidence reflects the circumstances at the time of the event. This allows them to explain what happened and support defensible conclusions.',
-          historicalExamples: 'Evidence handling and chain-of-custody concepts repeatedly stress integrity because a compromised or poorly captured artifact can mislead an investigation.',
-          warningSigns: ['Missing timestamps', 'Altered system state', 'Unclear source ownership'],
-          detectionMethods: ['Imaging and hashing', 'Timeline creation', 'Preservation procedures'],
-          preventionMethods: ['Document collection methods', 'Protect forensic copies', 'Maintain clear evidence workflows'],
-          references: ['NIST digital evidence guidance'],
-          keywords: ['artifacts', 'timeline', 'preservation', 'integrity']
-        },
-        {
-          name: 'Malware Analysis Concepts', category: 'DIGITAL FORENSICS', difficulty: 'Advanced',
-          description: 'The examination of malicious code and behavior to understand its capabilities, delivery, and impact.',
-          technicalExplanation: 'Malware analysis includes static inspection, dynamic behavior monitoring, and the reconstruction of execution steps. Analysts build a model of what the file does without assuming the author’s intent from the file name alone.',
-          howThreatWorks: 'By observing how the malware interacts with the system, persists, executes, and communicates, analysts derive its operational model and identify indicators that can be used for detection and blocking.',
-          historicalExamples: 'Analysis work in public cyber education consistently demonstrates that behavior and execution context matter as much as the code strings or file name.',
-          warningSigns: ['Unexpected process chains', 'Encoded commands', 'Hidden persistence methods'],
-          detectionMethods: ['Sandboxing', 'Behavioral analysis', 'YARA rules and network indicators'],
-          preventionMethods: ['Separate analysis environments', 'Use controlled lab systems', 'Document findings and indicators'],
-          references: ['CISA malware analysis guidance', 'MITRE ATT&CK'],
-          keywords: ['sandbox', 'static', 'dynamic', 'indicators']
-        },
-        {
-          name: 'Firewalls', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
-          description: 'Security controls that filter traffic based on policy, allowing legitimate communication while blocking or restricting unauthorized paths.',
-          technicalExplanation: 'Firewalls inspect traffic according to rules such as source, destination, protocol, and port. They enforce policy boundaries between networks or between a system and the wider internet.',
-          howThreatWorks: 'Traffic that violates the configured policy is blocked. This reduces the attack surface and creates a predictable boundary that defenders can tune and monitor.',
-          historicalExamples: 'Network segmentation and perimeter filtering remain central to defensive design because they provide a simple, enforceable barrier against known attack paths.',
-          warningSigns: ['Blocked traffic events', 'Unexpected firewall rule changes', 'Unapproved port exposure'],
-          detectionMethods: ['Policy review', 'Traffic logs', 'Access validation'],
-          preventionMethods: ['Harden rules', 'Restrict exposure', 'Review changes regularly'],
-          references: ['NIST firewall guidance', 'CISA network defenses'],
-          keywords: ['ingress', 'egress', 'rules', 'segmentation']
-        },
-        {
-          name: 'Encryption', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
-          description: 'The use of cryptographic methods to protect confidentiality, integrity, and trust in data and communication.',
-          technicalExplanation: 'Encryption turns readable data into a form that is intentionally hard to interpret without the right key or algorithm. It protects stored data, network traffic, and sensitive communications from unauthorized access.',
-          howThreatWorks: 'Put simply, the sender or system uses a key to transform content so that only authorized parties can reverse the operation. This helps reduce exposure if data is intercepted or stolen.',
-          historicalExamples: 'Modern security practice depends on encryption in transit and at rest because it narrows the impact of theft and network interception.',
-          warningSigns: ['Weak or legacy crypto settings', 'No TLS on services', 'Stored data without protection'],
-          detectionMethods: ['Certificate checks', 'Config review', 'Cryptography policy controls'],
-          preventionMethods: ['Use modern protocols', 'Manage keys carefully', 'Protect data in transit and at rest'],
-          references: ['NIST cryptography guidance', 'OWASP TLS guidance'],
-          keywords: ['cipher', 'keys', 'confidentiality', 'TLS']
-        },
-        {
-          name: 'Multi-Factor Authentication', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
-          description: 'A method that requires more than one type of verification before a user is trusted.',
-          technicalExplanation: 'MFA adds a second factor such as a token, code, or device possession to a username and password. This reduces the risk that a password alone grants unauthorized access.',
-          howThreatWorks: 'A password might be compromised or guessed, but the attacker still needs the second factor. That additional challenge narrows the number of paths by which a bad actor can access a valid account.',
-          historicalExamples: 'Account takeover prevention commonly relies on MFA because it blocks a broad class of credential-based attacks even when credentials are weak or leaked.',
-          warningSigns: ['Users bypass MFA prompts', 'SMS-only or legacy strong authentication issues', 'Unexpected reset requests'],
-          detectionMethods: ['MFA rollouts', 'Authentication reporting', 'Risk-based policies'],
-          preventionMethods: ['Enforce MFA everywhere', 'Use phishing-resistant forms where possible', 'Review exceptions'],
-          references: ['NIST Digital Identity', 'CISA MFA guidance'],
-          keywords: ['2FA', 'one-time code', 'token', 'identity proofing']
-        },
-        {
-          name: 'Password Security', category: 'DEFENSIVE SECURITY', difficulty: 'Beginner',
-          description: 'The practices and controls that protect user credentials from guessing, theft, and reuse across systems.',
-          technicalExplanation: 'Strong password security combines password quality, password managers, risk-aware reset flows, and safe storage techniques. The goal is to make credential compromise significantly harder while reducing user friction where appropriate.',
-          howThreatWorks: 'Attackers try to guess, brute-force, or steal credentials. Without strong controls, a compromised password may be enough to access a user’s account, email, or internal systems.',
-          historicalExamples: 'Credential compromise remains one of the most common attack themes because password reuse and weak policies create long-lived opportunity for attackers.',
-          warningSigns: ['Reused passwords', 'No MFA', 'Password resets without verification'],
-          detectionMethods: ['Password policy review', 'Account monitoring', 'Leak detection'],
-          preventionMethods: ['Use password managers', 'Avoid reuse', 'Enforce MFA and reset verification'],
-          references: ['NIST Digital Identity guidelines'],
-          keywords: ['credential storage', 'breach', 'reuse', 'guessing']
-        },
-        {
-          name: 'System Hardening', category: 'DEFENSIVE SECURITY', difficulty: 'Intermediate',
-          description: 'Reducing the attack surface of systems by removing unnecessary services, tightening permissions, and applying baseline security controls.',
-          technicalExplanation: 'Hardening is about reducing what a system does and how exposed it is. It removes unnecessary privileges, undesirable services, weak defaults, and open trust relationships that attackers would otherwise exploit.',
-          howThreatWorks: 'Attackers prefer easy access paths. By reducing those paths, defenders increase the work required for exploitation and shrink the attack surface for lateral movement and privilege abuse.',
-          historicalExamples: 'Security baselines, workstation hardening guides, and service minimization all rely on the same idea: fewer attack paths means lower risk.',
-          warningSigns: ['Unneeded services or accounts', 'Broad permissions', 'Default or legacy settings left active'],
-          detectionMethods: ['Baseline review', 'Policy compliance checks', 'Configuration monitoring'],
-          preventionMethods: ['Disable unnecessary features', 'Restrict rights', 'Automate secure configuration'],
-          references: ['CISA hardening guidance'],
-          keywords: ['baseline', 'attack surface', 'permissions', 'service minimization']
-        },
-        {
-          name: 'Security Monitoring', category: 'DEFENSIVE SECURITY', difficulty: 'Intermediate',
-          description: 'Ongoing observation of systems and networks for suspicious changes, access, or behavior.',
-          technicalExplanation: 'Monitoring combines endpoint data, identity logs, network flows, and alerts to detect suspicious behavior at the moment it matters. It helps defenders identify slow compromise, misuse, and attack progression.',
-          howThreatWorks: 'An attacker leaves traces through new processes, failed logins, unusual scripts, account access, or outbound behavior. Monitoring surfaces those patterns before they become full-blown compromise.',
-          historicalExamples: 'Detection and analyst workflows are built around signal quality and context: normal behavior is identified first, then anomalies are examined before responding.',
-          warningSigns: ['Unexpected alerts', 'Repeated failures', 'New processes or access patterns'],
-          detectionMethods: ['SIEM review', 'Endpoint telemetry', 'Behavioral alerts'],
-          preventionMethods: ['Collect useful telemetry', 'Tune alerts carefully', 'Respond to high-confidence detections'],
-          references: ['CISA monitoring guidance', 'MITRE ATT&CK detection tactics'],
-          keywords: ['SIEM', 'alerts', 'telemetry', 'anomaly detection']
+          title: 'Cryptography and trust',
+          tag: 'Crypto',
+          description: 'Hashing, public-key systems, certificates, TLS, and the difference between confidentiality, integrity, and authenticity.',
+          mini: 'PKI • TLS'
         }
       ];
 
-      const researchArticles = [
+      const articleDatabase = [
         {
-          title: 'The practical value of threat modeling',
-          category: 'Threat analysis',
-          date: '2026-10-11',
-          readTime: '6 min read',
-          author: 'VØIDSKY',
-          summary: 'Threat modeling helps teams map trust boundaries, identify risk pathways, and prioritize the controls that matter most before a system grows complex.',
-          references: ['OWASP Threat Modeling', 'CISA Cybersecurity Awareness'],
-          tag: 'Research'
+          id: 'tcp-ip-architecture',
+          slug: 'tcp-ip-architecture',
+          title: 'TCP/IP Architecture',
+          category: 'Network Engineering',
+          tags: ['Networking', 'Routing', 'Packets'],
+          difficulty: 'Intermediate',
+          readTime: '9 min read',
+          summary: 'Understand the layered model that powers the internet, how data moves between networks, and why socket-level behavior matters in diagnostics and defense.',
+          content: [
+            'The TCP/IP stack is a pragmatic model built around communication between hosts across networks. It combines the Internet Protocol (IP) for addressing and routing with Transmission Control Protocol (TCP) for reliable delivery, plus UDP for low-overhead transport.',
+            'At the network layer, IP establishes end-to-end addressing and forwarding. Routers inspect destination addresses and determine the best next hop. At the transport layer, TCP adds sequencing, acknowledgment, flow control, and retransmission. This makes it suitable for sessions such as HTTPS, SSH, and file transfer.',
+            'A practical understanding of packet flow allows engineers to reason about latency, packet loss, retransmissions, window scaling, and connection state. In modern defense contexts, packet capture review and flow inspection remain foundational for troubleshooting and incident response.'
+          ],
+          references: ['RFC 791', 'RFC 793', 'IETF Internet Protocol Considerations'],
+          pinned: true
         },
         {
-          title: 'Defensive defaults for web applications',
-          category: 'Web security',
-          date: '2026-10-25',
-          readTime: '8 min read',
-          author: 'VØIDSKY',
-          summary: 'Strong defaults reduce the need for heroic defense. Secure cookies, strict content policies, validation, and isolation help keep user sessions and application trust boundaries intact.',
-          references: ['OWASP Application Security Verification Standard', 'MDN Security Guidance'],
-          tag: 'Guide'
-        },
-        {
-          title: 'Digital privacy in a monitored internet',
-          category: 'Privacy',
-          date: '2026-11-01',
+          id: 'osi-model',
+          slug: 'osi-model',
+          title: 'OSI Model',
+          category: 'Network Engineering',
+          tags: ['Modeling', 'Layering', 'Troubleshooting'],
+          difficulty: 'Beginner',
           readTime: '7 min read',
-          author: 'VØIDSKY',
-          summary: 'Privacy is not a single product—it is a collection of defaults, habits, and system boundaries that limit unnecessary exposure across messages, devices, and services.',
-          references: ['CISA Cybersecurity Tips', 'NIST Privacy Framework'],
-          tag: 'Guide'
+          summary: 'The OSI model provides a common language for describing how data moves through applications, transport, network, and physical layers.',
+          content: [
+            'The seven-layer OSI model helps teams reason about where a problem lives. A damaged cable, faulty duplex settings, or radio interference may sit at Layer 1 or Layer 2. An application timeout or TLS negotiation failure is usually a Layer 5-7 concern.',
+            'Even though modern networking often uses the simpler TCP/IP model, the OSI model remains useful in teaching and troubleshooting because it separates functions cleanly. It encourages structured analysis of headers, frames, sessions, and protocol behavior.'
+          ],
+          references: ['ISO/IEC 7498-1', 'Cisco Networking Fundamentals'],
+          pinned: false
         },
         {
-          title: 'Security advisories and understanding exposure',
-          category: 'Advisory',
-          date: '2026-11-05',
-          readTime: '5 min read',
-          author: 'VØIDSKY',
-          summary: 'Official advisories matter because they provide context about impact, attack patterns, and remediation sequencing when threats become actionable.',
-          references: ['CISA advisories', 'MITRE ATT&CK'],
-          tag: 'Briefing'
+          id: 'dns-architecture',
+          slug: 'dns-architecture',
+          title: 'DNS Architecture and DNSSEC',
+          category: 'Network Engineering',
+          tags: ['DNS', 'Resolver', 'Trust'],
+          difficulty: 'Intermediate',
+          readTime: '11 min read',
+          summary: 'DNS underpins naming and service discovery; DNSSEC adds cryptographic integrity so resolvers can verify data origin and authenticity.',
+          content: [
+            'DNS converts human-readable names into addresses and other resource records. Recursive resolvers query authoritative servers using a distributed hierarchy that includes root, TLD, and zone-specific authorities.',
+            'DNSSEC adds digital signatures to DNS records so resolvers can validate that the answer has not been altered in transit. It does not encrypt DNS information, but it improves integrity and trust in the resolution process.',
+            'When designing secure internet services, teams must consider TTL values, registrar behavior, delegation records, and the operational overhead of key rollover. These are critical system-level concerns that affect both availability and trust.'
+          ],
+          references: ['RFC 4033', 'RFC 4035', 'IETF DNSSEC Documentation'],
+          pinned: true
+        },
+        {
+          id: 'owasp-top-10',
+          slug: 'owasp-top-10',
+          title: 'OWASP Top 10',
+          category: 'Web Application Security',
+          tags: ['OWASP', 'Web Security', 'Risk'],
+          difficulty: 'Intermediate',
+          readTime: '10 min read',
+          summary: 'The OWASP Top 10 presents the most common and impactful application-security risks, from injection to broken access control and insecure design.',
+          content: [
+            'The OWASP Top 10 is useful because it translates abstract security concerns into a practical risk model. Threats like SQL injection, XSS, and broken access control are common because they arise from insecure assumptions about trust and validation in web systems.',
+            'The goal of a secure design is not only to patch individual bugs but to strengthen the trust boundaries around data, user identity, authorization decisions, and input handling. A well-structured application uses validation, output encoding, least privilege, strong session management, and clear policy enforcement.'
+          ],
+          references: ['OWASP Top 10', 'ASVS', 'OWASP Cheat Sheet Series'],
+          pinned: true
+        },
+        {
+          id: 'sql-injection',
+          slug: 'sql-injection',
+          title: 'SQL Injection: Theory and Safe Examples',
+          category: 'Web Application Security',
+          tags: ['Injection', 'SQL', 'Prepared Statements'],
+          difficulty: 'Advanced',
+          readTime: '13 min read',
+          summary: 'SQL injection occurs when untrusted data alters query structure. Safe design uses parameterized queries, strict validation, and clear separation between code and data.',
+          content: [
+            'The core issue is the mixing of data and command syntax. If user input is concatenated into a query, the application may allow an attacker to change logic or access additional data.',
+            'Prepared statements, parameter binding, and safe query construction prevent this. For training purposes, toy demonstrations may compare vulnerable and hardened examples, but the real defense is disciplined input handling and strong application boundaries.'
+          ],
+          references: ['OWASP SQL Injection Prevention Cheat Sheet', 'Parameterized Query Guidance'],
+          pinned: false
+        },
+        {
+          id: 'tls-https',
+          slug: 'tls-https',
+          title: 'TLS and HTTPS',
+          category: 'Network Engineering',
+          tags: ['TLS', 'Certificates', 'HTTPS'],
+          difficulty: 'Intermediate',
+          readTime: '12 min read',
+          summary: 'TLS secures transport by authenticating endpoints and protecting confidentiality and integrity. HTTPS is HTTP over TLS.',
+          content: [
+            'The TLS handshake establishes a protected channel between client and server. It includes negotiation of protocol version, cipher suite, and key exchange parameters, followed by key derivation and secure record protection.',
+            'Certificates bind a public key to an identity. Trust is established by a chain rooted in a trusted store or policy source. Modern deployments also enforce strong ciphers, HTTP/2 or HTTP/3 behaviors, and secure defaults such as HSTS and complete certificate validation.'
+          ],
+          references: ['RFC 8446', 'Mozilla Security Recommendations', 'Let\'s Encrypt Documentation'],
+          pinned: true
+        },
+        {
+          id: 'symmetric-asymmetric',
+          slug: 'symmetric-asymmetric',
+          title: 'Symmetric and Asymmetric Encryption',
+          category: 'Cryptography',
+          tags: ['Encryption', 'PKI', 'Key Management'],
+          difficulty: 'Intermediate',
+          readTime: '10 min read',
+          summary: 'Symmetric encryption is fast and efficient for bulk data, while asymmetric encryption is commonly used for key exchange, signatures, and identity verification.',
+          content: [
+            'Symmetric algorithms use a shared secret key known to both parties. They are efficient and well-suited for protecting data in transit or at rest when the key can be exchanged securely.',
+            'Asymmetric cryptography uses key pairs: a public key for encryption or verification and a private key for decryption or signing. This model supports certificates and distributed trust, but it is computationally heavier and less suitable for encrypting large volumes of data on its own.'
+          ],
+          references: ['NIST Cryptographic Standards', 'PyCA Cryptography Documentation'],
+          pinned: false
+        },
+        {
+          id: 'hashing-hmac',
+          slug: 'hashing-hmac',
+          title: 'Hashing, SHA-256, and HMAC',
+          category: 'Cryptography',
+          tags: ['Hashing', 'Integrity', 'Authentication'],
+          difficulty: 'Intermediate',
+          readTime: '9 min read',
+          summary: 'Hashing provides integrity and fingerprinting. HMAC adds a secret key so the integrity check also binds to authenticity.',
+          content: [
+            'A hash function maps data to a fixed-length digest. This is useful for verifying file integrity, comparing stored values, and deriving trust cues. SHA-256 is a widely used standard for integrity-oriented operations.',
+            'HMAC combines a hash function with a secret key, making it suitable for verifying message authenticity. It is essential in protocols where both integrity and shared-secret validation matter, without exposing secrets directly in the payload.'
+          ],
+          references: ['FIPS 180-4', 'NIST SP 800-107', 'HMAC Specification'],
+          pinned: false
+        },
+        {
+          id: 'linux-permissions',
+          slug: 'linux-permissions',
+          title: 'Linux Permissions and File Security',
+          category: 'Operating System Security',
+          tags: ['Linux', 'Permissions', 'Hardening'],
+          difficulty: 'Beginner',
+          readTime: '8 min read',
+          summary: 'Linux security is fundamentally about identity, ownership, permissions, and process boundaries. Every privileged operation is a policy decision.',
+          content: [
+            'Linux permissions are expressed as owner, group, and others with read, write, and execute bits. These permissions, combined with ACLs and capability-aware behavior, define what a process may do with files and resources.',
+            'A strong operating system posture relies on least privilege, carefully managed sudoers policy, minimal service accounts, and proper filesystem ownership. These controls reduce accidental exposure and limit the blast radius of software compromise.'
+          ],
+          references: ['Linux Documentation', 'OpenSSL and SELinux Documentation'],
+          pinned: false
+        },
+        {
+          id: 'windows-security',
+          slug: 'windows-security',
+          title: 'Windows Security Architecture',
+          category: 'Operating System Security',
+          tags: ['Windows', 'Authentication', 'Privileges'],
+          difficulty: 'Intermediate',
+          readTime: '9 min read',
+          summary: 'Windows security centers on user tokens, privilege boundaries, and built-in protections such as UAC, LSASS isolation, and logon architecture.',
+          content: [
+            'Windows uses access tokens to represent a user identity and the groups or privileges associated with a process. Authorization decisions rely on whether a given process has the right token and the relevant rights for a requested action.',
+            'Strong operational practices include securing local admin rights, applying patches promptly, reviewing service account configuration, and using monitoring and control tooling such as Defender, Windows event logs, and endpoint controls.'
+          ],
+          references: ['Microsoft Security Documentation', 'Windows Security Baselines'],
+          pinned: false
+        },
+        {
+          id: 'digital-forensics',
+          slug: 'digital-forensics',
+          title: 'Digital Forensic Methodology',
+          category: 'Digital Forensics',
+          tags: ['Evidence', 'Timeline', 'Integrity'],
+          difficulty: 'Advanced',
+          readTime: '12 min read',
+          summary: 'Forensics begins with preservation and scope control. A defensible investigation depends on evidence integrity, careful documentation, and time-based reconstruction.',
+          content: [
+            'Digital forensics is not simply searching a disk; it is a structured process that begins with preservation, identification, and chain-of-custody. Investigators must record the exact state of the evidence and avoid modifying it in ways that would compromise later analysis.',
+            'Timelines, metadata review, log correlation, and artifact analysis help reconstruct user actions, process execution, and system change patterns. The value of the investigation depends on maintaining defensibility and explaining each analytical step.'
+          ],
+          references: ['NIST Digital Evidence', 'SANS DFIR Resources'],
+          pinned: true
+        },
+        {
+          id: 'malware-analysis',
+          slug: 'malware-analysis',
+          title: 'Static, Dynamic, and Behavioral Analysis',
+          category: 'Malware Analysis',
+          tags: ['Malware', 'Reverse Engineering', 'Analysis'],
+          difficulty: 'Advanced',
+          readTime: '13 min read',
+          summary: 'Malware analysis uses static review, dynamic execution in controlled environments, and behavior-based indicators to identify capabilities and impact patterns.',
+          content: [
+            'Static analysis focuses on file structure, embedded strings, imports, section layout, and signatures. Dynamic analysis uses sandbox or isolated hosts to observe runtime behavior such as file creation, registry changes, network connections, and process execution.',
+            'Behavioral analysis correlates observations into a model of what the software does, without assuming that a signature alone explains the entire threat. A disciplined analyst documents indicators, capabilities, and environment constraints to make the report defensible and useful.'
+          ],
+          references: ['MITRE ATT&CK', 'CISA Malware Guidance', 'Malware Analyst Notes'],
+          pinned: true
+        },
+        {
+          id: 'digital-privacy',
+          slug: 'digital-privacy',
+          title: 'Digital Privacy and Metadata Exposure',
+          category: 'Digital Privacy',
+          tags: ['Privacy', 'Metadata', 'OSINT'],
+          difficulty: 'Intermediate',
+          readTime: '9 min read',
+          summary: 'Metadata often reveals more than content. Privacy depends on limiting unnecessary exposure in files, browser behavior, and public records.',
+          content: [
+            'A photo may include GPS coordinates, camera model, timestamps, and author metadata. A document may include author names, revision history, hidden comments, and embedded macros. These details matter because they create a trail that may remain even after the main data is sanitized.',
+            'Responsible privacy practice includes minimizing unnecessary metadata, checking public records carefully, understanding tracking technologies, and using synthetic data in educational environments. If gathered carefully, privacy analysis can strengthen operational decisions without becoming intrusive or harmful.'
+          ],
+          references: ['NIST Privacy Framework', 'EFF Red Team', 'Mozilla Privacy Guidelines'],
+          pinned: false
+        },
+        {
+          id: 'zero-trust',
+          slug: 'zero-trust',
+          title: 'Zero Trust Architecture',
+          category: 'Security Architecture',
+          tags: ['Zero Trust', 'Identity', 'Policy'],
+          difficulty: 'Advanced',
+          readTime: '11 min read',
+          summary: 'Zero Trust denies implicit trust, validates identity and context continuously, and applies policy at every access point.',
+          content: [
+            'Zero Trust is not a single product. It is an architectural pattern that questions every trust decision and re-evaluates it based on identity, device posture, network context, and policy.',
+            'This approach is especially relevant in modern cloud and hybrid environments where boundaries shift, users access resources from multiple contexts, and control planes are no longer purely network-based. Defense depends on strong identity, session hygiene, least privilege, and continuous monitoring.'
+          ],
+          references: ['NIST SP 800-207', 'CISA Zero Trust Guidance'],
+          pinned: false
+        },
+        {
+          id: 'morris-worm',
+          slug: 'morris-worm',
+          title: 'The Morris Worm',
+          category: 'Cybersecurity History',
+          tags: ['History', 'Worm', 'Internet'],
+          difficulty: 'Intermediate',
+          readTime: '8 min read',
+          summary: 'The Morris Worm was a watershed event that revealed how quickly a networked software bug could spread and how fragile early internet trust assumptions were.',
+          content: [
+            'Robert Tappan Morris released the worm in 1988, causing widespread disruption across the early internet. Its propagation behavior, resources, and broad impact made it one of the first high-profile examples of software moving beyond a single host into the wider network fabric.',
+            'The historical lesson is not sensationalism but operational discipline: authentication, privilege boundaries, warnings about unfettered propagation, and responsible software engineering matter. It also increased awareness of the need for incident coordination and monitoring.'
+          ],
+          references: ['CERT/CC Advisories', 'Historical Network Security Records'],
+          pinned: false
+        },
+        {
+          id: 'wannacry',
+          slug: 'wannacry',
+          title: 'WannaCry',
+          category: 'Cybersecurity History',
+          tags: ['Ransomware', 'Patch', 'Exploitation'],
+          difficulty: 'Advanced',
+          readTime: '10 min read',
+          summary: 'WannaCry demonstrated how unpatched systems, exposed services, and fast-moving exploit chains can create global operational damage.',
+          content: [
+            'WannaCry spread rapidly by exploiting a known SMB vulnerability in systems that had not been patched or were not properly segmented. It showed how a single missing update could propagate across a broad environment.',
+            'The event reinforced patch prioritization, exposure reduction, network segmentation, and emergency response planning. It also demonstrated that broad internet-facing services need layered controls and quick incident communication.'
+          ],
+          references: ['NCSC Guidance', 'CISA Advisories', 'Microsoft Security Response Center'],
+          pinned: false
         }
       ];
 
-      const learningPaths = [
+      const codeLabEntries = [
         {
-          level: 'Beginner',
-          title: 'Cybersecurity fundamentals',
-          progress: 28,
-          lessons: ['Cybersecurity fundamentals', 'Internet infrastructure', 'Basic encryption', 'Password security', 'Online privacy'],
-          description: 'Build the language and mental models needed to understand access, risk, and trust in digital systems.'
+          title: 'SHA-256 file integrity checker',
+          purpose: 'Create a local hash of a file to verify integrity or compare content changes.',
+          code: `import hashlib
+
+def sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(65536), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+if __name__ == '__main__':
+    print(sha256_file('sample.txt'))`
         },
         {
-          level: 'Intermediate',
-          title: 'Network and application security',
-          progress: 52,
-          lessons: ['Network security', 'Web application security', 'Linux security', 'Digital forensics', 'Threat analysis'],
-          description: 'Move from theory to operational understanding through monitoring, application risk, and attack-path analysis.'
+          title: 'Password strength estimator',
+          purpose: 'Score a fictional password using length, diversity, and composition heuristics.',
+          code: `import re
+
+def score_password(password: str) -> int:
+    score = 0
+    if len(password) >= 12: score += 2
+    if len(password) >= 16: score += 2
+    if re.search(r'[A-Z]', password): score += 1
+    if re.search(r'[a-z]', password): score += 1
+    if re.search(r'\d', password): score += 1
+    if re.search(r'[^A-Za-z0-9]', password): score += 2
+    return score
+
+for pw in ['Dawn@River7', 'password123', 'Tr0ub4dor&3']:
+    print(pw, '->', score_password(pw))`
         },
         {
-          level: 'Advanced',
-          title: 'Defensive security engineering',
-          progress: 76,
-          lessons: ['Security architecture', 'Vulnerability research concepts', 'Incident response', 'Defensive security engineering'],
-          description: 'Learn how resilient systems are designed, monitored, and improved under real operational pressure.'
+          title: 'HTTP security header inspector',
+          purpose: 'Request a URL and inspect the returned headers for safe defaults.',
+          code: `import requests
+
+url = 'https://example.com'
+resp = requests.get(url, timeout=10)
+for key in ['Strict-Transport-Security', 'Content-Security-Policy', 'X-Frame-Options', 'X-Content-Type-Options']:
+    print(f'{key}: {resp.headers.get(key, "missing")}')`
+        },
+        {
+          title: 'JSON security configuration validator',
+          purpose: 'Check that a configuration object includes safe defaults but not secrets.',
+          code: `import json
+
+def validate_config(payload: dict) -> list[str]:
+    issues = []
+    if payload.get('debug') is True:
+        issues.append('debug should be disabled in production')
+    if not payload.get('tls', {}).get('enabled', False):
+        issues.append('TLS should be enabled')
+    if payload.get('secret'):
+        issues.append('do not store secrets in configuration files')
+    return issues
+
+cfg = {'debug': False, 'tls': {'enabled': True}, 'secret': None}
+print(validate_config(cfg))`
+        },
+        {
+          title: 'HMAC verification example',
+          purpose: 'Verify a message by recomputing the HMAC with a shared secret.',
+          code: `import hmac, hashlib
+
+def verify_hmac(message: str, signature: str, secret: str) -> bool:
+    expected = hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, signature)
+
+msg = 'sensor:reading:42'
+secret = 'demo-secret'
+actual = hmac.new(secret.encode(), msg.encode(), hashlib.sha256).hexdigest()
+print(verify_hmac(msg, actual, secret))`
+        },
+        {
+          title: 'Secure password hashing demonstration',
+          purpose: 'Hash a password with PBKDF2 to reduce brute-force risk in a toy example.',
+          code: `import hashlib
+
+password = 'demo-password'.encode()
+salt = b'generated-salt-123'
+key = hashlib.pbkdf2_hmac('sha256', password, salt, 200_000)
+print(key.hex())`
         }
       ];
+
+      const labs = [
+        {
+          title: 'Interactive OSI model',
+          description: 'Select a layer and review what it handles and which protocols commonly live there.',
+          points: ['Layer 1 physical transmission', 'L2 switching and framing', 'L3 addressing and routing', 'L4 transport and ports']
+        },
+        {
+          title: 'DNS resolution simulator',
+          description: 'Walk through local cache, recursive lookup, TLD query, and authoritative answer resolution.',
+          points: ['Cached record check', 'Recursive resolver query', 'TLD and authority strategy', 'TTL and response handling']
+        },
+        {
+          title: 'TCP handshake visualization',
+          description: 'See how SYN, SYN-ACK, and ACK establish a reliable stream between peers.',
+          points: ['Connection setup', 'Sequence numbers', 'Handshake reliability', 'State transitions']
+        },
+        {
+          title: 'Hashing playground',
+          description: 'Try different inputs and compare their SHA-256 output to understand deterministic hashing.',
+          points: ['Input text hashing', 'Determinism', 'Collision resistance', 'Integrity workflows']
+        }
+      ];
+
+      const featureGrid = document.getElementById('feature-grid');
+      const archiveGrid = document.getElementById('archive-grid');
+      const codeLabGrid = document.getElementById('code-lab-grid');
+      const labsGrid = document.getElementById('labs-grid');
+      const simulatorTabs = document.getElementById('simulator-tabs');
+      const simulatorOutput = document.getElementById('simulator-output');
+
+      function renderFeatureCards() {
+        featureGrid.innerHTML = featureCards.map(card => `
+          <article class="feature-card">
+            <span class="tag">${card.tag}</span>
+            <h3>${card.title}</h3>
+            <p>${card.description}</p>
+            <div class="mini">${card.mini}</div>
+          </article>
+        `).join('');
+      }
 
       const detailCard = document.getElementById('detail-card');
       const threatResults = document.getElementById('threat-results');
@@ -1698,10 +1737,8 @@
       const resetButton = document.getElementById('reset-filters');
 
       function populateCategories() {
-        const options = categories
-          .map(category => `<option value="${category.name}">${category.name}</option>`)
-          .join('');
-        categoryFilter.innerHTML = '<option value="all">All categories</option>' + options;
+        const categories = [...new Set(articleDatabase.map(item => item.category))];
+        categoryFilter.innerHTML = '<option value="all">All categories</option>' + categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
       }
 
       function getFilteredEntries() {
@@ -1709,10 +1746,10 @@
         const selectedCategory = categoryFilter.value;
         const selectedDifficulty = difficultyFilter.value;
 
-        return threatEntries.filter(entry => {
+        return articleDatabase.filter(entry => {
           const matchesCategory = selectedCategory === 'all' || entry.category === selectedCategory;
           const matchesDifficulty = selectedDifficulty === 'all' || entry.difficulty === selectedDifficulty;
-          const searchText = [entry.name, entry.category, entry.description, entry.keywords.join(' ')].join(' ').toLowerCase();
+          const searchText = [entry.title, entry.category, entry.summary, entry.tags.join(' ')].join(' ').toLowerCase();
           const matchesSearch = !searchTerm || searchText.includes(searchTerm);
           return matchesCategory && matchesDifficulty && matchesSearch;
         });
@@ -1728,165 +1765,240 @@
         }
 
         threatResults.innerHTML = filtered.map(entry => `
-          <article class="threat-item" tabindex="0" data-name="${entry.name}">
+          <article class="threat-item" tabindex="0" data-title="${entry.title}">
             <div class="threat-head">
-              <h3>${entry.name}</h3>
+              <h3>${entry.title}</h3>
               <span class="pill">${entry.difficulty}</span>
             </div>
             <div class="threat-meta">
               <span>${entry.category}</span>
               <span>•</span>
-              <span>${entry.references[0]}</span>
+              <span>${entry.readTime}</span>
             </div>
-            <p class="threat-description">${entry.description}</p>
+            <p class="threat-description">${entry.summary}</p>
             <div class="threat-tags">
-              ${entry.keywords.slice(0, 4).map(tag => `<span>${tag}</span>`).join('')}
+              ${entry.tags.slice(0, 4).map(tag => `<span>${tag}</span>`).join('')}
             </div>
           </article>
         `).join('');
 
         const items = document.querySelectorAll('.threat-item');
         items.forEach(item => {
-          item.addEventListener('click', () => openThreat(item.dataset.name));
+          item.addEventListener('click', () => openArticle(item.dataset.title));
           item.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
-              openThreat(item.dataset.name);
+              openArticle(item.dataset.title);
             }
           });
         });
 
-        if (filtered[0]) openThreat(filtered[0].name);
+        if (filtered[0]) openArticle(filtered[0].title);
       }
 
-      function openThreat(name) {
-        const entry = threatEntries.find(item => item.name === name);
+      function openArticle(title) {
+        const entry = articleDatabase.find(item => item.title === title);
         if (!entry) return;
 
-        const related = threatEntries
-          .filter(item => item.category === entry.category && item.name !== entry.name)
+        const related = articleDatabase
+          .filter(item => item.category === entry.category && item.title !== entry.title)
           .slice(0, 5)
-          .map(item => `<span data-name="${item.name}">${item.name}</span>`)
+          .map(item => `<span data-title="${item.title}">${item.title}</span>`)
           .join('');
 
         detailCard.innerHTML = `
           <p class="meta-label">Selected topic</p>
-          <h3>${entry.name}</h3>
+          <h3>${entry.title}</h3>
           <div class="meta">
             <span>${entry.category}</span>
             <span>•</span>
             <span>${entry.difficulty}</span>
+            <span>•</span>
+            <span>${entry.readTime}</span>
           </div>
           <div class="body">
-            <p>${entry.description}</p>
-            <h4>Technical explanation</h4>
-            <p>${entry.technicalExplanation}</p>
-            <h4>How the threat works</h4>
-            <p>${entry.howThreatWorks}</p>
-            <h4>Warning signs</h4>
-            <ul>${entry.warningSigns.map(item => `<li>${item}</li>`).join('')}</ul>
-            <h4>Detection methods</h4>
-            <ul>${entry.detectionMethods.map(item => `<li>${item}</li>`).join('')}</ul>
-            <h4>Prevention methods</h4>
-            <ul>${entry.preventionMethods.map(item => `<li>${item}</li>`).join('')}</ul>
-            <h4>Related topics</h4>
-            <div class="related-list">${related || '<span>None in this category</span>'}</div>
+            <p>${entry.summary}</p>
+            <ul>
+              ${entry.content.slice(0, 3).map(point => `<li>${point}</li>`).join('')}
+            </ul>
+            <div style="margin-top: 18px;">
+              <div class="meta-label" style="margin-bottom: 10px;">Related</div>
+              <div class="related-list">${related || '<span>None</span>'}</div>
+            </div>
           </div>
         `;
 
         detailCard.querySelectorAll('.related-list span').forEach(item => {
-          item.addEventListener('click', () => openThreat(item.dataset.name));
+          item.addEventListener('click', () => openArticle(item.dataset.title));
         });
       }
 
-      function renderResearch() {
-        const archiveGrid = document.getElementById('archive-grid');
-        archiveGrid.innerHTML = researchArticles.map(article => `
+      function renderArchive() {
+        archiveGrid.innerHTML = articleDatabase.map((item, index) => `
           <article class="article-card">
-            <span class="tag">${article.tag}</span>
-            <h3>${article.title}</h3>
+            <span class="tag">${item.category}</span>
+            <h3>${item.title}</h3>
+            <p>${item.summary}</p>
             <div class="meta-row">
-              <span>${article.category}</span>
+              <span>${item.difficulty}</span>
               <span>•</span>
-              <span>${article.date}</span>
+              <span>${item.readTime}</span>
               <span>•</span>
-              <span>${article.readTime}</span>
+              <span>${item.tags[0]}</span>
             </div>
-            <p>${article.summary}</p>
-            <div class="meta-row">
-              <span>Author: ${article.author}</span>
-            </div>
-            <div class="mini">Sources: ${article.references.join(' • ')}</div>
+            <div class="mini">${index < 3 ? 'Featured' : 'Archive'} • ${item.references[0]}</div>
           </article>
         `).join('');
       }
 
-      function renderLearning() {
-        const learningGrid = document.getElementById('learning-grid');
-        learningGrid.innerHTML = learningPaths.map(path => `
-          <article class="path-card">
-            <span class="tag">${path.level}</span>
-            <h3>${path.title}</h3>
-            <p>${path.description}</p>
-            <div class="progress"><span style="width: ${path.progress}%"></span></div>
-            <div class="mini">Progress: ${path.progress}%</div>
-            <ul class="path-list">
-              ${path.lessons.map(lesson => `<li>${lesson}</li>`).join('')}
+      function renderCodeLab() {
+        codeLabGrid.innerHTML = codeLabEntries.map(item => `
+          <article class="code-card">
+            <p class="tag">Defensive coding</p>
+            <h3>${item.title}</h3>
+            <p>${item.purpose}</p>
+            <pre><code>${escapeHtml(item.code)}</code></pre>
+            <div class="code-actions">
+              <span class="meta-label">Safe local example</span>
+              <button class="mini-button copy-code" type="button">Copy code</button>
+            </div>
+          </article>
+        `).join('');
+
+        document.querySelectorAll('.copy-code').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const codeBlock = button.closest('.code-card').querySelector('code');
+            try {
+              await navigator.clipboard.writeText(codeBlock.textContent);
+              button.textContent = 'Copied';
+              setTimeout(() => button.textContent = 'Copy code', 1400);
+            } catch (error) {
+              button.textContent = 'Copy failed';
+              setTimeout(() => button.textContent = 'Copy code', 1400);
+            }
+          });
+        });
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function renderLabs() {
+        labsGrid.innerHTML = labs.map(lab => `
+          <article class="lab-card">
+            <p class="tag">Simulation</p>
+            <h3>${lab.title}</h3>
+            <p>${lab.description}</p>
+            <ul class="lab-list">
+              ${lab.points.map(point => `<li>${point}</li>`).join('')}
             </ul>
+            <div class="mini">Browser-based exercise</div>
           </article>
         `).join('');
       }
 
-      function bindFilters() {
-        [globalSearch, categoryFilter, difficultyFilter].forEach(input => {
-          input.addEventListener('input', renderThreats);
-          input.addEventListener('change', renderThreats);
+      const simulatorCatalog = {
+        osi: {
+          title: 'OSI model drill',
+          body: `
+            <h4>Layer mapping</h4>
+            <p>Each layer focuses on a different abstraction: physical media, link framing, routing, transport, session, presentation, and application behavior.</p>
+            <ul>
+              <li><strong>Layer 2:</strong> Ethernet frames and switching decisions</li>
+              <li><strong>Layer 3:</strong> IP addressing and router-based forwarding</li>
+              <li><strong>Layer 4:</strong> TCP and UDP port logic</li>
+              <li><strong>Layer 7:</strong> HTTP, TLS negotiation, and application semantics</li>
+            </ul>
+          `
+        },
+        dns: {
+          title: 'DNS resolution path',
+          body: `
+            <h4>How a name resolves</h4>
+            <p>A recursive resolver checks local cache, then queries the root, TLD, and authoritative nameservers before returning the final answer to the client.</p>
+            <ul>
+              <li>Client asks resolver for example.org</li>
+              <li>Resolver uses cached records if available</li>
+              <li>TLD and authoritative servers provide delegation and answer records</li>
+              <li>Resolver returns the result and a TTL for future caching</li>
+            </ul>
+          `
+        },
+        tcp: {
+          title: 'TCP three-way handshake',
+          body: `
+            <h4>Connection establishment</h4>
+            <p>The host begins a connection by sending SYN, the peer responds with SYN-ACK, and the origin completes with ACK. This sequence ensures both sides are ready to exchange data.</p>
+            <ul>
+              <li><strong>SYN:</strong> initial request and initial sequence</li>
+              <li><strong>SYN-ACK:</strong> acceptance and acknowledgment</li>
+              <li><strong>ACK:</strong> final confirmation and data stream begins</li>
+            </ul>
+          `
+        },
+        hash: {
+          title: 'Hashing playground',
+          body: `
+            <h4>Deterministic output</h4>
+            <p>Hash functions like SHA-256 produce a fixed-length digest from input data. Small changes in input typically cause large changes in output.</p>
+            <ul>
+              <li>Same input → same digest</li>
+              <li>Different input → different digest</li>
+              <li>Useful for integrity verification and file fingerprinting</li>
+            </ul>
+          `
+        }
+      };
+
+      function setupSimulator() {
+        const tabs = Object.entries(simulatorCatalog).map(([key, value]) => `
+          <button type="button" class="sim-tab ${key === 'osi' ? 'active' : ''}" data-key="${key}">${key.toUpperCase()}</button>
+        `).join('');
+        simulatorTabs.innerHTML = tabs;
+
+        const updateOutput = (key) => {
+          const item = simulatorCatalog[key];
+          simulatorOutput.innerHTML = item.body;
+          document.querySelectorAll('.sim-tab').forEach(button => {
+            button.classList.toggle('active', button.dataset.key === key);
+          });
+        };
+
+        simulatorTabs.addEventListener('click', (event) => {
+          const button = event.target.closest('.sim-tab');
+          if (!button) return;
+          updateOutput(button.dataset.key);
         });
 
+        updateOutput('osi');
+      }
+
+      function bindControls() {
+        globalSearch.addEventListener('input', renderThreats);
+        categoryFilter.addEventListener('change', renderThreats);
+        difficultyFilter.addEventListener('change', renderThreats);
         resetButton.addEventListener('click', () => {
           globalSearch.value = '';
           categoryFilter.value = 'all';
           difficultyFilter.value = 'all';
           renderThreats();
-          globalSearch.focus();
-        });
-
-        document.addEventListener('keydown', (event) => {
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-            event.preventDefault();
-            globalSearch.focus();
-            globalSearch.select();
-          }
-        });
-
-        const toggle = document.querySelector('.mobile-toggle');
-        const nav = document.querySelector('.nav');
-        toggle.addEventListener('click', () => {
-          const expanded = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', String(!expanded));
-          nav.style.display = expanded ? 'none' : 'flex';
-          nav.style.flexDirection = 'column';
-          nav.style.position = 'absolute';
-          nav.style.top = '72px';
-          nav.style.right = '20px';
-          nav.style.padding = '18px';
-          nav.style.background = 'rgba(17, 16, 28, 0.96)';
-          nav.style.border = '1px solid var(--line)';
-          nav.style.borderRadius = '12px';
-          nav.style.zIndex = '10';
         });
       }
 
-      function init() {
-        populateCategories();
-        renderThreats();
-        renderResearch();
-        renderLearning();
-        bindFilters();
-        document.getElementById('year').textContent = new Date().getFullYear();
-      }
-
-      init();
+      renderFeatureCards();
+      populateCategories();
+      renderThreats();
+      renderArchive();
+      renderCodeLab();
+      renderLabs();
+      bindControls();
+      setupSimulator();
     </script>
   </body>
 </html>
