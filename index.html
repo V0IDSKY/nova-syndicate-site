@@ -1,2004 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="NØVA SYNDICATE — cybersecurity education, research archive, code lab, and interactive security learning environment."
-    />
-    <meta name="theme-color" content="#080710" />
-    <title>NØVA SYNDICATE | Knowledge Archive</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --obsidian: #080710;
-        --obsidian-2: #11101c;
-        --violet: #54258a;
-        --electric: #a56bff;
-        --silver: #c5c3d0;
-        --silver-soft: rgba(197, 195, 208, 0.7);
-        --white: #eae7f2;
-        --muted: rgba(234, 231, 242, 0.74);
-        --line: rgba(197, 195, 208, 0.17);
-        --line-strong: rgba(165, 107, 255, 0.35);
-        --panel: rgba(17, 16, 28, 0.82);
-        --panel-strong: rgba(20, 19, 30, 0.96);
-        --success: #b5f9d5;
-        --warning: #f8d48d;
-        --shadow: 0 22px 55px rgba(0, 0, 0, 0.42);
-        --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-        --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-        --sans: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
-      }
-
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        min-width: 320px;
-        min-height: 100vh;
-        overflow-x: hidden;
-        background:
-          radial-gradient(circle at 78% 18%, rgba(84, 37, 138, 0.28), transparent 30%),
-          radial-gradient(circle at 13% 34%, rgba(165, 107, 255, 0.12), transparent 24%),
-          linear-gradient(180deg, #080710 0%, #0d0b17 25%, #080710 100%);
-        color: var(--white);
-        font-family: var(--sans);
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background:
-          linear-gradient(transparent 0%, rgba(255,255,255,0.02) 100%),
-          repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,0.018) 4px);
-        opacity: 0.7;
-      }
-
-      a { color: inherit; text-decoration: none; }
-      img { max-width: 100%; display: block; }
-      button, input, select, textarea { font: inherit; }
-      pre, code { font-family: var(--mono); }
-
-      .shell {
-        width: min(1180px, calc(100% - 48px));
-        margin-inline: auto;
-        position: relative;
-        z-index: 1;
-      }
-
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        backdrop-filter: blur(12px);
-        background: rgba(8, 7, 16, 0.68);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .topbar-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 82px;
-        gap: 18px;
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .brand-mark {
-        position: relative;
-        display: grid;
-        width: 40px;
-        aspect-ratio: 1;
-        place-items: center;
-        border: 1px solid rgba(197, 195, 208, 0.45);
-        border-radius: 50%;
-        box-shadow: 0 0 20px rgba(165, 107, 255, 0.12), inset 0 0 12px rgba(165, 107, 255, 0.1);
-      }
-
-      .brand-mark::before,
-      .brand-mark::after {
-        content: "";
-        position: absolute;
-        border: 1px solid rgba(165, 107, 255, 0.48);
-        border-radius: 50%;
-      }
-
-      .brand-mark::before { inset: 6px; }
-      .brand-mark::after {
-        width: 6px;
-        height: 6px;
-        border: 0;
-        background: var(--silver);
-        box-shadow: 0 0 12px var(--electric);
-      }
-
-      .brand-name {
-        display: block;
-        font-size: 0.92rem;
-        font-weight: 700;
-        letter-spacing: 0.32em;
-        text-transform: uppercase;
-      }
-
-      .brand-sub {
-        display: block;
-        margin-top: 4px;
-        color: var(--muted);
-        font: 0.52rem var(--mono);
-        letter-spacing: 0.34em;
-        text-transform: uppercase;
-      }
-
-      .nav {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .nav a {
-        position: relative;
-        color: var(--silver-soft);
-        font: 0.62rem var(--mono);
-        letter-spacing: 0.23em;
-        text-transform: uppercase;
-        transition: color 0.2s ease;
-      }
-
-      .nav a::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -9px;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, var(--electric), transparent);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.2s ease;
-      }
-
-      .nav a:hover,
-      .nav a:focus-visible { color: var(--white); }
-      .nav a:hover::after,
-      .nav a:focus-visible::after { transform: scaleX(1); }
-
-      .mobile-toggle {
-        display: none;
-        background: transparent;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 10px 12px;
-        color: var(--white);
-        font: 0.62rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 12px;
-        border: 1px solid rgba(165, 107, 255, 0.28);
-        border-radius: 999px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .status-pill .status-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--electric);
-        box-shadow: 0 0 10px rgba(165, 107, 255, 0.8);
-        animation: pulse 2.4s ease-in-out infinite;
-      }
-
-      .hero {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        align-items: center;
-        gap: 36px;
-        min-height: min(760px, calc(100vh - 100px));
-        padding: 58px 0 18px;
-      }
-
-      .eyebrow,
-      .micro-label,
-      .meta-label {
-        color: var(--silver);
-        font: 0.62rem var(--mono);
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-      }
-
-      .eyebrow { margin: 0 0 20px; }
-
-      h1, h2, h3 {
-        margin: 0;
-        font-family: var(--serif);
-        font-weight: 500;
-        letter-spacing: -0.06em;
-      }
-
-      .hero h1 {
-        max-width: 760px;
-        font-size: clamp(3.4rem, 7vw, 7rem);
-        line-height: 0.9;
-        text-shadow: 0 0 36px rgba(165, 107, 255, 0.18);
-      }
-
-      .subtitle {
-        margin: 22px 0 0;
-        color: var(--muted);
-        font-size: clamp(1.1rem, 1.8vw, 1.5rem);
-        font-style: italic;
-        line-height: 1.6;
-      }
-
-      .slogan {
-        margin: 12px 0 0;
-        color: var(--white);
-        font: 0.8rem var(--mono);
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-
-      .founder-line {
-        margin: 34px 0 0;
-        color: var(--silver);
-        font: 0.62rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .cta-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 28px;
-      }
-
-      .button,
-      .button-ghost,
-      .mini-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 48px;
-        padding: 0 20px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-        font: 0.7rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        cursor: pointer;
-      }
-
-      .button,
-      .mini-button {
-        background: linear-gradient(135deg, rgba(165, 107, 255, 0.2), rgba(84, 37, 138, 0.14));
-        box-shadow: inset 0 0 18px rgba(165, 107, 255, 0.14), 0 10px 25px rgba(84, 37, 138, 0.22);
-      }
-
-      .button-ghost {
-        background: transparent;
-        color: var(--white);
-      }
-
-      .button:hover,
-      .button-ghost:hover,
-      .mini-button:hover,
-      .button:focus-visible,
-      .button-ghost:focus-visible,
-      .mini-button:focus-visible {
-        transform: translateY(-1px);
-        border-color: rgba(165, 107, 255, 0.42);
-      }
-
-      .emblem-area {
-        display: grid;
-        justify-items: center;
-        min-height: 430px;
-      }
-
-      .emblem {
-        position: relative;
-        display: grid;
-        place-items: center;
-        width: min(420px, 75vw);
-        aspect-ratio: 1;
-        border: 1px solid rgba(197, 195, 208, 0.16);
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(84, 37, 138, 0.12), rgba(8, 7, 16, 0.08) 62%, transparent 64%);
-        box-shadow: inset 0 0 60px rgba(165, 107, 255, 0.08), 0 0 80px rgba(84, 37, 138, 0.08);
-      }
-
-      .emblem::before,
-      .emblem::after {
-        content: "";
-        position: absolute;
-        border: 1px solid rgba(197, 195, 208, 0.12);
-        border-radius: 50%;
-      }
-
-      .emblem::before { inset: 12%; }
-      .emblem::after { inset: 23%; border-color: rgba(165, 107, 255, 0.32); }
-
-      .orbit {
-        position: absolute;
-        width: 112%;
-        height: 46%;
-        border: 1px solid rgba(197, 195, 208, 0.14);
-        border-radius: 50%;
-        transform: rotate(-38deg);
-      }
-
-      .orbit.second {
-        width: 104%;
-        height: 57%;
-        border-color: rgba(165, 107, 255, 0.18);
-        transform: rotate(38deg);
-      }
-
-      .orbit-dot {
-        position: absolute;
-        top: 15%;
-        right: 16%;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--silver);
-        box-shadow: 0 0 14px var(--electric);
-      }
-
-      .emblem-word {
-        position: relative;
-        z-index: 1;
-        font-size: clamp(2.5rem, 5vw, 4.2rem);
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-shadow: 0 0 24px rgba(165, 107, 255, 0.22);
-      }
-
-      .emblem-word span { color: var(--silver); }
-      .emblem-caption {
-        position: absolute;
-        bottom: 12%;
-        color: var(--silver);
-        font: 0.55rem var(--mono);
-        letter-spacing: 0.34em;
-        text-transform: uppercase;
-      }
-
-      .info-strip {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
-        margin-top: 12px;
-      }
-
-      .info-unit {
-        padding: 18px 22px;
-      }
-
-      .info-unit + .info-unit {
-        border-left: 1px solid var(--line);
-      }
-
-      .info-unit p {
-        margin: 0 0 8px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-      }
-
-      .info-unit strong {
-        font-size: 1rem;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-      }
-
-      section {
-        padding-top: 92px;
-      }
-
-      .section-head {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 28px;
-      }
-
-      .section-head h2 {
-        font-size: clamp(2.35rem, 5vw, 4.5rem);
-        line-height: 0.95;
-      }
-
-      .section-head p { margin: 0; }
-
-      .feature-grid,
-      .research-grid,
-      .article-grid,
-      .path-grid,
-      .about-grid,
-      .privacy-grid,
-      .lab-grid,
-      .code-grid {
-        display: grid;
-        gap: 22px;
-      }
-
-      .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-      .feature-card,
-      .research-card,
-      .article-card,
-      .path-card,
-      .about-panel,
-      .privacy-panel,
-      .search-panel,
-      .lab-card,
-      .code-card {
-        position: relative;
-        background: var(--panel);
-        border: 1px solid var(--line);
-        box-shadow: var(--shadow);
-      }
-
-      .feature-card,
-      .research-card,
-      .article-card,
-      .path-card,
-      .about-panel,
-      .privacy-panel,
-      .lab-card,
-      .code-card {
-        padding: 28px 24px 24px;
-      }
-
-      .feature-card .tag,
-      .research-card .tag,
-      .article-card .tag,
-      .path-card .tag {
-        display: inline-block;
-        margin-bottom: 16px;
-        color: var(--silver);
-        font: 0.6rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .feature-card h3,
-      .research-card h3,
-      .article-card h3,
-      .path-card h3,
-      .lab-card h3,
-      .code-card h3 {
-        font-size: clamp(1.6rem, 2vw, 2.2rem);
-        line-height: 1.06;
-      }
-
-      .feature-card p,
-      .research-card p,
-      .article-card p,
-      .path-card p,
-      .about-panel p,
-      .privacy-panel p,
-      .path-list li,
-      .lab-card p,
-      .code-card p {
-        color: var(--muted);
-        line-height: 1.72;
-      }
-
-      .feature-card .mini,
-      .research-card .mini,
-      .article-card .mini,
-      .lab-card .mini {
-        margin-top: 18px;
-        color: var(--silver);
-        font: 0.6rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .database-shell {
-        display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-        gap: 24px;
-        align-items: start;
-      }
-
-      .search-panel {
-        padding: 18px 18px 14px;
-      }
-
-      .search-toolbar {
-        display: grid;
-        grid-template-columns: 1.6fr repeat(2, minmax(0, 0.8fr)) auto;
-        gap: 12px;
-      }
-
-      .field {
-        position: relative;
-      }
-
-      .field input,
-      .field select {
-        width: 100%;
-        min-height: 46px;
-        padding: 0 14px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: rgba(255,255,255,0.02);
-        color: var(--white);
-      }
-
-      .field input::placeholder { color: rgba(234, 231, 242, 0.55); }
-      .field-label {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-      }
-
-      .search-summary {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 16px;
-        padding-top: 12px;
-        border-top: 1px solid var(--line);
-        color: var(--silver-soft);
-        font: 0.62rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .reset-button {
-        background: transparent;
-        color: var(--white);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 0 18px;
-        min-height: 46px;
-        font: 0.6rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        cursor: pointer;
-      }
-
-      .threat-results {
-        display: grid;
-        gap: 18px;
-        margin-top: 18px;
-      }
-
-      .threat-item {
-        display: grid;
-        gap: 14px;
-        padding: 22px 20px;
-        background: rgba(17, 16, 28, 0.72);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        cursor: pointer;
-        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .threat-item:hover,
-      .threat-item:focus-visible {
-        transform: translateY(-1px);
-        border-color: rgba(165, 107, 255, 0.42);
-        box-shadow: 0 18px 40px rgba(84, 37, 138, 0.12);
-      }
-
-      .threat-head {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        align-items: start;
-      }
-
-      .threat-head h3 {
-        font-size: clamp(1.5rem, 2vw, 2rem);
-        line-height: 1.1;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 10px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-
-      .threat-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        color: var(--silver);
-        font: 0.6rem var(--mono);
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .threat-description {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .threat-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .threat-tags span {
-        display: inline-flex;
-        align-items: center;
-        padding: 7px 10px;
-        border-radius: 999px;
-        background: rgba(165, 107, 255, 0.08);
-        border: 1px solid rgba(165, 107, 255, 0.15);
-        color: var(--silver);
-        font: 0.56rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .side-panel {
-        position: sticky;
-        top: 102px;
-        display: grid;
-        gap: 14px;
-      }
-
-      .detail-card {
-        background: var(--panel-strong);
-        border: 1px solid var(--line);
-        padding: 22px 18px;
-        box-shadow: var(--shadow);
-      }
-
-      .detail-card h3 {
-        font-size: clamp(1.8rem, 2vw, 2.5rem);
-        line-height: 1.1;
-      }
-
-      .detail-card .meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 12px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .detail-card .body {
-        margin-top: 18px;
-      }
-
-      .detail-card p,
-      .detail-card li {
-        color: var(--muted);
-        line-height: 1.75;
-      }
-
-      .detail-card ul {
-        margin: 0;
-        padding-left: 18px;
-      }
-
-      .related-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .related-list span {
-        display: inline-flex;
-        align-items: center;
-        padding: 7px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        color: var(--silver);
-        font: 0.56rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        cursor: pointer;
-      }
-
-      .research-grid,
-      .article-grid,
-      .path-grid,
-      .about-grid,
-      .privacy-grid,
-      .lab-grid,
-      .code-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .research-card,
-      .article-card,
-      .path-card,
-      .about-panel,
-      .privacy-panel,
-      .lab-card,
-      .code-card {
-        border-radius: 20px;
-      }
-
-      .meta-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 18px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-      .path-card {
-        padding-bottom: 20px;
-      }
-
-      .path-card .progress {
-        height: 8px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.04);
-        overflow: hidden;
-        margin: 18px 0 16px;
-      }
-
-      .path-card .progress span {
-        display: block;
-        height: 100%;
-        background: linear-gradient(90deg, var(--electric), rgba(197,195,208,0.8));
-        border-radius: inherit;
-      }
-
-      .path-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .path-list li {
-        padding: 10px 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .path-list li:first-child { border-top: 0; }
-
-      .about-grid {
-        grid-template-columns: 1.1fr 1.1fr 0.8fr;
-        align-items: start;
-      }
-
-      .principles {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .principles span {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 52px;
-        padding: 0 18px;
-        border: 1px solid var(--line);
-        color: var(--white);
-        background: rgba(165, 107, 255, 0.05);
-        font: 0.7rem var(--mono);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .privacy-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .privacy-panel ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .privacy-panel li {
-        padding: 10px 0;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .privacy-panel li:first-child { border-top: 0; }
-
-      .code-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .code-card pre {
-        max-height: 260px;
-        overflow: auto;
-        margin: 18px 0 0;
-        padding: 16px 18px;
-        background: rgba(8, 7, 16, 0.9);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        color: var(--white);
-        white-space: pre-wrap;
-        line-height: 1.6;
-      }
-
-      .code-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        margin-top: 18px;
-      }
-
-      .mini-button {
-        min-height: 36px;
-        padding: 0 14px;
-        font-size: 0.58rem;
-      }
-
-      .lab-card .lab-list {
-        list-style: none;
-        margin: 18px 0 0;
-        padding: 0;
-      }
-
-      .lab-card .lab-list li {
-        padding: 10px 0;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-      }
-
-      .lab-card .lab-list li:first-child { border-top: 0; }
-
-      .interactive-panel {
-        display: grid;
-        gap: 18px;
-        padding: 24px 22px;
-        background: rgba(17, 16, 28, 0.8);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-      }
-
-      .interact-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .interact-tabs button {
-        background: rgba(165, 107, 255, 0.06);
-        border: 1px solid var(--line);
-        color: var(--white);
-        padding: 10px 14px;
-        border-radius: 999px;
-        font: 0.56rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        cursor: pointer;
-      }
-
-      .interact-tabs button.active {
-        background: rgba(165, 107, 255, 0.15);
-        border-color: rgba(165, 107, 255, 0.35);
-      }
-
-      .simulator-output {
-        min-height: 170px;
-        padding: 18px 16px;
-        background: rgba(8, 7, 16, 0.82);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-      }
-
-      .simulator-output h4 {
-        margin: 0 0 12px;
-        font-size: 1.15rem;
-        color: var(--white);
-      }
-
-      .simulator-output p,
-      .simulator-output li {
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .simulator-output ul {
-        margin: 0;
-        padding-left: 18px;
-      }
-
-      .lab-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .hash-box,
-      .password-box,
-      .dns-box {
-        width: 100%;
-        min-height: 44px;
-        padding: 12px 14px;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        color: var(--white);
-      }
-
-      .not-found {
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-        padding: 40px 20px;
-      }
-
-      .not-found-card {
-        width: min(760px, 100%);
-        padding: 46px 28px;
-        border: 1px solid var(--line);
-        background: rgba(17, 16, 28, 0.9);
-        box-shadow: var(--shadow);
-        text-align: center;
-      }
-
-      .not-found-card h1 {
-        font-size: clamp(4rem, 12vw, 9rem);
-        line-height: 0.85;
-        letter-spacing: -0.08em;
-      }
-
-      .not-found-card p {
-        color: var(--muted);
-        line-height: 1.75;
-      }
-
-      footer {
-        padding: 26px 0 40px;
-        border-top: 1px solid var(--line);
-      }
-
-      .footer-inner {
-        display: flex;
-        justify-content: space-between;
-        gap: 18px;
-        color: var(--silver);
-        font: 0.58rem var(--mono);
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-
-      .empty-state {
-        padding: 34px 20px;
-        border: 1px dashed var(--line);
-        border-radius: 18px;
-        color: var(--muted);
-        text-align: center;
-        font: 0.8rem var(--mono);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      @keyframes pulse {
-        50% { opacity: 0.55; transform: scale(0.75); }
-      }
-
-      @media (max-width: 980px) {
-        .nav { display: none; }
-        .mobile-toggle { display: inline-flex; }
-        .hero,
-        .database-shell,
-        .about-grid,
-        .privacy-grid,
-        .feature-grid,
-        .research-grid,
-        .article-grid,
-        .path-grid,
-        .lab-grid,
-        .code-grid {
-          grid-template-columns: 1fr;
-        }
-        .search-toolbar { grid-template-columns: 1fr; }
-        .side-panel { position: static; }
-      }
-
-      @media (max-width: 700px) {
-        .shell { width: min(100% - 30px, 700px); }
-        .topbar-inner { min-height: 74px; }
-        .brand-name { letter-spacing: 0.22em; }
-        .brand-sub { letter-spacing: 0.22em; }
-        .hero { min-height: auto; padding-top: 32px; }
-        .info-strip { grid-template-columns: 1fr; }
-        .info-unit + .info-unit { border-top: 1px solid var(--line); border-left: 0; }
-        .section-head { align-items: start; flex-direction: column; }
-        .cta-row { flex-direction: column; }
-        .button, .button-ghost, .mini-button { width: 100%; }
-        .footer-inner { flex-direction: column; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-          scroll-behavior: auto !important;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="shell topbar-inner">
-        <a class="brand" href="#home" aria-label="NØVA SYNDICATE home">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>
-            <span class="brand-name">NØVA</span>
-            <span class="brand-sub">Syndicate</span>
-          </span>
-        </a>
-
-        <nav class="nav" aria-label="Main navigation">
-          <a href="#home">Home</a>
-          <a href="#database">Knowledge Database</a>
-          <a href="#research">Research</a>
-          <a href="#code-lab">NØVA Code Lab</a>
-          <a href="#learning">Laboratories</a>
-          <a href="#about">About</a>
-        </nav>
-
-        <div class="status-pill" aria-label="System status online">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span>System status: online</span>
-        </div>
-
-        <button class="mobile-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NØVA SYNDICATE — an independent archive of cybersecurity knowledge, research and digital awareness.">
+  <meta name="theme-color" content="#09080D">
+  <title>NØVA SYNDICATE — Independent Research Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#09080d;--bg-soft:#100e16;--surface:#17141f;--accent:#7950a8;--accent-soft:#a78bc8;--text:#ece8f0;--muted:#96909f;--line:#292431;--mono:"IBM Plex Mono",monospace;--serif:"Instrument Serif",Georgia,serif;--sans:"DM Sans",Arial,sans-serif;--measure:68ch;--content:1180px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;min-width:320px;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 82% 10%,rgba(121,80,168,.10),transparent 30%),linear-gradient(180deg,rgba(255,255,255,.012),transparent 38%)}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{color:inherit}::selection{background:rgba(121,80,168,.45);color:#fff}.shell{width:min(var(--content),calc(100% - 64px));margin-inline:auto}.topbar{position:sticky;top:0;z-index:20;background:rgba(9,8,13,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.topbar-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:28px}.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}.brand-mark{width:32px;height:32px;border:1px solid #827a8c;border-radius:50%;display:grid;place-items:center;position:relative}.brand-mark:before{content:"";position:absolute;inset:5px;border:1px solid var(--accent-soft);border-radius:50%}.brand-mark:after{content:"";width:4px;height:4px;background:var(--text);border-radius:50%}.brand-name{display:block;font-size:.8rem;letter-spacing:.24em;font-weight:600}.brand-sub{display:block;color:var(--muted);font:9px var(--mono);letter-spacing:.22em;text-transform:uppercase;margin-top:1px}.nav{display:flex;align-items:center;gap:24px}.nav a{font:10px var(--mono);color:var(--muted);transition:color .18s ease}.nav a:hover,.nav a:focus-visible,.nav a[aria-current=location]{color:var(--text)}.nav a:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent-soft);outline-offset:4px}.mobile-toggle{display:none;background:none;border:1px solid var(--line);padding:9px 12px;font:10px var(--mono);cursor:pointer}.hero{min-height:660px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:54px;padding:84px 0 70px;position:relative;border-bottom:1px solid var(--line)}.hero-copy{position:relative;z-index:1}.overline,.eyebrow,.meta-label{font:10px var(--mono);letter-spacing:.14em;color:var(--accent-soft)}.overline{margin:0 0 28px}.hero h1{font:normal clamp(4.5rem,9vw,8.5rem)/.82 var(--serif);letter-spacing:-.045em;margin:0;max-width:760px}.hero h1 span{display:block;color:var(--accent-soft);font-style:italic}.hero-slogan{margin:34px 0 12px;font:11px var(--mono);letter-spacing:.19em;color:var(--text)}.subtitle{max-width:510px;margin:0;color:#b9b3c0;font-size:1.13rem;line-height:1.7}.hero-meta{display:flex;gap:22px;align-items:center;margin-top:38px;color:var(--muted);font:9px var(--mono);letter-spacing:.1em}.hero-meta span+span:before{content:"/";margin-right:22px;color:var(--accent)}.hero-actions{display:flex;gap:12px;margin-top:30px}.button,.button-ghost{min-height:44px;padding:0 17px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:10px var(--mono);transition:border-color .2s,background .2s}.button{background:var(--accent);border-color:var(--accent);color:white}.button:hover{background:#865eb5}.button-ghost:hover{border-color:var(--accent-soft)}.orbital{width:min(390px,35vw);aspect-ratio:1;justify-self:center;position:relative;display:grid;place-items:center}.orbital:before,.orbital:after,.orbit-line{content:"";position:absolute;border:1px solid rgba(167,139,200,.25);border-radius:50%}.orbital:before{inset:5%}.orbital:after{inset:19%;border-color:rgba(236,232,240,.12)}.orbit-line{inset:30% -10%;height:40%;transform:rotate(-34deg);border-color:rgba(167,139,200,.4)}.orbit-line.two{inset:23% -3%;height:54%;transform:rotate(38deg);border-color:rgba(236,232,240,.15)}.orbit-core{font:clamp(2rem,4vw,3.8rem) var(--serif);letter-spacing:.08em}.orbit-core span{color:var(--accent-soft)}.orbit-caption{position:absolute;bottom:13%;font:8px var(--mono);letter-spacing:.24em;color:var(--muted)}.orbital-dot{position:absolute;right:13%;top:23%;width:7px;height:7px;border-radius:50%;background:var(--accent-soft)}section{padding:94px 0 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:32px}.section-index{margin:0 0 10px;color:var(--accent-soft);font:9px var(--mono);letter-spacing:.14em}.section-head h2{font:normal clamp(2.6rem,5vw,4.6rem)/.98 var(--serif);letter-spacing:-.025em;margin:0}.section-note{max-width:300px;color:var(--muted);font-size:13px;margin:0}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.feature-card{padding:25px 26px 26px 0}.feature-card+.feature-card{padding-left:26px;border-left:1px solid var(--line)}.feature-card .tag,.tag{font:9px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-soft)}.feature-card h3,.article-card h3,.lab-card h3,.code-card h3,.about-panel h3{font:normal 1.8rem/1.05 var(--serif);margin:14px 0 10px}.feature-card p,.article-card p,.lab-card p,.code-card p,.about-panel p{margin:0;color:#b5afbb;font-size:14px;line-height:1.75}.feature-card .mini,.mini{margin-top:17px;font:9px var(--mono);color:var(--muted);letter-spacing:.04em}.database-shell{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);gap:34px;align-items:start}.search-panel{padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.search-toolbar{display:grid;grid-template-columns:1.5fr .9fr .8fr auto;gap:12px;align-items:end}.field label{display:block;margin-bottom:7px;font:9px var(--mono);color:var(--muted);letter-spacing:.08em}.field input,.field select{width:100%;height:42px;padding:0 11px;background:var(--bg-soft);border:1px solid var(--line);border-radius:0;color:var(--text);font-size:12px}.field input::placeholder{color:#706a78}.reset-button{height:42px;padding:0 14px;background:none;border:1px solid var(--line);font:9px var(--mono);cursor:pointer}.reset-button:hover{border-color:var(--accent-soft)}.search-summary{display:flex;justify-content:space-between;padding-top:12px;margin-top:14px;border-top:1px solid var(--line);color:var(--muted);font:9px var(--mono)}.threat-results{display:grid}.threat-item{padding:20px 2px;border-bottom:1px solid var(--line);cursor:pointer;transition:padding .18s ease}.threat-item:hover,.threat-item:focus-visible{padding-left:9px}.threat-head{display:flex;justify-content:space-between;gap:15px;align-items:baseline}.threat-head h3{font:normal 1.65rem/1.1 var(--serif);margin:0}.pill{font:8px var(--mono);color:var(--accent-soft);white-space:nowrap}.threat-meta{margin-top:7px;font:9px var(--mono);color:var(--muted)}.threat-description{font-size:13px;color:#b5afbb;margin:11px 0}.threat-tags{display:flex;flex-wrap:wrap;gap:8px}.threat-tags span{font:8px var(--mono);color:var(--muted)}.threat-tags span+span:before{content:"·";margin-right:8px;color:var(--accent)}.side-panel{position:sticky;top:100px}.detail-card{border-left:1px solid var(--accent);padding:7px 0 8px 22px}.detail-card h3{font:normal 2.2rem/1.04 var(--serif);margin:12px 0}.detail-card .meta{font:9px var(--mono);color:var(--muted)}.detail-card .body{margin-top:19px;color:#b5afbb;font-size:13px;line-height:1.8}.detail-card .body p{margin:0 0 14px}.detail-card ul{padding-left:17px}.detail-card li{margin:8px 0}.related-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:9px}.related-list span{font:9px var(--mono);color:var(--accent-soft);cursor:pointer}.related-list span:hover{text-decoration:underline}.article-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px}.article-card{padding:21px 0 25px;border-top:1px solid var(--line)}.article-card h3{margin:9px 0}.article-card .meta-row{display:flex;gap:9px;margin-top:15px;color:var(--muted);font:9px var(--mono)}.article-card .mini{margin-top:10px}.code-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 42px}.code-card{padding:20px 0 0;border-top:1px solid var(--line);min-width:0}.code-card h3{font-size:1.75rem;margin:10px 0}.code-card pre{position:relative;overflow:auto;max-height:300px;margin:17px 0 0;padding:16px 18px;background:#100e16;border:1px solid var(--line);color:#d8d1df;font:11px/1.7 var(--mono);tab-size:2;white-space:pre}.code-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.code-actions .meta-label{font-size:8px}.mini-button{background:transparent;border:1px solid var(--line);padding:8px 11px;font:9px var(--mono);cursor:pointer}.mini-button:hover{border-color:var(--accent-soft)}.lab-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px}.lab-card{padding:23px 0;border-top:1px solid var(--line)}.lab-card h3{margin:9px 0}.lab-list{list-style:none;padding:0;margin:13px 0 0}.lab-list li{padding:7px 0;border-top:1px solid rgba(41,36,49,.7);color:var(--muted);font-size:12px}.lab-list li:first-child{border-top:0}.interactive-panel{margin-top:40px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.interact-tabs{display:flex;flex-wrap:wrap;gap:0 20px;margin-bottom:18px}.interact-tabs button{border:0;border-bottom:1px solid transparent;padding:8px 0;background:none;color:var(--muted);font:9px var(--mono);cursor:pointer}.interact-tabs button.active{color:var(--text);border-color:var(--accent-soft)}.simulator-output{max-width:780px;min-height:150px}.simulator-output h4{font:normal 1.8rem var(--serif);margin:0 0 9px}.simulator-output p,.simulator-output li{font-size:13px;color:#b5afbb;line-height:1.8}.simulator-output ul{padding-left:19px}.empty-state{padding:28px 0;color:var(--muted);font:11px var(--mono)}.about-grid{display:grid;grid-template-columns:1fr 1fr .8fr;gap:38px}.about-panel{border-top:1px solid var(--line);padding-top:18px}.about-panel h3{margin-top:12px}.principles{display:flex;flex-direction:column;gap:9px;margin-top:18px}.principles span{border-bottom:1px solid var(--line);padding:8px 0;color:var(--muted);font:9px var(--mono)}.privacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}.privacy-panel{border-top:1px solid var(--line);padding-top:18px}.privacy-panel h3{font:normal 2rem var(--serif);margin:10px 0}.privacy-panel ul{list-style:none;margin:12px 0;padding:0}.privacy-panel li{padding:11px 0;border-top:1px solid rgba(41,36,49,.7);color:#b5afbb;font-size:13px}.privacy-panel li:first-child{border-top:0}footer{margin-top:110px;border-top:1px solid var(--line);padding:25px 0 35px}.footer-inner{display:flex;justify-content:space-between;gap:18px;color:var(--muted);font:9px var(--mono);letter-spacing:.08em}.reading-progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:var(--accent-soft);transition:width .1s linear}.bookmark-button{border:1px solid var(--line);background:transparent;padding:7px 10px;font:9px var(--mono);cursor:pointer}.bookmark-button[aria-pressed=true]{color:var(--accent-soft);border-color:var(--accent)}
+    @media(max-width:980px){.shell{width:min(100% - 44px,var(--content))}.nav{gap:14px}.nav a{font-size:9px}.status-pill{display:none}.hero{min-height:570px;gap:20px}.database-shell{grid-template-columns:1fr}.side-panel{position:static}.detail-card{max-width:800px}.feature-grid{grid-template-columns:1fr}.feature-card,.feature-card+.feature-card{padding:22px 0;border-left:0;border-bottom:1px solid var(--line)}.feature-card:last-child{border-bottom:0}.about-grid{grid-template-columns:1fr 1fr}.principles{grid-column:1/-1;flex-direction:row;flex-wrap:wrap}}
+    @media(max-width:700px){.shell{width:calc(100% - 36px)}.topbar-inner{min-height:68px}.mobile-toggle{display:block}.nav{display:none;position:absolute;top:68px;left:0;right:0;padding:15px 18px 20px;background:var(--bg);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:16px}.nav.open{display:flex}.nav a{font-size:10px}.hero{grid-template-columns:1fr;min-height:auto;padding:75px 0 42px;gap:38px}.hero h1{font-size:clamp(4.1rem,16vw,6rem)}.orbital{width:min(260px,68vw);grid-row:1;justify-self:end;margin-right:10px}.hero-copy{grid-row:2}.hero-slogan{margin-top:26px}.hero-meta{gap:10px;flex-wrap:wrap}.hero-meta span+span:before{margin-right:10px}.hero-actions{flex-wrap:wrap}.section-head{align-items:flex-start;flex-direction:column;margin-bottom:22px}.section-note{max-width:unset}.section-head h2{font-size:3.3rem}section{padding-top:72px}.search-toolbar{grid-template-columns:1fr 1fr}.search-toolbar .field:first-child{grid-column:1/-1}.reset-button{grid-column:1/-1}.article-grid,.code-grid,.lab-grid,.privacy-grid,.about-grid{grid-template-columns:1fr;gap:0}.article-card,.lab-card,.about-panel,.privacy-panel{padding:21px 0}.code-card{padding-top:20px}.code-card pre{font-size:10px;padding:14px}.privacy-grid{gap:0}.principles{grid-column:auto}.footer-inner{flex-direction:column}.interactive-panel{padding:20px 0}.interact-tabs{gap:0 14px}.detail-card{padding-left:15px}.hero-meta{font-size:8px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#home" aria-label="NØVA SYNDICATE home"><span class="brand-mark" aria-hidden="true"></span><span><span class="brand-name">NØVA</span><span class="brand-sub">Syndicate</span></span></a>
+      <nav class="nav" id="main-nav" aria-label="Main navigation">
+        <a href="#home">Home</a><a href="#database">Archive</a><a href="#research">Research</a><a href="#code-lab">Code Lab</a><a href="#learning">Laboratories</a><a href="#about">About</a>
+      </nav>
+      <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="orbital" aria-hidden="true"><span class="orbit-line"></span><span class="orbit-line two"></span><span class="orbital-dot"></span><span class="orbit-core">NØ<span>/</span>VA</span><span class="orbit-caption">INDEPENDENT RESEARCH ARCHIVE</span></div>
+      <div class="hero-copy">
+        <p class="overline">Independent research archive · Est. 2026</p>
+        <h1 id="hero-title">NØVA <span>SYNDICATE</span></h1>
+        <p class="hero-slogan">DISAPPEAR FROM THE SYSTEM.</p>
+        <p class="subtitle">An independent archive of cybersecurity knowledge, research and digital awareness.</p>
+        <div class="hero-meta"><span>DEFENSIVE SECURITY</span><span>TECHNICAL RESEARCH</span><span>OPEN LEARNING</span></div>
+        <div class="hero-actions"><a class="button" href="#database">Explore the archive</a><a class="button-ghost" href="#research">Read research</a></div>
       </div>
-    </header>
+    </section>
 
-    <main class="shell">
-      <section id="home" class="hero" aria-labelledby="hero-title">
-        <div>
-          <p class="eyebrow">Independent cyber research archive</p>
-          <h1 id="hero-title">NØVA<br />SYNDICATE</h1>
-          <p class="subtitle">“Knowledge is the ultimate form of independence.”</p>
-          <p class="slogan">Knowledge. Independence. Curiosity.</p>
-          <p class="founder-line">Founder: VØIDSKY // Research archive 2026</p>
+    <section aria-labelledby="featured-title">
+      <div class="section-head"><div><p class="section-index">01 / THE COLLECTION</p><h2 id="featured-title">Research domains</h2></div><p class="section-note">A considered collection of technical disciplines and defensive practice.</p></div>
+      <div class="feature-grid" id="feature-grid"></div>
+    </section>
 
-          <div class="cta-row">
-            <a class="button" href="#database">Enter the archive</a>
-            <a class="button-ghost" href="#research">View research</a>
-          </div>
-        </div>
+    <section id="database" aria-labelledby="database-title">
+      <div class="section-head"><div><p class="section-index">02 / KNOWLEDGE DATABASE</p><h2 id="database-title">The archive</h2></div><p class="section-note">Search the collection by concept, domain, or difficulty.</p></div>
+      <div class="database-shell"><div>
+        <div class="search-panel"><div class="search-toolbar">
+          <div class="field"><label for="global-search">Search the collection</label><input id="global-search" type="search" placeholder="DNS, forensics, hashing…" aria-label="Search knowledge database"></div>
+          <div class="field"><label for="category-filter">Discipline</label><select id="category-filter"><option value="all">All disciplines</option></select></div>
+          <div class="field"><label for="difficulty-filter">Level</label><select id="difficulty-filter"><option value="all">All levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+          <button class="reset-button" type="button" id="reset-filters">Reset filters</button>
+        </div><div class="search-summary"><span id="result-count">0 entries</span><span>Ctrl / ⌘ K to search</span></div></div>
+        <div id="threat-results" class="threat-results" aria-live="polite"></div>
+      </div><aside class="side-panel"><article class="detail-card" id="detail-card"><p class="meta-label">Selected research</p><h3>The knowledge atlas</h3><div class="meta">Choose an entry to read its overview.</div><div class="body"><p>Technical subjects are presented through concepts, system behavior, defensive decisions, and trustworthy further reading.</p></div></article></aside></div>
+    </section>
 
-        <div class="emblem-area" aria-label="NØVA emblem">
-          <div class="emblem" aria-hidden="true">
-            <span class="orbit"></span>
-            <span class="orbit second"></span>
-            <span class="orbit-dot"></span>
-            <span class="emblem-word">NØ<span>/</span>VA</span>
-            <span class="emblem-caption">NØVA SYNDICATE</span>
-          </div>
-        </div>
-      </section>
+    <section id="research" aria-labelledby="research-title">
+      <div class="section-head"><div><p class="section-index">03 / RECENT RESEARCH</p><h2 id="research-title">From the archive</h2></div><p class="section-note">Selected notes and guides from across the collection.</p></div>
+      <div class="article-grid" id="archive-grid"></div>
+    </section>
 
-      <div class="info-strip" aria-label="Collective details">
-        <div class="info-unit">
-          <p>Focus</p>
-          <strong>Cybersecurity education & research</strong>
-        </div>
-        <div class="info-unit">
-          <p>Mission</p>
-          <strong>Defensive knowledge, structured learning, practical tools</strong>
-        </div>
+    <section id="code-lab" aria-labelledby="code-lab-title">
+      <div class="section-head"><div><p class="section-index">04 / NØVA CODE LAB</p><h2 id="code-lab-title">Defensive practice</h2></div><p class="section-note">Small, inspectable examples for local learning. Never run on systems without authorization.</p></div>
+      <div class="code-grid" id="code-lab-grid"></div>
+    </section>
+
+    <section id="learning" aria-labelledby="learning-title">
+      <div class="section-head"><div><p class="section-index">05 / NØVA LABORATORIES</p><h2 id="learning-title">Learn by tracing</h2></div><p class="section-note">Browser-based simulations explain protocols and defensive concepts without touching real systems.</p></div>
+      <div class="lab-grid" id="labs-grid"></div>
+      <div class="interactive-panel"><div class="interact-tabs" id="simulator-tabs" role="tablist" aria-label="Choose a learning simulation"></div><div class="simulator-output" id="simulator-output" aria-live="polite"></div></div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-head"><div><p class="section-index">06 / THE INSTITUTION</p><h2 id="about-title">Knowledge is a practice.</h2></div></div>
+      <div class="about-grid">
+        <article class="about-panel"><span class="tag">Method</span><h3>Evidence before atmosphere</h3><p>NØVA SYNDICATE is an independent research archive for technical literacy, defensive reasoning, and careful study of system behavior. We favor architecture, evidence, and repeatable controls over hype.</p></article>
+        <article class="about-panel"><span class="tag">Scope</span><h3>Across the security disciplines</h3><p>Networking, application security, cryptography, operating systems, forensics, malware analysis, privacy, security architecture, and cybersecurity history—with a clear defensive purpose.</p></article>
+        <article class="about-panel"><span class="tag">Principles</span><div class="principles"><span>Defense</span><span>Evidence</span><span>Clarity</span><span>Ethics</span></div></article>
       </div>
+    </section>
 
-      <section aria-labelledby="featured-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">01 / Intelligence stack</p>
-            <h2 id="featured-title">Featured research topics</h2>
-          </div>
-        </div>
-
-        <div class="feature-grid" id="feature-grid"></div>
-      </section>
-
-      <section id="database" aria-labelledby="database-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">02 / Knowledge database</p>
-            <h2 id="database-title">Cybersecurity knowledge archive</h2>
-          </div>
-        </div>
-
-        <div class="database-shell">
-          <div>
-            <div class="search-panel">
-              <div class="search-toolbar">
-                <div class="field">
-                  <label class="field-label" for="global-search">Search topics</label>
-                  <input id="global-search" type="search" placeholder="Search by title, tag, or keyword" aria-label="Search knowledge database" />
-                </div>
-                <div class="field">
-                  <label class="field-label" for="category-filter">Category</label>
-                  <select id="category-filter" aria-label="Filter by category">
-                    <option value="all">All categories</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label class="field-label" for="difficulty-filter">Difficulty</label>
-                  <select id="difficulty-filter" aria-label="Filter by difficulty">
-                    <option value="all">All levels</option>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                </div>
-                <button class="reset-button" type="button" id="reset-filters">Reset</button>
-              </div>
-
-              <div class="search-summary">
-                <span id="result-count">0 entries</span>
-                <span>Ctrl + K</span>
-              </div>
-            </div>
-
-            <div id="threat-results" class="threat-results" aria-live="polite"></div>
-          </div>
-
-          <aside class="side-panel">
-            <div class="detail-card" id="detail-card">
-              <p class="meta-label">Selected topic</p>
-              <h3>Knowledge atlas</h3>
-              <div class="meta">
-                <span>Choose an entry</span>
-              </div>
-              <div class="body">
-                <p>Use the database to inspect concepts, review defensive controls, and navigate the broader cyber research archive.</p>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section id="research" aria-labelledby="research-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">03 / Research archive</p>
-            <h2 id="research-title">Latest educational articles</h2>
-          </div>
-        </div>
-
-        <div class="article-grid" id="archive-grid"></div>
-      </section>
-
-      <section id="code-lab" aria-labelledby="code-lab-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">04 / NØVA Code Lab</p>
-            <h2 id="code-lab-title">Practical defensive tooling</h2>
-          </div>
-        </div>
-
-        <div class="code-grid" id="code-lab-grid"></div>
-      </section>
-
-      <section id="learning" aria-labelledby="learning-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">05 / Interactive learning</p>
-            <h2 id="learning-title">NØVA Laboratories</h2>
-          </div>
-        </div>
-
-        <div class="lab-grid" id="labs-grid"></div>
-
-        <div class="interactive-panel" style="margin-top: 22px;">
-          <div class="interact-tabs" id="simulator-tabs"></div>
-          <div class="simulator-output" id="simulator-output"></div>
-        </div>
-      </section>
-
-      <section id="about" aria-labelledby="about-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">06 / Mission</p>
-            <h2 id="about-title">A disciplined research practice</h2>
-          </div>
-        </div>
-
-        <div class="about-grid">
-          <div class="about-panel">
-            <p class="tag">Method</p>
-            <h3>Research grounded in defensible principles</h3>
-            <p>
-              NØVA SYNDICATE focuses on technical literacy, real-world defensive reasoning, and careful analysis of system behavior. We emphasize architecture, evidence, and repeatable controls rather than hype or noise.
-            </p>
-          </div>
-
-          <div class="about-panel">
-            <p class="tag">Scope</p>
-            <h3>From fundamentals to specialized disciplines</h3>
-            <p>
-              The archive spans networking, web security, cryptography, OS hardening, digital forensics, malware analysis, privacy, and security architecture. Every article is designed to explain how a system works and how to defend it.
-            </p>
-          </div>
-
-          <div class="about-panel">
-            <p class="tag">Principles</p>
-            <div class="principles">
-              <span>Defense</span>
-              <span>Evidence</span>
-              <span>Clarity</span>
-              <span>Ethics</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="privacy-title">
-        <div class="section-head">
-          <div>
-            <p class="micro-label">07 / Privacy</p>
-            <h2 id="privacy-title">Responsible digital hygiene</h2>
-          </div>
-        </div>
-
-        <div class="privacy-grid">
-          <div class="privacy-panel">
-            <p class="tag">Field notes</p>
-            <h3>Security is a habit</h3>
-            <ul>
-              <li>Limit metadata exposure under normal operating conditions.</li>
-              <li>Prefer strong defaults such as MFA, encrypted transport, and strict validation.</li>
-              <li>Document decision-making with evidence, not assumptions.</li>
-              <li>Review system boundaries, access models, and logging before deployment.</li>
-            </ul>
-          </div>
-
-          <div class="privacy-panel">
-            <p class="tag">Operational guidance</p>
-            <h3>Minimal disclosure, stronger posture</h3>
-            <ul>
-              <li>Use synthetic data in demonstrations and workshops.</li>
-              <li>Verify data retention windows and access scopes before sharing artifacts.</li>
-              <li>Favor least-privilege access, session controls, and auditability.</li>
-              <li>Review browser and network telemetry before broad public publishing.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="shell footer-inner">
-        <span>NØVA SYNDICATE</span>
-        <span>Knowledge. Independence. Curiosity.</span>
+    <section aria-labelledby="privacy-title">
+      <div class="section-head"><div><p class="section-index">07 / FIELD NOTES</p><h2 id="privacy-title">Digital hygiene</h2></div></div>
+      <div class="privacy-grid">
+        <article class="privacy-panel"><span class="tag">Principles</span><h3>Security is a habit</h3><ul><li>Limit unnecessary metadata and minimize sensitive data retention.</li><li>Prefer strong defaults: MFA, encrypted transport, strict validation, and least privilege.</li><li>Document decisions with evidence, not assumptions.</li><li>Review system boundaries, access models, and logging before deployment.</li></ul></article>
+        <article class="privacy-panel"><span class="tag">Practice</span><h3>Minimize disclosure</h3><ul><li>Use synthetic data in demonstrations and workshops.</li><li>Review access scopes and retention before sharing artifacts.</li><li>Favor strong session controls and auditability.</li><li>Respect privacy and consent in every research workflow.</li></ul></article>
       </div>
-    </footer>
+    </section>
+  </main>
+  <footer><div class="shell footer-inner"><span>NØVA SYNDICATE · KNOWLEDGE. INDEPENDENCE. CURIOSITY.</span><span>Independent archive · 2026</span></div></footer>
 
-    <script>
-      const featureCards = [
-        {
-          title: 'Network security foundations',
-          tag: 'Network',
-          description: 'TCP/IP, DNS, switching, routing, segmentation, and the architecture behind modern enterprise networking.',
-          mini: 'Architecture • Monitoring'
-        },
-        {
-          title: 'Web application defense',
-          tag: 'Web',
-          description: 'Input validation, secure APIs, secure session patterns, and application-layer controls under OWASP guidance.',
-          mini: 'OWASP • Controls'
-        },
-        {
-          title: 'Cryptography and trust',
-          tag: 'Crypto',
-          description: 'Hashing, public-key systems, certificates, TLS, and the difference between confidentiality, integrity, and authenticity.',
-          mini: 'PKI • TLS'
-        }
-      ];
+  <script>
+    const featureCards=[
+      {title:'Network engineering',tag:'01 — Infrastructure',description:'TCP/IP, DNS, switching, routing, segmentation, and the architecture behind modern networks.',mini:'Protocols · topology · monitoring'},
+      {title:'Application security',tag:'02 — Software',description:'Secure APIs, authorization, input boundaries, browser controls, and robust application design.',mini:'OWASP · identity · resilience'},
+      {title:'Trust & evidence',tag:'03 — Assurance',description:'Cryptography, forensics, privacy, operating systems, and the evidence behind defensive decisions.',mini:'Cryptography · DFIR · privacy'}
+    ];
+    const articleDatabase=[
+      {id:'tcp-ip-architecture',slug:'tcp-ip-architecture',title:'TCP/IP Architecture',category:'Network Engineering',tags:['Networking','Routing','Packets'],difficulty:'Intermediate',readTime:'9 min read',summary:'Understand the layered model that powers the internet, how data moves between networks, and why transport behavior matters in diagnostics and defense.',content:['TCP/IP is a pragmatic model for communication between hosts across networks. Internet Protocol provides addressing and routing; TCP provides reliable delivery, while UDP supports lower-overhead datagrams.','At the network layer, routers forward packets toward destination addresses. At the transport layer, TCP adds sequencing, acknowledgements, flow control, and retransmission. Applications such as HTTPS and SSH rely on these transport services.','Packet captures and flow records help engineers reason about latency, loss, retransmissions, connection state, and unexpected traffic. These tools are useful for authorized diagnostics and incident response.'],references:['https://www.rfc-editor.org/rfc/rfc791','https://www.rfc-editor.org/rfc/rfc9293'],pinned:true},
+      {id:'osi-model',slug:'osi-model',title:'The OSI Model',category:'Network Engineering',tags:['Modeling','Layering','Troubleshooting'],difficulty:'Beginner',readTime:'7 min read',summary:'A shared vocabulary for reasoning about how information moves through physical, network, transport, and application layers.',content:['The seven-layer OSI model provides a troubleshooting framework. Cable faults and radio interference are physical-layer concerns; routing is a network-layer concern; application timeouts arise higher in the stack.','Internet implementations are commonly described using TCP/IP, but OSI remains useful because it separates concerns and encourages systematic analysis rather than guesswork.'],references:['https://www.iso.org/standard/20269.html'],pinned:false},
+      {id:'dns-architecture',slug:'dns-architecture',title:'DNS Architecture and DNSSEC',category:'Network Engineering',tags:['DNS','Resolver','Trust'],difficulty:'Intermediate',readTime:'11 min read',summary:'DNS maps names to records across a distributed hierarchy; DNSSEC lets validating resolvers verify signed data and delegation.',content:['A stub resolver asks a recursive resolver for resource records. If the answer is not cached, the recursive resolver follows referrals through root, top-level domain, and authoritative nameservers. TTL values bound how long answers may be cached.','DNSSEC uses a chain of signatures and delegation records to support origin authentication and integrity validation. DNSSEC does not encrypt DNS queries; confidentiality requires separate mechanisms.','Operational care includes registrar security, accurate delegation, key rollover plans, and monitoring for unexpected record changes.'],references:['https://www.rfc-editor.org/rfc/rfc4033','https://www.rfc-editor.org/rfc/rfc4035'],pinned:true},
+      {id:'owasp-top-10',slug:'owasp-top-10',title:'OWASP Top 10',category:'Web Application Security',tags:['OWASP','Web Security','Risk'],difficulty:'Intermediate',readTime:'10 min read',summary:'A risk-oriented introduction to common application security weaknesses and the controls that reduce their likelihood and impact.',content:['The OWASP Top 10 highlights recurring risk patterns such as broken access control, injection, insecure design, and security misconfiguration. It is an awareness document—not a complete testing standard or a substitute for threat modeling.','Strong applications use explicit authorization checks, safe query construction, output encoding, secure session design, robust logging, and safe defaults. Controls should be verified across the development lifecycle.'],references:['https://owasp.org/www-project-top-ten/','https://owasp.org/www-project-application-security-verification-standard/'],pinned:true},
+      {id:'sql-injection',slug:'sql-injection',title:'SQL Injection: Theory and Safe Examples',category:'Web Application Security',tags:['Injection','SQL','Prepared Statements'],difficulty:'Advanced',readTime:'13 min read',summary:'SQL injection occurs when untrusted data changes query structure; parameterized statements maintain the boundary between code and values.',content:['The underlying flaw is a failure to preserve the distinction between query instructions and user-supplied data. Concatenating values into a query can alter its meaning.','Use parameter binding or a well-maintained ORM. Give application identities only the database permissions required, handle errors safely, and test with synthetic records in an isolated environment.'],references:['https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html'],pinned:false},
+      {id:'tls-https',slug:'tls-https',title:'TLS and HTTPS',category:'Network Engineering',tags:['TLS','Certificates','HTTPS'],difficulty:'Intermediate',readTime:'12 min read',summary:'TLS authenticates peers and protects data in transit; HTTPS is HTTP carried over a TLS-protected connection.',content:['During a TLS handshake, the endpoints negotiate protocol parameters, authenticate the server using certificates, and derive traffic keys. The resulting record layer protects application data against disclosure and modification.','Certificate validation checks the presented identity against the requested hostname and a trusted chain. Secure deployments maintain current software, protect private keys, avoid mixed content, and use carefully selected protocol settings.'],references:['https://www.rfc-editor.org/rfc/rfc8446','https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview'],pinned:true},
+      {id:'symmetric-asymmetric',slug:'symmetric-asymmetric',title:'Symmetric and Asymmetric Cryptography',category:'Cryptography',tags:['Encryption','PKI','Key Management'],difficulty:'Intermediate',readTime:'10 min read',summary:'Symmetric algorithms efficiently protect bulk data; public-key cryptography supports identity, key establishment, and digital signatures.',content:['Symmetric encryption uses a shared secret and is efficient for data at rest or in transit once both parties have the key. Authenticated encryption modes provide confidentiality and integrity together.','Public-key systems use related public and private keys. They enable signatures and key establishment, but are generally not used alone to encrypt large data volumes. Real systems combine these primitives through well-reviewed protocols.','Key lifecycle matters as much as algorithm choice: generate, distribute, protect, rotate, revoke, and retire keys under a documented policy.'],references:['https://csrc.nist.gov/projects/cryptographic-standards-and-guidelines','https://cryptography.io/en/latest/'],pinned:false},
+      {id:'hashing-hmac',slug:'hashing-hmac',title:'Hashing, SHA-256, and HMAC',category:'Cryptography',tags:['Hashing','Integrity','Authentication'],difficulty:'Intermediate',readTime:'9 min read',summary:'Cryptographic hashes fingerprint data; HMAC combines a hash with a secret key to authenticate messages between parties that share that key.',content:['A cryptographic hash maps input to a fixed-size digest. Repeating the operation on the same input produces the same digest, making hashes useful for integrity checks and content identification. A hash is not encryption and cannot be reversed to retrieve the input.','HMAC uses a secret key and hash function to provide message integrity and authentication to parties sharing that secret. Compare tags with a constant-time comparison function and protect keys from logs and source control.'],references:['https://csrc.nist.gov/pubs/fips/180-4/upd1/final','https://www.rfc-editor.org/rfc/rfc2104'],pinned:false},
+      {id:'linux-permissions',slug:'linux-permissions',title:'Linux Permissions and File Security',category:'Operating System Security',tags:['Linux','Permissions','Hardening'],difficulty:'Beginner',readTime:'8 min read',summary:'Ownership, mode bits, ACLs, and privilege boundaries determine how Linux users and processes interact with files and resources.',content:['Traditional mode bits define read, write, and execute access for owner, group, and other classes. ACLs can express additional entries, while Linux capabilities can divide certain privileged operations.','Hardening begins with least privilege: restrict administrative access, keep service accounts narrowly scoped, verify ownership and mode on sensitive files, remove unnecessary services, and monitor authentication events.'],references:['https://www.kernel.org/doc/html/latest/','https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html'],pinned:false},
+      {id:'windows-security',slug:'windows-security',title:'Windows Security Architecture',category:'Operating System Security',tags:['Windows','Authentication','Privileges'],difficulty:'Intermediate',readTime:'9 min read',summary:'Windows security relies on identities, access tokens, security descriptors, and policy boundaries to govern actions by users and processes.',content:['Access tokens describe a security principal and its groups and privileges. Windows evaluates those tokens against security descriptors to decide whether an operation is permitted. User Account Control and service isolation support additional boundaries.','Defensive operations include controlling local administrator membership, applying security baselines and updates, reviewing service accounts, retaining useful event logs, and monitoring with supported endpoint protection.'],references:['https://learn.microsoft.com/en-us/windows/security/','https://learn.microsoft.com/en-us/windows/security/identity-protection/'],pinned:false},
+      {id:'digital-forensics',slug:'digital-forensics',title:'Digital Forensic Methodology',category:'Digital Forensics',tags:['Evidence','Timeline','Integrity'],difficulty:'Advanced',readTime:'12 min read',summary:'A defensible investigation preserves evidence, records decisions, validates integrity, and correlates artifacts with transparent methods.',content:['A forensic workflow starts with authority, scope, and preservation. Document who collected each item, when and how it was handled, and any transformations made. Hashes can help identify accidental changes but do not by themselves prove chain of custody.','Analysis may correlate filesystem metadata, event logs, browser artifacts, and memory observations into a timeline. Record time zones, clock drift, source limitations, and confidence so later reviewers can reproduce conclusions.'],references:['https://csrc.nist.gov/pubs/sp/800/86/final','https://www.cisa.gov/resources-tools'],pinned:true},
+      {id:'malware-analysis',slug:'malware-analysis',title:'Static, Dynamic, and Behavioral Analysis',category:'Malware Analysis',tags:['Malware','Reverse Engineering','Analysis'],difficulty:'Advanced',readTime:'13 min read',summary:'Defensive malware analysis combines file inspection and isolated observation to document behavior, indicators, and scope without executing samples on production systems.',content:['Static analysis examines a file without running it: format metadata, hashes, strings, imports, and signatures can help form hypotheses. These signals can be misleading or incomplete, so findings should be independently validated.','Dynamic analysis runs samples only in a purpose-built, isolated laboratory with controlled networking and snapshots. Behavioral observations—such as file, process, and network activity—are recorded for defensive detection and response.','Reports distinguish observed facts from inference, provide hashes and environment details, and avoid distributing dangerous samples casually.'],references:['https://attack.mitre.org/','https://www.cisa.gov/stopransomware'],pinned:true},
+      {id:'digital-privacy',slug:'digital-privacy',title:'Digital Privacy and Metadata Exposure',category:'Digital Privacy',tags:['Privacy','Metadata','OSINT'],difficulty:'Intermediate',readTime:'9 min read',summary:'Metadata can reveal context even when content seems harmless; privacy practice starts with minimization, consent, and threat modeling.',content:['Images and documents may contain location, timestamps, author details, revision history, or embedded comments. These details can persist through sharing and create exposure beyond the intended content.','Review metadata before publishing, minimize collection and retention, and use synthetic data for demonstrations. Responsible OSINT must use lawful public sources, respect consent and safety, and avoid identifying private people.'],references:['https://www.nist.gov/privacy-framework','https://ssd.eff.org/'],pinned:false},
+      {id:'zero-trust',slug:'zero-trust',title:'Zero Trust Architecture',category:'Security Architecture',tags:['Zero Trust','Identity','Policy'],difficulty:'Advanced',readTime:'11 min read',summary:'Zero Trust rejects implicit trust based on network location and continuously makes access decisions using identity, context, and policy.',content:['Zero Trust is an architectural approach, not a product. A policy decision considers who is requesting access, the resource, device and session posture, and other relevant context. Access should be scoped to the task and re-evaluated as conditions change.','Implementation is incremental: inventory protected resources, strengthen identity and device signals, centralize policy, instrument access decisions, and reduce over-broad privileges. Monitoring and reliable recovery paths are essential.'],references:['https://csrc.nist.gov/pubs/sp/800/207/final','https://www.cisa.gov/zero-trust-maturity-model'],pinned:false},
+      {id:'morris-worm',slug:'morris-worm',title:'Historical Dossier: The Morris Worm',category:'Cybersecurity History',tags:['History','Worm','Internet'],difficulty:'Intermediate',readTime:'8 min read',summary:'The 1988 Morris Worm exposed the fragility of early internet assumptions and helped establish the need for coordinated incident response.',content:['Released in 1988, the Morris Worm spread across a comparatively small but interconnected internet and disrupted many systems. Its impact was amplified by design decisions that allowed repeated infection and resource exhaustion.','The episode helped demonstrate that a networked program can have consequences beyond its intended scope. Lessons include cautious software testing, least privilege, resilient recovery, clear incident coordination, and responsible disclosure.'],references:['https://www.cs.cmu.edu/afs/cs/user/raj/www/morris.html','https://www.sei.cmu.edu/about/history/'],pinned:false},
+      {id:'wannacry',slug:'wannacry',title:'Historical Dossier: WannaCry',category:'Cybersecurity History',tags:['Ransomware','Patch Management','Resilience'],difficulty:'Advanced',readTime:'10 min read',summary:'WannaCry illustrated how unpatched systems and weak segmentation can turn a known vulnerability into broad operational disruption.',content:['The 2017 WannaCry incident affected organizations across many countries. Its spread was associated with vulnerable, unpatched Windows systems and network paths that allowed rapid propagation. Specific infection conditions and impacts varied by environment.','Defensive lessons include timely vulnerability remediation, asset visibility, network segmentation, resilient offline backups, incident communications, and tested recovery procedures.'],references:['https://www.cisa.gov/news-events/alerts/2017/05/12/indicators-associated-wannacry-ransomware','https://www.microsoft.com/en-us/security/blog/'],pinned:false},
+      {id:'threat-modeling',slug:'threat-modeling',title:'The Practical Value of Threat Modeling',category:'Security Architecture',tags:['Threat Modeling','Trust Boundaries','Risk'],difficulty:'Intermediate',readTime:'6 min read',summary:'Threat modeling helps teams identify trust boundaries and prioritize mitigations before architecture decisions become expensive to change.',content:['A useful threat model starts with scope: users, assets, data flows, external dependencies, and trust boundaries. Teams then identify plausible misuse cases and evaluate what controls reduce likelihood or impact.','Models are hypotheses, not guarantees. Revisit them when architecture, threat context, or business use changes, and turn actions into tracked engineering work.'],references:['https://owasp.org/www-community/Threat_Modeling','https://csrc.nist.gov/pubs/sp/800/154/ipd'],pinned:true},
+      {id:'defensive-web-defaults',slug:'defensive-web-defaults',title:'Defensive Defaults for Web Applications',category:'Web Application Security',tags:['Cookies','CSP','Secure Defaults'],difficulty:'Intermediate',readTime:'8 min read',summary:'Secure defaults reduce the number of unsafe choices developers and operators must remember to make.',content:['Applications benefit from secure cookie attributes, strict content policies, server-side authorization, validated inputs, context-appropriate output encoding, and deliberate error handling.','No single header or framework setting is enough. Defense comes from controls applied at multiple layers and verified through tests, reviews, and operational monitoring.'],references:['https://cheatsheetseries.owasp.org/','https://developer.mozilla.org/en-US/docs/Web/Security'],pinned:true},
+      {id:'privacy-research',slug:'digital-privacy-research',title:'Digital Privacy in a Monitored Internet',category:'Digital Privacy',tags:['Privacy','Tracking','Threat Model'],difficulty:'Intermediate',readTime:'7 min read',summary:'Privacy is a combination of choices and system boundaries that limit unnecessary exposure across devices, services, and communications.',content:['Start with a threat model: what data matters, who might access it, what capabilities they have, and what tradeoffs remain acceptable. Privacy tools cannot eliminate every observation or inference.','Useful practices include account separation where appropriate, tracker controls, careful sharing, strong authentication, and periodic review of permissions and retention settings.'],references:['https://www.nist.gov/privacy-framework','https://www.eff.org/issues/privacy'],pinned:false},
+      {id:'advisories-exposure',slug:'understanding-security-advisories',title:'Security Advisories and Understanding Exposure',category:'Vulnerability Management',tags:['Advisories','Exposure','Remediation'],difficulty:'Beginner',readTime:'5 min read',summary:'An advisory is a starting point for exposure assessment: identify affected assets, applicability, mitigations, and authoritative updates.',content:['Read the affected product and version ranges carefully, then compare them with your asset inventory and deployment configuration. A vulnerable component is not automatically exposed in every deployment, and a mitigation may have operational implications.','Use vendor and government sources, document assessment assumptions, prioritize by exposure and impact, and verify remediation through a repeatable process.'],references:['https://www.cisa.gov/known-exploited-vulnerabilities-catalog','https://nvd.nist.gov/'],pinned:false}
+    ];
+    const codeLabEntries=[
+      {title:'SHA-256 file integrity checker',language:'Python',purpose:'Calculate a local file digest for integrity comparison. Requirements: Python 3; no third-party packages.',run:'python hash_file.py sample.txt',code:`import hashlib
+import sys
 
-      const articleDatabase = [
-        {
-          id: 'tcp-ip-architecture',
-          slug: 'tcp-ip-architecture',
-          title: 'TCP/IP Architecture',
-          category: 'Network Engineering',
-          tags: ['Networking', 'Routing', 'Packets'],
-          difficulty: 'Intermediate',
-          readTime: '9 min read',
-          summary: 'Understand the layered model that powers the internet, how data moves between networks, and why socket-level behavior matters in diagnostics and defense.',
-          content: [
-            'The TCP/IP stack is a pragmatic model built around communication between hosts across networks. It combines the Internet Protocol (IP) for addressing and routing with Transmission Control Protocol (TCP) for reliable delivery, plus UDP for low-overhead transport.',
-            'At the network layer, IP establishes end-to-end addressing and forwarding. Routers inspect destination addresses and determine the best next hop. At the transport layer, TCP adds sequencing, acknowledgment, flow control, and retransmission. This makes it suitable for sessions such as HTTPS, SSH, and file transfer.',
-            'A practical understanding of packet flow allows engineers to reason about latency, packet loss, retransmissions, window scaling, and connection state. In modern defense contexts, packet capture review and flow inspection remain foundational for troubleshooting and incident response.'
-          ],
-          references: ['RFC 791', 'RFC 793', 'IETF Internet Protocol Considerations'],
-          pinned: true
-        },
-        {
-          id: 'osi-model',
-          slug: 'osi-model',
-          title: 'OSI Model',
-          category: 'Network Engineering',
-          tags: ['Modeling', 'Layering', 'Troubleshooting'],
-          difficulty: 'Beginner',
-          readTime: '7 min read',
-          summary: 'The OSI model provides a common language for describing how data moves through applications, transport, network, and physical layers.',
-          content: [
-            'The seven-layer OSI model helps teams reason about where a problem lives. A damaged cable, faulty duplex settings, or radio interference may sit at Layer 1 or Layer 2. An application timeout or TLS negotiation failure is usually a Layer 5-7 concern.',
-            'Even though modern networking often uses the simpler TCP/IP model, the OSI model remains useful in teaching and troubleshooting because it separates functions cleanly. It encourages structured analysis of headers, frames, sessions, and protocol behavior.'
-          ],
-          references: ['ISO/IEC 7498-1', 'Cisco Networking Fundamentals'],
-          pinned: false
-        },
-        {
-          id: 'dns-architecture',
-          slug: 'dns-architecture',
-          title: 'DNS Architecture and DNSSEC',
-          category: 'Network Engineering',
-          tags: ['DNS', 'Resolver', 'Trust'],
-          difficulty: 'Intermediate',
-          readTime: '11 min read',
-          summary: 'DNS underpins naming and service discovery; DNSSEC adds cryptographic integrity so resolvers can verify data origin and authenticity.',
-          content: [
-            'DNS converts human-readable names into addresses and other resource records. Recursive resolvers query authoritative servers using a distributed hierarchy that includes root, TLD, and zone-specific authorities.',
-            'DNSSEC adds digital signatures to DNS records so resolvers can validate that the answer has not been altered in transit. It does not encrypt DNS information, but it improves integrity and trust in the resolution process.',
-            'When designing secure internet services, teams must consider TTL values, registrar behavior, delegation records, and the operational overhead of key rollover. These are critical system-level concerns that affect both availability and trust.'
-          ],
-          references: ['RFC 4033', 'RFC 4035', 'IETF DNSSEC Documentation'],
-          pinned: true
-        },
-        {
-          id: 'owasp-top-10',
-          slug: 'owasp-top-10',
-          title: 'OWASP Top 10',
-          category: 'Web Application Security',
-          tags: ['OWASP', 'Web Security', 'Risk'],
-          difficulty: 'Intermediate',
-          readTime: '10 min read',
-          summary: 'The OWASP Top 10 presents the most common and impactful application-security risks, from injection to broken access control and insecure design.',
-          content: [
-            'The OWASP Top 10 is useful because it translates abstract security concerns into a practical risk model. Threats like SQL injection, XSS, and broken access control are common because they arise from insecure assumptions about trust and validation in web systems.',
-            'The goal of a secure design is not only to patch individual bugs but to strengthen the trust boundaries around data, user identity, authorization decisions, and input handling. A well-structured application uses validation, output encoding, least privilege, strong session management, and clear policy enforcement.'
-          ],
-          references: ['OWASP Top 10', 'ASVS', 'OWASP Cheat Sheet Series'],
-          pinned: true
-        },
-        {
-          id: 'sql-injection',
-          slug: 'sql-injection',
-          title: 'SQL Injection: Theory and Safe Examples',
-          category: 'Web Application Security',
-          tags: ['Injection', 'SQL', 'Prepared Statements'],
-          difficulty: 'Advanced',
-          readTime: '13 min read',
-          summary: 'SQL injection occurs when untrusted data alters query structure. Safe design uses parameterized queries, strict validation, and clear separation between code and data.',
-          content: [
-            'The core issue is the mixing of data and command syntax. If user input is concatenated into a query, the application may allow an attacker to change logic or access additional data.',
-            'Prepared statements, parameter binding, and safe query construction prevent this. For training purposes, toy demonstrations may compare vulnerable and hardened examples, but the real defense is disciplined input handling and strong application boundaries.'
-          ],
-          references: ['OWASP SQL Injection Prevention Cheat Sheet', 'Parameterized Query Guidance'],
-          pinned: false
-        },
-        {
-          id: 'tls-https',
-          slug: 'tls-https',
-          title: 'TLS and HTTPS',
-          category: 'Network Engineering',
-          tags: ['TLS', 'Certificates', 'HTTPS'],
-          difficulty: 'Intermediate',
-          readTime: '12 min read',
-          summary: 'TLS secures transport by authenticating endpoints and protecting confidentiality and integrity. HTTPS is HTTP over TLS.',
-          content: [
-            'The TLS handshake establishes a protected channel between client and server. It includes negotiation of protocol version, cipher suite, and key exchange parameters, followed by key derivation and secure record protection.',
-            'Certificates bind a public key to an identity. Trust is established by a chain rooted in a trusted store or policy source. Modern deployments also enforce strong ciphers, HTTP/2 or HTTP/3 behaviors, and secure defaults such as HSTS and complete certificate validation.'
-          ],
-          references: ['RFC 8446', 'Mozilla Security Recommendations', 'Let\'s Encrypt Documentation'],
-          pinned: true
-        },
-        {
-          id: 'symmetric-asymmetric',
-          slug: 'symmetric-asymmetric',
-          title: 'Symmetric and Asymmetric Encryption',
-          category: 'Cryptography',
-          tags: ['Encryption', 'PKI', 'Key Management'],
-          difficulty: 'Intermediate',
-          readTime: '10 min read',
-          summary: 'Symmetric encryption is fast and efficient for bulk data, while asymmetric encryption is commonly used for key exchange, signatures, and identity verification.',
-          content: [
-            'Symmetric algorithms use a shared secret key known to both parties. They are efficient and well-suited for protecting data in transit or at rest when the key can be exchanged securely.',
-            'Asymmetric cryptography uses key pairs: a public key for encryption or verification and a private key for decryption or signing. This model supports certificates and distributed trust, but it is computationally heavier and less suitable for encrypting large volumes of data on its own.'
-          ],
-          references: ['NIST Cryptographic Standards', 'PyCA Cryptography Documentation'],
-          pinned: false
-        },
-        {
-          id: 'hashing-hmac',
-          slug: 'hashing-hmac',
-          title: 'Hashing, SHA-256, and HMAC',
-          category: 'Cryptography',
-          tags: ['Hashing', 'Integrity', 'Authentication'],
-          difficulty: 'Intermediate',
-          readTime: '9 min read',
-          summary: 'Hashing provides integrity and fingerprinting. HMAC adds a secret key so the integrity check also binds to authenticity.',
-          content: [
-            'A hash function maps data to a fixed-length digest. This is useful for verifying file integrity, comparing stored values, and deriving trust cues. SHA-256 is a widely used standard for integrity-oriented operations.',
-            'HMAC combines a hash function with a secret key, making it suitable for verifying message authenticity. It is essential in protocols where both integrity and shared-secret validation matter, without exposing secrets directly in the payload.'
-          ],
-          references: ['FIPS 180-4', 'NIST SP 800-107', 'HMAC Specification'],
-          pinned: false
-        },
-        {
-          id: 'linux-permissions',
-          slug: 'linux-permissions',
-          title: 'Linux Permissions and File Security',
-          category: 'Operating System Security',
-          tags: ['Linux', 'Permissions', 'Hardening'],
-          difficulty: 'Beginner',
-          readTime: '8 min read',
-          summary: 'Linux security is fundamentally about identity, ownership, permissions, and process boundaries. Every privileged operation is a policy decision.',
-          content: [
-            'Linux permissions are expressed as owner, group, and others with read, write, and execute bits. These permissions, combined with ACLs and capability-aware behavior, define what a process may do with files and resources.',
-            'A strong operating system posture relies on least privilege, carefully managed sudoers policy, minimal service accounts, and proper filesystem ownership. These controls reduce accidental exposure and limit the blast radius of software compromise.'
-          ],
-          references: ['Linux Documentation', 'OpenSSL and SELinux Documentation'],
-          pinned: false
-        },
-        {
-          id: 'windows-security',
-          slug: 'windows-security',
-          title: 'Windows Security Architecture',
-          category: 'Operating System Security',
-          tags: ['Windows', 'Authentication', 'Privileges'],
-          difficulty: 'Intermediate',
-          readTime: '9 min read',
-          summary: 'Windows security centers on user tokens, privilege boundaries, and built-in protections such as UAC, LSASS isolation, and logon architecture.',
-          content: [
-            'Windows uses access tokens to represent a user identity and the groups or privileges associated with a process. Authorization decisions rely on whether a given process has the right token and the relevant rights for a requested action.',
-            'Strong operational practices include securing local admin rights, applying patches promptly, reviewing service account configuration, and using monitoring and control tooling such as Defender, Windows event logs, and endpoint controls.'
-          ],
-          references: ['Microsoft Security Documentation', 'Windows Security Baselines'],
-          pinned: false
-        },
-        {
-          id: 'digital-forensics',
-          slug: 'digital-forensics',
-          title: 'Digital Forensic Methodology',
-          category: 'Digital Forensics',
-          tags: ['Evidence', 'Timeline', 'Integrity'],
-          difficulty: 'Advanced',
-          readTime: '12 min read',
-          summary: 'Forensics begins with preservation and scope control. A defensible investigation depends on evidence integrity, careful documentation, and time-based reconstruction.',
-          content: [
-            'Digital forensics is not simply searching a disk; it is a structured process that begins with preservation, identification, and chain-of-custody. Investigators must record the exact state of the evidence and avoid modifying it in ways that would compromise later analysis.',
-            'Timelines, metadata review, log correlation, and artifact analysis help reconstruct user actions, process execution, and system change patterns. The value of the investigation depends on maintaining defensibility and explaining each analytical step.'
-          ],
-          references: ['NIST Digital Evidence', 'SANS DFIR Resources'],
-          pinned: true
-        },
-        {
-          id: 'malware-analysis',
-          slug: 'malware-analysis',
-          title: 'Static, Dynamic, and Behavioral Analysis',
-          category: 'Malware Analysis',
-          tags: ['Malware', 'Reverse Engineering', 'Analysis'],
-          difficulty: 'Advanced',
-          readTime: '13 min read',
-          summary: 'Malware analysis uses static review, dynamic execution in controlled environments, and behavior-based indicators to identify capabilities and impact patterns.',
-          content: [
-            'Static analysis focuses on file structure, embedded strings, imports, section layout, and signatures. Dynamic analysis uses sandbox or isolated hosts to observe runtime behavior such as file creation, registry changes, network connections, and process execution.',
-            'Behavioral analysis correlates observations into a model of what the software does, without assuming that a signature alone explains the entire threat. A disciplined analyst documents indicators, capabilities, and environment constraints to make the report defensible and useful.'
-          ],
-          references: ['MITRE ATT&CK', 'CISA Malware Guidance', 'Malware Analyst Notes'],
-          pinned: true
-        },
-        {
-          id: 'digital-privacy',
-          slug: 'digital-privacy',
-          title: 'Digital Privacy and Metadata Exposure',
-          category: 'Digital Privacy',
-          tags: ['Privacy', 'Metadata', 'OSINT'],
-          difficulty: 'Intermediate',
-          readTime: '9 min read',
-          summary: 'Metadata often reveals more than content. Privacy depends on limiting unnecessary exposure in files, browser behavior, and public records.',
-          content: [
-            'A photo may include GPS coordinates, camera model, timestamps, and author metadata. A document may include author names, revision history, hidden comments, and embedded macros. These details matter because they create a trail that may remain even after the main data is sanitized.',
-            'Responsible privacy practice includes minimizing unnecessary metadata, checking public records carefully, understanding tracking technologies, and using synthetic data in educational environments. If gathered carefully, privacy analysis can strengthen operational decisions without becoming intrusive or harmful.'
-          ],
-          references: ['NIST Privacy Framework', 'EFF Red Team', 'Mozilla Privacy Guidelines'],
-          pinned: false
-        },
-        {
-          id: 'zero-trust',
-          slug: 'zero-trust',
-          title: 'Zero Trust Architecture',
-          category: 'Security Architecture',
-          tags: ['Zero Trust', 'Identity', 'Policy'],
-          difficulty: 'Advanced',
-          readTime: '11 min read',
-          summary: 'Zero Trust denies implicit trust, validates identity and context continuously, and applies policy at every access point.',
-          content: [
-            'Zero Trust is not a single product. It is an architectural pattern that questions every trust decision and re-evaluates it based on identity, device posture, network context, and policy.',
-            'This approach is especially relevant in modern cloud and hybrid environments where boundaries shift, users access resources from multiple contexts, and control planes are no longer purely network-based. Defense depends on strong identity, session hygiene, least privilege, and continuous monitoring.'
-          ],
-          references: ['NIST SP 800-207', 'CISA Zero Trust Guidance'],
-          pinned: false
-        },
-        {
-          id: 'morris-worm',
-          slug: 'morris-worm',
-          title: 'The Morris Worm',
-          category: 'Cybersecurity History',
-          tags: ['History', 'Worm', 'Internet'],
-          difficulty: 'Intermediate',
-          readTime: '8 min read',
-          summary: 'The Morris Worm was a watershed event that revealed how quickly a networked software bug could spread and how fragile early internet trust assumptions were.',
-          content: [
-            'Robert Tappan Morris released the worm in 1988, causing widespread disruption across the early internet. Its propagation behavior, resources, and broad impact made it one of the first high-profile examples of software moving beyond a single host into the wider network fabric.',
-            'The historical lesson is not sensationalism but operational discipline: authentication, privilege boundaries, warnings about unfettered propagation, and responsible software engineering matter. It also increased awareness of the need for incident coordination and monitoring.'
-          ],
-          references: ['CERT/CC Advisories', 'Historical Network Security Records'],
-          pinned: false
-        },
-        {
-          id: 'wannacry',
-          slug: 'wannacry',
-          title: 'WannaCry',
-          category: 'Cybersecurity History',
-          tags: ['Ransomware', 'Patch', 'Exploitation'],
-          difficulty: 'Advanced',
-          readTime: '10 min read',
-          summary: 'WannaCry demonstrated how unpatched systems, exposed services, and fast-moving exploit chains can create global operational damage.',
-          content: [
-            'WannaCry spread rapidly by exploiting a known SMB vulnerability in systems that had not been patched or were not properly segmented. It showed how a single missing update could propagate across a broad environment.',
-            'The event reinforced patch prioritization, exposure reduction, network segmentation, and emergency response planning. It also demonstrated that broad internet-facing services need layered controls and quick incident communication.'
-          ],
-          references: ['NCSC Guidance', 'CISA Advisories', 'Microsoft Security Response Center'],
-          pinned: false
-        }
-      ];
+path = sys.argv[1] if len(sys.argv) > 1 else "sample.txt"
+digest = hashlib.sha256()
+with open(path, "rb") as source:
+    for block in iter(lambda: source.read(64 * 1024), b""):
+        digest.update(block)
+print(f"SHA-256  {digest.hexdigest()}  {path}")`},
+      {title:'Safe SQL parameter binding',language:'Python / SQL',purpose:'Illustrate the correct separation of query structure from user-provided values. Run locally with a temporary SQLite database.',run:'python safe_query.py',code:`import sqlite3
 
-      const codeLabEntries = [
-        {
-          title: 'SHA-256 file integrity checker',
-          purpose: 'Create a local hash of a file to verify integrity or compare content changes.',
-          code: `import hashlib
+connection = sqlite3.connect(":memory:")
+connection.execute("CREATE TABLE notes (owner TEXT, note TEXT)")
+connection.execute("INSERT INTO notes VALUES (?, ?)", ("reader", "sample"))
 
-def sha256_file(path: str) -> str:
-    h = hashlib.sha256()
-    with open(path, 'rb') as f:
-        for chunk in iter(lambda: f.read(65536), b''):
-            h.update(chunk)
-    return h.hexdigest()
+requested_owner = "reader"  # synthetic input
+rows = connection.execute(
+    "SELECT note FROM notes WHERE owner = ?",
+    (requested_owner,),
+).fetchall()
+print(rows)`},
+      {title:'HTTP security header review',language:'Python',purpose:'Inspect headers from a public test domain. Use only a host you own or are authorized to assess. Requirements: requests.',run:'python headers.py',code:`import requests
 
-if __name__ == '__main__':
-    print(sha256_file('sample.txt'))`
-        },
-        {
-          title: 'Password strength estimator',
-          purpose: 'Score a fictional password using length, diversity, and composition heuristics.',
-          code: `import re
+url = "https://example.com"
+response = requests.get(url, timeout=10)
+for name in (
+    "Strict-Transport-Security",
+    "Content-Security-Policy",
+    "X-Content-Type-Options",
+    "Referrer-Policy",
+):
+    print(f"{name}: {response.headers.get(name, 'not present')}")`},
+      {title:'HMAC message verification',language:'Python',purpose:'Verify integrity and authenticity of a synthetic message with a shared key. Never reuse this demonstration key.',run:'python verify_hmac.py',code:`import hashlib
+import hmac
 
-def score_password(password: str) -> int:
-    score = 0
-    if len(password) >= 12: score += 2
-    if len(password) >= 16: score += 2
-    if re.search(r'[A-Z]', password): score += 1
-    if re.search(r'[a-z]', password): score += 1
-    if re.search(r'\d', password): score += 1
-    if re.search(r'[^A-Za-z0-9]', password): score += 2
-    return score
+key = b"local-demo-key-only"
+message = b"sensor=lab;status=ok"
+tag = hmac.new(key, message, hashlib.sha256).hexdigest()
+received = tag  # replace only in a controlled local exercise
+valid = hmac.compare_digest(
+    hmac.new(key, message, hashlib.sha256).hexdigest(), received
+)
+print("valid" if valid else "invalid")`},
+      {title:'Log frequency analyzer',language:'Python',purpose:'Count selected words in a sample text log. Requirements: Python 3. Use synthetic or authorized logs only.',run:'python log_count.py sample.log',code:`from collections import Counter
+from pathlib import Path
+import sys
 
-for pw in ['Dawn@River7', 'password123', 'Tr0ub4dor&3']:
-    print(pw, '->', score_password(pw))`
-        },
-        {
-          title: 'HTTP security header inspector',
-          purpose: 'Request a URL and inspect the returned headers for safe defaults.',
-          code: `import requests
+path = Path(sys.argv[1] if len(sys.argv) > 1 else "sample.log")
+counts = Counter()
+for line in path.read_text(errors="replace").splitlines():
+    if "WARN" in line:
+        counts["WARN"] += 1
+    if "ERROR" in line:
+        counts["ERROR"] += 1
+print(dict(counts))`},
+      {title:'Input validation by allowlist',language:'JavaScript',purpose:'Validate a simple identifier by explicit format and size constraints before use.',run:'Run in a browser console with the sample values.',code:`function isSafeLabel(value) {
+  return typeof value === "string" &&
+    value.length > 0 && value.length <= 32 &&
+    /^[a-z0-9][a-z0-9_-]*$/i.test(value);
+}
 
-url = 'https://example.com'
-resp = requests.get(url, timeout=10)
-for key in ['Strict-Transport-Security', 'Content-Security-Policy', 'X-Frame-Options', 'X-Content-Type-Options']:
-    print(f'{key}: {resp.headers.get(key, "missing")}')`
-        },
-        {
-          title: 'JSON security configuration validator',
-          purpose: 'Check that a configuration object includes safe defaults but not secrets.',
-          code: `import json
-
-def validate_config(payload: dict) -> list[str]:
-    issues = []
-    if payload.get('debug') is True:
-        issues.append('debug should be disabled in production')
-    if not payload.get('tls', {}).get('enabled', False):
-        issues.append('TLS should be enabled')
-    if payload.get('secret'):
-        issues.append('do not store secrets in configuration files')
-    return issues
-
-cfg = {'debug': False, 'tls': {'enabled': True}, 'secret': None}
-print(validate_config(cfg))`
-        },
-        {
-          title: 'HMAC verification example',
-          purpose: 'Verify a message by recomputing the HMAC with a shared secret.',
-          code: `import hmac, hashlib
-
-def verify_hmac(message: str, signature: str, secret: str) -> bool:
-    expected = hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
-    return hmac.compare_digest(expected, signature)
-
-msg = 'sensor:reading:42'
-secret = 'demo-secret'
-actual = hmac.new(secret.encode(), msg.encode(), hashlib.sha256).hexdigest()
-print(verify_hmac(msg, actual, secret))`
-        },
-        {
-          title: 'Secure password hashing demonstration',
-          purpose: 'Hash a password with PBKDF2 to reduce brute-force risk in a toy example.',
-          code: `import hashlib
-
-password = 'demo-password'.encode()
-salt = b'generated-salt-123'
-key = hashlib.pbkdf2_hmac('sha256', password, salt, 200_000)
-print(key.hex())`
-        }
-      ];
-
-      const labs = [
-        {
-          title: 'Interactive OSI model',
-          description: 'Select a layer and review what it handles and which protocols commonly live there.',
-          points: ['Layer 1 physical transmission', 'L2 switching and framing', 'L3 addressing and routing', 'L4 transport and ports']
-        },
-        {
-          title: 'DNS resolution simulator',
-          description: 'Walk through local cache, recursive lookup, TLD query, and authoritative answer resolution.',
-          points: ['Cached record check', 'Recursive resolver query', 'TLD and authority strategy', 'TTL and response handling']
-        },
-        {
-          title: 'TCP handshake visualization',
-          description: 'See how SYN, SYN-ACK, and ACK establish a reliable stream between peers.',
-          points: ['Connection setup', 'Sequence numbers', 'Handshake reliability', 'State transitions']
-        },
-        {
-          title: 'Hashing playground',
-          description: 'Try different inputs and compare their SHA-256 output to understand deterministic hashing.',
-          points: ['Input text hashing', 'Determinism', 'Collision resistance', 'Integrity workflows']
-        }
-      ];
-
-      const featureGrid = document.getElementById('feature-grid');
-      const archiveGrid = document.getElementById('archive-grid');
-      const codeLabGrid = document.getElementById('code-lab-grid');
-      const labsGrid = document.getElementById('labs-grid');
-      const simulatorTabs = document.getElementById('simulator-tabs');
-      const simulatorOutput = document.getElementById('simulator-output');
-
-      function renderFeatureCards() {
-        featureGrid.innerHTML = featureCards.map(card => `
-          <article class="feature-card">
-            <span class="tag">${card.tag}</span>
-            <h3>${card.title}</h3>
-            <p>${card.description}</p>
-            <div class="mini">${card.mini}</div>
-          </article>
-        `).join('');
-      }
-
-      const detailCard = document.getElementById('detail-card');
-      const threatResults = document.getElementById('threat-results');
-      const categoryFilter = document.getElementById('category-filter');
-      const difficultyFilter = document.getElementById('difficulty-filter');
-      const globalSearch = document.getElementById('global-search');
-      const resultCount = document.getElementById('result-count');
-      const resetButton = document.getElementById('reset-filters');
-
-      function populateCategories() {
-        const categories = [...new Set(articleDatabase.map(item => item.category))];
-        categoryFilter.innerHTML = '<option value="all">All categories</option>' + categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
-      }
-
-      function getFilteredEntries() {
-        const searchTerm = globalSearch.value.trim().toLowerCase();
-        const selectedCategory = categoryFilter.value;
-        const selectedDifficulty = difficultyFilter.value;
-
-        return articleDatabase.filter(entry => {
-          const matchesCategory = selectedCategory === 'all' || entry.category === selectedCategory;
-          const matchesDifficulty = selectedDifficulty === 'all' || entry.difficulty === selectedDifficulty;
-          const searchText = [entry.title, entry.category, entry.summary, entry.tags.join(' ')].join(' ').toLowerCase();
-          const matchesSearch = !searchTerm || searchText.includes(searchTerm);
-          return matchesCategory && matchesDifficulty && matchesSearch;
-        });
-      }
-
-      function renderThreats() {
-        const filtered = getFilteredEntries();
-        resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? 'entry' : 'entries'}`;
-
-        if (!filtered.length) {
-          threatResults.innerHTML = '<div class="empty-state">No matching entries. Adjust your filters and try again.</div>';
-          return;
-        }
-
-        threatResults.innerHTML = filtered.map(entry => `
-          <article class="threat-item" tabindex="0" data-title="${entry.title}">
-            <div class="threat-head">
-              <h3>${entry.title}</h3>
-              <span class="pill">${entry.difficulty}</span>
-            </div>
-            <div class="threat-meta">
-              <span>${entry.category}</span>
-              <span>•</span>
-              <span>${entry.readTime}</span>
-            </div>
-            <p class="threat-description">${entry.summary}</p>
-            <div class="threat-tags">
-              ${entry.tags.slice(0, 4).map(tag => `<span>${tag}</span>`).join('')}
-            </div>
-          </article>
-        `).join('');
-
-        const items = document.querySelectorAll('.threat-item');
-        items.forEach(item => {
-          item.addEventListener('click', () => openArticle(item.dataset.title));
-          item.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              openArticle(item.dataset.title);
-            }
-          });
-        });
-
-        if (filtered[0]) openArticle(filtered[0].title);
-      }
-
-      function openArticle(title) {
-        const entry = articleDatabase.find(item => item.title === title);
-        if (!entry) return;
-
-        const related = articleDatabase
-          .filter(item => item.category === entry.category && item.title !== entry.title)
-          .slice(0, 5)
-          .map(item => `<span data-title="${item.title}">${item.title}</span>`)
-          .join('');
-
-        detailCard.innerHTML = `
-          <p class="meta-label">Selected topic</p>
-          <h3>${entry.title}</h3>
-          <div class="meta">
-            <span>${entry.category}</span>
-            <span>•</span>
-            <span>${entry.difficulty}</span>
-            <span>•</span>
-            <span>${entry.readTime}</span>
-          </div>
-          <div class="body">
-            <p>${entry.summary}</p>
-            <ul>
-              ${entry.content.slice(0, 3).map(point => `<li>${point}</li>`).join('')}
-            </ul>
-            <div style="margin-top: 18px;">
-              <div class="meta-label" style="margin-bottom: 10px;">Related</div>
-              <div class="related-list">${related || '<span>None</span>'}</div>
-            </div>
-          </div>
-        `;
-
-        detailCard.querySelectorAll('.related-list span').forEach(item => {
-          item.addEventListener('click', () => openArticle(item.dataset.title));
-        });
-      }
-
-      function renderArchive() {
-        archiveGrid.innerHTML = articleDatabase.map((item, index) => `
-          <article class="article-card">
-            <span class="tag">${item.category}</span>
-            <h3>${item.title}</h3>
-            <p>${item.summary}</p>
-            <div class="meta-row">
-              <span>${item.difficulty}</span>
-              <span>•</span>
-              <span>${item.readTime}</span>
-              <span>•</span>
-              <span>${item.tags[0]}</span>
-            </div>
-            <div class="mini">${index < 3 ? 'Featured' : 'Archive'} • ${item.references[0]}</div>
-          </article>
-        `).join('');
-      }
-
-      function renderCodeLab() {
-        codeLabGrid.innerHTML = codeLabEntries.map(item => `
-          <article class="code-card">
-            <p class="tag">Defensive coding</p>
-            <h3>${item.title}</h3>
-            <p>${item.purpose}</p>
-            <pre><code>${escapeHtml(item.code)}</code></pre>
-            <div class="code-actions">
-              <span class="meta-label">Safe local example</span>
-              <button class="mini-button copy-code" type="button">Copy code</button>
-            </div>
-          </article>
-        `).join('');
-
-        document.querySelectorAll('.copy-code').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const codeBlock = button.closest('.code-card').querySelector('code');
-            try {
-              await navigator.clipboard.writeText(codeBlock.textContent);
-              button.textContent = 'Copied';
-              setTimeout(() => button.textContent = 'Copy code', 1400);
-            } catch (error) {
-              button.textContent = 'Copy failed';
-              setTimeout(() => button.textContent = 'Copy code', 1400);
-            }
-          });
-        });
-      }
-
-      function escapeHtml(str) {
-        return str
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
-      }
-
-      function renderLabs() {
-        labsGrid.innerHTML = labs.map(lab => `
-          <article class="lab-card">
-            <p class="tag">Simulation</p>
-            <h3>${lab.title}</h3>
-            <p>${lab.description}</p>
-            <ul class="lab-list">
-              ${lab.points.map(point => `<li>${point}</li>`).join('')}
-            </ul>
-            <div class="mini">Browser-based exercise</div>
-          </article>
-        `).join('');
-      }
-
-      const simulatorCatalog = {
-        osi: {
-          title: 'OSI model drill',
-          body: `
-            <h4>Layer mapping</h4>
-            <p>Each layer focuses on a different abstraction: physical media, link framing, routing, transport, session, presentation, and application behavior.</p>
-            <ul>
-              <li><strong>Layer 2:</strong> Ethernet frames and switching decisions</li>
-              <li><strong>Layer 3:</strong> IP addressing and router-based forwarding</li>
-              <li><strong>Layer 4:</strong> TCP and UDP port logic</li>
-              <li><strong>Layer 7:</strong> HTTP, TLS negotiation, and application semantics</li>
-            </ul>
-          `
-        },
-        dns: {
-          title: 'DNS resolution path',
-          body: `
-            <h4>How a name resolves</h4>
-            <p>A recursive resolver checks local cache, then queries the root, TLD, and authoritative nameservers before returning the final answer to the client.</p>
-            <ul>
-              <li>Client asks resolver for example.org</li>
-              <li>Resolver uses cached records if available</li>
-              <li>TLD and authoritative servers provide delegation and answer records</li>
-              <li>Resolver returns the result and a TTL for future caching</li>
-            </ul>
-          `
-        },
-        tcp: {
-          title: 'TCP three-way handshake',
-          body: `
-            <h4>Connection establishment</h4>
-            <p>The host begins a connection by sending SYN, the peer responds with SYN-ACK, and the origin completes with ACK. This sequence ensures both sides are ready to exchange data.</p>
-            <ul>
-              <li><strong>SYN:</strong> initial request and initial sequence</li>
-              <li><strong>SYN-ACK:</strong> acceptance and acknowledgment</li>
-              <li><strong>ACK:</strong> final confirmation and data stream begins</li>
-            </ul>
-          `
-        },
-        hash: {
-          title: 'Hashing playground',
-          body: `
-            <h4>Deterministic output</h4>
-            <p>Hash functions like SHA-256 produce a fixed-length digest from input data. Small changes in input typically cause large changes in output.</p>
-            <ul>
-              <li>Same input → same digest</li>
-              <li>Different input → different digest</li>
-              <li>Useful for integrity verification and file fingerprinting</li>
-            </ul>
-          `
-        }
-      };
-
-      function setupSimulator() {
-        const tabs = Object.entries(simulatorCatalog).map(([key, value]) => `
-          <button type="button" class="sim-tab ${key === 'osi' ? 'active' : ''}" data-key="${key}">${key.toUpperCase()}</button>
-        `).join('');
-        simulatorTabs.innerHTML = tabs;
-
-        const updateOutput = (key) => {
-          const item = simulatorCatalog[key];
-          simulatorOutput.innerHTML = item.body;
-          document.querySelectorAll('.sim-tab').forEach(button => {
-            button.classList.toggle('active', button.dataset.key === key);
-          });
-        };
-
-        simulatorTabs.addEventListener('click', (event) => {
-          const button = event.target.closest('.sim-tab');
-          if (!button) return;
-          updateOutput(button.dataset.key);
-        });
-
-        updateOutput('osi');
-      }
-
-      function bindControls() {
-        globalSearch.addEventListener('input', renderThreats);
-        categoryFilter.addEventListener('change', renderThreats);
-        difficultyFilter.addEventListener('change', renderThreats);
-        resetButton.addEventListener('click', () => {
-          globalSearch.value = '';
-          categoryFilter.value = 'all';
-          difficultyFilter.value = 'all';
-          renderThreats();
-        });
-      }
-
-      renderFeatureCards();
-      populateCategories();
-      renderThreats();
-      renderArchive();
-      renderCodeLab();
-      renderLabs();
-      bindControls();
-      setupSimulator();
-    </script>
-  </body>
+console.log(isSafeLabel("lab-node_2")); // true
+console.log(isSafeLabel("../private")); // false`}
+    ];
+    const labs=[
+      {title:'OSI model',description:'Trace where common network responsibilities sit in a layered mental model.',points:['Link: local frame delivery','Network: addressing and routing','Transport: ports and delivery semantics','Application: protocol meaning and data']},
+      {title:'DNS resolution',description:'Follow a recursive query from local cache to authoritative answer.',points:['Client asks a recursive resolver','Resolver follows referrals when uncached','Authoritative zone returns records','TTL informs cache lifetime']},
+      {title:'TCP connection setup',description:'Review the purpose of the three-message connection handshake.',points:['SYN requests a connection','SYN-ACK acknowledges and responds','ACK confirms shared state','Application data follows']},
+      {title:'Cryptographic fingerprints',description:'Explore why a small input change produces a distinct deterministic digest.',points:['Same bytes produce same digest','Digest length is fixed for the chosen hash','Hashing is not encryption','Integrity comparison requires a trusted reference']}
+    ];
+    const simulators={
+      osi:{title:'OSI model · layer guide',text:'Choose a layer to understand its role in the communication path.',items:['Layer 1 · Physical media and signal transmission','Layer 2 · Local frames, switching, and link addressing','Layer 3 · IP addressing and packet routing','Layer 4 · TCP/UDP transport and ports','Layer 7 · Application protocols such as HTTP and DNS']},
+      dns:{title:'DNS · recursive resolution',text:'A resolver assembles an answer by following the DNS hierarchy when the requested record is not cached.',items:['1 · Client queries its configured recursive resolver','2 · Resolver checks cache and policy','3 · Resolver follows root and TLD referrals','4 · Authoritative server supplies the zone answer','5 · Resolver returns the result with a TTL']},
+      tcp:{title:'TCP · connection establishment',text:'The three-way handshake synchronizes connection state before normal application data is exchanged.',items:['SYN · Client requests a connection and proposes initial sequence state','SYN-ACK · Server acknowledges and responds with its own sequence state','ACK · Client acknowledges the response','Established · Both endpoints can exchange stream data']},
+      crypto:{title:'Cryptography · digest vs encryption',text:'A digest is a fixed-size fingerprint; encryption is reversible with a key. They solve different problems.',items:['SHA-256 digest · integrity fingerprint, not secrecy','HMAC · keyed message authentication for parties sharing a secret','Authenticated encryption · confidentiality and integrity together','Digital signature · verifiable proof made with a private signing key']}
+    };
+    const featureGrid=document.getElementById('feature-grid'),archiveGrid=document.getElementById('archive-grid'),codeLabGrid=document.getElementById('code-lab-grid'),labsGrid=document.getElementById('labs-grid'),simulatorTabs=document.getElementById('simulator-tabs'),simulatorOutput=document.getElementById('simulator-output');
+    const detailCard=document.getElementById('detail-card'),threatResults=document.getElementById('threat-results'),categoryFilter=document.getElementById('category-filter'),difficultyFilter=document.getElementById('difficulty-filter'),globalSearch=document.getElementById('global-search'),resultCount=document.getElementById('result-count');
+    function escapeHtml(text){return String(text).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));}
+    function renderFeatures(){featureGrid.innerHTML=featureCards.map(item=>`<article class="feature-card"><span class="tag">${item.tag}</span><h3>${item.title}</h3><p>${item.description}</p><div class="mini">${item.mini}</div></article>`).join('');}
+    function populateCategories(){const cats=[...new Set(articleDatabase.map(item=>item.category))];categoryFilter.innerHTML='<option value="all">All disciplines</option>'+cats.map(cat=>`<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');}
+    function filteredArticles(){const term=globalSearch.value.trim().toLowerCase();return articleDatabase.filter(item=>(categoryFilter.value==='all'||item.category===categoryFilter.value)&&(difficultyFilter.value==='all'||item.difficulty===difficultyFilter.value)&&(!term||[item.title,item.category,item.summary,item.tags.join(' '),item.content.join(' ')].join(' ').toLowerCase().includes(term)));}
+    function openArticle(id){const entry=articleDatabase.find(item=>item.id===id);if(!entry)return;const related=articleDatabase.filter(item=>item.category===entry.category&&item.id!==entry.id).slice(0,4);detailCard.innerHTML=`<p class="meta-label">${escapeHtml(entry.category)}</p><h3>${escapeHtml(entry.title)}</h3><div class="meta">${escapeHtml(entry.difficulty)} · ${escapeHtml(entry.readTime)}</div><div class="body"><p>${escapeHtml(entry.summary)}</p>${entry.content.map(p=>`<p>${escapeHtml(p)}</p>`).join('')}<p><strong>Defensive focus:</strong> Apply least privilege, validate assumptions against the system context, and document evidence and limitations.</p><p><strong>Further reading</strong></p><ul>${entry.references.map(ref=>`<li><a href="${escapeHtml(ref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(ref.replace(/^https?:\/\//,''))}</a></li>`).join('')}</ul>${related.length?`<p><strong>Related</strong></p><div class="related-list">${related.map(item=>`<span data-id="${escapeHtml(item.id)}">${escapeHtml(item.title)}</span>`).join('')}</div>`:''}</div>`;detailCard.querySelectorAll('.related-list span').forEach(node=>node.addEventListener('click',()=>openArticle(node.dataset.id)));}
+    function renderArticles(){const items=filteredArticles();resultCount.textContent=`${items.length} ${items.length===1?'entry':'entries'}`;if(!items.length){threatResults.innerHTML='<div class="empty-state">No matching research. Adjust the filters and try again.</div>';return;}threatResults.innerHTML=items.map(item=>`<article class="threat-item" tabindex="0" role="button" data-id="${escapeHtml(item.id)}"><div class="threat-head"><h3>${escapeHtml(item.title)}</h3><span class="pill">${escapeHtml(item.difficulty)}</span></div><div class="threat-meta">${escapeHtml(item.category)} · ${escapeHtml(item.readTime)}</div><p class="threat-description">${escapeHtml(item.summary)}</p><div class="threat-tags">${item.tags.map(tag=>`<span>${escapeHtml(tag)}</span>`).join('')}</div></article>`).join('');threatResults.querySelectorAll('.threat-item').forEach(node=>{node.addEventListener('click',()=>openArticle(node.dataset.id));node.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openArticle(node.dataset.id);}});});openArticle(items[0].id);}
+    function renderArchive(){const recent=[...articleDatabase].sort((a,b)=>Number(b.pinned)-Number(a.pinned)).slice(0,8);archiveGrid.innerHTML=recent.map(item=>`<article class="article-card"><span class="tag">${escapeHtml(item.category)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="meta-row"><span>${escapeHtml(item.difficulty)}</span><span>·</span><span>${escapeHtml(item.readTime)}</span></div><div class="mini">${item.pinned?'Featured research':'Archive note'} · ${escapeHtml(item.tags.slice(0,2).join(' / '))}</div></article>`).join('');}
+    function renderCode(){codeLabGrid.innerHTML=codeLabEntries.map((item,index)=>`<article class="code-card"><span class="tag">${escapeHtml(item.language)} · LOCAL EXERCISE</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.purpose)}</p><p class="mini">Run: ${escapeHtml(item.run)}</p><pre aria-label="${escapeHtml(item.language)} code"><code>${escapeHtml(item.code)}</code></pre><div class="code-actions"><span class="meta-label">EXAMPLE ${String(index+1).padStart(2,'0')}</span><button class="mini-button copy-code" type="button">Copy code</button></div></article>`).join('');codeLabGrid.querySelectorAll('.copy-code').forEach(button=>button.addEventListener('click',async()=>{const code=button.closest('.code-card').querySelector('code').textContent;try{await navigator.clipboard.writeText(code);button.textContent='Copied';}catch{const area=document.createElement('textarea');area.value=code;document.body.append(area);area.select();document.execCommand('copy');area.remove();button.textContent='Copied';}setTimeout(()=>button.textContent='Copy code',1300);}));}
+    function renderLabs(){labsGrid.innerHTML=labs.map((item,index)=>`<article class="lab-card"><span class="tag">SIMULATION ${String(index+1).padStart(2,'0')}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p><ul class="lab-list">${item.points.map(point=>`<li>${escapeHtml(point)}</li>`).join('')}</ul></article>`).join('');}
+    function setupSimulator(){simulatorTabs.innerHTML=Object.entries(simulators).map(([key,item],index)=>`<button role="tab" aria-selected="${index===0}" class="sim-tab ${index===0?'active':''}" type="button" data-key="${key}">${escapeHtml(item.title.split(' · ')[0])}</button>`).join('');function select(key){const item=simulators[key];simulatorOutput.innerHTML=`<h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.text)}</p><ul>${item.items.map(line=>`<li>${escapeHtml(line)}</li>`).join('')}</ul>`;simulatorTabs.querySelectorAll('button').forEach(button=>{const active=button.dataset.key===key;button.classList.toggle('active',active);button.setAttribute('aria-selected',String(active));});}simulatorTabs.addEventListener('click',event=>{const button=event.target.closest('button[data-key]');if(button)select(button.dataset.key);});select('osi');}
+    document.querySelector('.mobile-toggle').addEventListener('click',event=>{const button=event.currentTarget,nav=document.getElementById('main-nav'),open=button.getAttribute('aria-expanded')!=='true';button.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open);button.textContent=open?'Close':'Menu';});
+    document.querySelectorAll('#main-nav a').forEach(link=>link.addEventListener('click',()=>{document.getElementById('main-nav').classList.remove('open');document.querySelector('.mobile-toggle').setAttribute('aria-expanded','false');document.querySelector('.mobile-toggle').textContent='Menu';}));
+    globalSearch.addEventListener('input',renderArticles);categoryFilter.addEventListener('change',renderArticles);difficultyFilter.addEventListener('change',renderArticles);document.getElementById('reset-filters').addEventListener('click',()=>{globalSearch.value='';categoryFilter.value='all';difficultyFilter.value='all';renderArticles();});
+    document.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();globalSearch.focus();}});
+    window.addEventListener('scroll',()=>{const total=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('reading-progress').style.width=`${total>0?window.scrollY/total*100:0}%`;},{passive:true});
+    renderFeatures();populateCategories();renderArticles();renderArchive();renderCode();renderLabs();setupSimulator();
+  </script>
+</body>
 </html>
